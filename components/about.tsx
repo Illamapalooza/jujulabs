@@ -4,7 +4,7 @@ const stats = [
   { value: "3+", label: "Years" },
   { value: "5+", label: "Projects" },
   { value: "4", label: "Companies" },
-  { value: "10+", label: "Technologies" },
+  { value: "20+", label: "Technologies" },
 ];
 
 export function About() {
@@ -20,16 +20,17 @@ export function About() {
         </h2>
 
         <p className="mt-6 max-w-2xl leading-relaxed text-muted">
-          I&apos;m Julius — a fullstack product and application engineer based in the
-          Philippines. I work across the entire stack, from crafting interfaces to
-          architecting backend systems, with a focus on shipping clean, scalable
-          software that people actually use.
+          I&apos;m Julius — a fullstack engineer and agentic systems builder based
+          in the Philippines. I work across the entire stack, from crafting
+          interfaces to architecting backend systems, and fully leverage agentic
+          coding — context engineering, compound AI systems, and autonomous agent
+          workflows — to ship faster and smarter.
         </p>
 
         <p className="mt-4 max-w-2xl leading-relaxed text-muted">
           Over the past three years, I&apos;ve built CRM platforms, AI chatbots,
           logistics systems, and developer tools — always with an eye toward
-          simplicity and user impact.
+          simplicity, automation, and user impact.
         </p>
 
         <div className="mt-12 grid grid-cols-2 gap-8 sm:grid-cols-4">

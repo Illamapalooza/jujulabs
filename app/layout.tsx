@@ -17,12 +17,12 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "jujulabs — Julius Baliling",
   description:
-    "Portfolio of Julius Baliling — Fullstack Product and Application Engineer. Building products with React, Next.js, TypeScript, and Node.js.",
+    "Portfolio of Julius Baliling — Fullstack Engineer & Agentic Systems Builder. Building products with modern web stacks, AI agents, and compound engineering.",
   metadataBase: new URL("https://jujulabs.co"),
   openGraph: {
     title: "jujulabs — Julius Baliling",
     description:
-      "Fullstack Product and Application Engineer. 3+ years experience building web applications.",
+      "Fullstack Engineer & Agentic Systems Builder. 3+ years building web apps, AI agents, and compound systems.",
     url: "https://jujulabs.co",
     siteName: "jujulabs",
     locale: "en_US",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "jujulabs — Julius Baliling",
     description:
-      "Fullstack Product and Application Engineer. 3+ years experience building web applications.",
+      "Fullstack Engineer & Agentic Systems Builder. 3+ years building web apps, AI agents, and compound systems.",
   },
   robots: {
     index: true,

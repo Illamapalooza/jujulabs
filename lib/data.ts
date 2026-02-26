@@ -50,10 +50,10 @@ export const projects: Project[] = [
 
 export const experiences: Experience[] = [
   {
-    role: "Software Engineer / Tech Lead",
-    company: "Symph / FTE",
+    role: "Lead Developer",
+    company: "Flying Tigers Express (FTE)",
     period: "2023 — Present",
-    description: "Fullstack engineering and technical leadership for logistics and enterprise applications.",
+    description: "Leading the development team for a logistics and enterprise application.",
   },
   {
     role: "Software Engineer",
@@ -62,22 +62,22 @@ export const experiences: Experience[] = [
     description: "Built AI chatbot infrastructure and conversational interfaces.",
   },
   {
-    role: "Fullstack Developer",
+    role: "Software Engineer",
     company: "Nurture Your Leads",
     period: "2024 — Present",
     description: "Architecting and developing a SaaS CRM platform from the ground up.",
   },
   {
-    role: "Founder",
-    company: "Hostari Labs",
+    role: "Startup Founder",
+    company: "Incubated at Hostari Labs",
     period: "2024",
-    description: "Founded a startup focused on developer tooling and hosting solutions.",
+    description: "Founded an incubated app focused on developer tooling and hosting solutions.",
   },
   {
-    role: "Community Lead",
-    company: "Google Developer Groups",
+    role: "Computer Science Lead",
+    company: "Google Developer Groups on Campus",
     period: "2023 — 2024",
-    description: "Organized developer events and tech community initiatives.",
+    description: "Led the computer science track, organizing developer events and technical initiatives.",
   },
   {
     role: "Research Assistant",
@@ -102,23 +102,22 @@ export const achievements: Achievement[] = [
   },
   {
     title: "Google Solution Challenge",
-    detail: "4th Place",
+    detail: "Top Placer",
   },
 ];
 
-export const techStack = [
-  "React",
-  "Next.js",
-  "TypeScript",
-  "Node.js",
-  "PostgreSQL",
-  "Supabase",
-  "Tailwind CSS",
-  "Firebase",
-  "Python",
-  "Git",
-  "Docker",
-  "Vercel",
+export type TechCategory = {
+  category: string;
+  items: string[];
+};
+
+export const techStack: TechCategory[] = [
+  { category: "Web Stack", items: ["Next.js", "NestJS", "React", "TypeScript", "Tailwind CSS"] },
+  { category: "Agentic Coding", items: ["Claude Code", "Context Engineering", "Compound AI Systems"] },
+  { category: "Automations", items: ["n8n", "Agent Workflows", "CI/CD Pipelines"] },
+  { category: "DevOps", items: ["Google Cloud Platform", "Vercel", "Docker", "GitHub Actions"] },
+  { category: "Databases", items: ["Supabase", "PostgreSQL", "Firebase Firestore"] },
+  { category: "Languages", items: ["TypeScript", "Python", "SQL"] },
 ];
 
 export const socials = {

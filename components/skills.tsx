@@ -13,14 +13,23 @@ export function Skills() {
           Technologies I work with.
         </h2>
 
-        <div className="mt-12 flex flex-wrap gap-3">
-          {techStack.map((tech) => (
-            <span
-              key={tech}
-              className="rounded-lg border border-border px-4 py-2 font-mono text-sm transition-colors hover:border-foreground/20 hover:text-foreground"
-            >
-              {tech}
-            </span>
+        <div className="mt-12 space-y-8">
+          {techStack.map((group) => (
+            <div key={group.category}>
+              <p className="font-mono text-xs uppercase tracking-widest text-muted">
+                {group.category}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
+                {group.items.map((tech) => (
+                  <span
+                    key={tech}
+                    className="rounded-lg border border-border px-4 py-2 font-mono text-sm transition-colors hover:border-foreground/20 hover:text-foreground"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       </SectionReveal>

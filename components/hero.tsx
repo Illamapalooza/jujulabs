@@ -10,7 +10,7 @@ export function Hero() {
             Julius Baliling
           </p>
           <p className="font-mono text-sm tracking-wide text-muted">
-            Fullstack Product &amp; Application Engineer
+            Fullstack Engineer &amp; Agentic Systems Builder
           </p>
         </div>
       </div>
