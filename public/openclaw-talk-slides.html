@@ -486,28 +486,28 @@
       <!-- SLIDE 2: About Me -->
       <section>
         <span class="tag">About Me</span>
-        <div style="display: flex; gap: 40px; align-items: center;">
-          <div style="flex: 0 0 200px; text-align: center;">
-            <img src="/profile-photo.png" alt="Julius Baliling" style="width: 200px; height: 200px; border-radius: 50%; border: 2px solid var(--oc-border); object-fit: cover;">
+        <div style="display: flex; gap: 56px; align-items: center; margin-top: 16px;">
+          <div style="flex: 0 0 280px; text-align: center;">
+            <img src="/profile-photo.png" alt="Julius Baliling" style="width: 280px; height: 280px; border-radius: 50%; border: 3px solid var(--oc-border); object-fit: cover;">
           </div>
           <div style="flex: 1;">
-            <h2 style="margin-top: 0;">Julius Baliling</h2>
+            <h2 style="margin-top: 0; font-size: 1.8em;">Julius Baliling</h2>
             <hr class="divider">
-            <p style="font-size:0.7em; color:#ccc; margin-bottom: 16px;">
+            <p style="font-size: 0.85em; color:#ccc; margin-bottom: 20px;">
               <strong>Software Engineer</strong> &middot; Freelancing for 3+ years
             </p>
-            <p style="font-size: 0.55em; color: #aaa; line-height: 1.8; margin: 0 0 20px 0;">
+            <p style="font-size: 0.68em; color: #aaa; line-height: 1.8; margin: 0 0 28px 0;">
               Experienced working across multiple client projects &mdash;<br>
               building and shipping production applications as part of distributed teams.
             </p>
-            <div style="display: flex; gap: 28px; align-items: center; margin-top: 8px;">
-              <div style="display: flex; flex-direction: column; gap: 6px;">
-                <img src="/fte-logo.svg" alt="Flying Tigers Express" style="height: 28px; width: auto;">
-                <span style="font-size: 0.45em; color: var(--oc-text-muted);">Full Stack Engineer</span>
+            <div style="display: flex; gap: 40px; align-items: center; margin-top: 12px;">
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <img src="/fte-logo.svg" alt="Flying Tigers Express" style="height: 36px; width: auto;">
+                <span style="font-size: 0.55em; color: var(--oc-text-muted);">Full Stack Engineer</span>
               </div>
-              <div style="display: flex; flex-direction: column; gap: 6px;">
-                <img src="/nyl-wordmark.svg" alt="Nurture Your Leads" style="height: 22px; width: auto;">
-                <span style="font-size: 0.45em; color: var(--oc-text-muted);">Lead Engineer</span>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <img src="/nyl-wordmark.svg" alt="Nurture Your Leads" style="height: 28px; width: auto;">
+                <span style="font-size: 0.55em; color: var(--oc-text-muted);">Lead Engineer</span>
               </div>
             </div>
           </div>
@@ -1059,76 +1059,124 @@ Review pull requests with focus on:
         <span class="tag">My Setup</span>
         <h2>How I Run <span class="accent">Mine</span></h2>
         <hr class="divider">
-        <div class="arch-diagram">
 
-          <!-- Layer 1: Client -->
-          <div class="arch-layer">
-            <div class="arch-layer-label blue">Client</div>
-            <div class="arch-layer-content">
-              <div class="arch-node n-channel">📱 Telegram + Discord<span class="node-sub">multi-channel</span></div>
-              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
-              <div class="arch-node n-gateway">OpenClaw Gateway<span class="node-sub">ws://localhost:19000</span></div>
-              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
-              <div class="arch-node n-acp">ACP Runtime<span class="node-sub">acpx &middot; 8 sessions</span></div>
+        <!-- architecture diagram -->
+        <div style="display: grid; grid-template-columns: 11% 1fr 11% auto 11%; height: 430px;">
+
+          <!-- LEFT: Channel -->
+          <div style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px 0 0 12px; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+            <p style="font-size: 0.42em; margin: 0; font-weight: 800; color: #3b82f6; text-align: center;">CHANNEL</p>
+            <span style="font-size: 1em;">📱</span>
+            <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 5px; padding: 4px 5px; text-align: center; width: 100%;">
+              <p style="font-size: 0.24em; margin: 0; color: var(--oc-text);">Telegram</p>
+              <p style="font-size: 0.18em; margin: 2px 0 0; color: var(--oc-text-muted);">Rafa + Ciel<br>bots</p>
+            </div>
+            <p style="font-size: 0.22em; color: #3b82f6; text-align: center; margin: 0;">Messages ⟶</p>
+          </div>
+
+          <!-- CENTER: OpenClaw System -->
+          <div style="background: rgba(255,107,53,0.05); border-top: 1px solid rgba(255,107,53,0.25); border-bottom: 1px solid rgba(255,107,53,0.25); padding: 6px 10px; display: flex; flex-direction: column; overflow: hidden;">
+            <p style="font-size: 0.32em; margin: 0 0 4px; font-weight: 800; color: var(--oc-orange); text-align: center; text-transform: uppercase; letter-spacing: 0.05em;">OpenClaw on M1 MacBook Pro <span style="font-weight: 400; color: var(--oc-text-muted);">(24/7)</span></p>
+
+            <div style="display: grid; grid-template-columns: auto auto 1fr auto auto; gap: 6px; align-items: center; flex: 1; min-width: 0;">
+
+              <!-- Gateway + ACP -->
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 3px;">
+                <div style="background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.3); border-radius: 8px; padding: 8px 8px; text-align: center;">
+                  <span style="font-size: 0.9em;">🦞</span>
+                  <p style="font-size: 0.32em; margin: 3px 0 0; font-weight: 700; color: var(--oc-orange);">GATEWAY</p>
+                  <p style="font-size: 0.18em; margin: 2px 0 0; color: var(--oc-text-muted);">ws://localhost:19000</p>
+                </div>
+                <div style="color: var(--oc-text-muted); font-size: 0.35em; line-height: 1;">↕</div>
+                <div style="background: rgba(168,85,247,0.1); border: 1px dashed rgba(168,85,247,0.3); border-radius: 6px; padding: 5px 6px; text-align: center;">
+                  <p style="font-size: 0.24em; margin: 0; font-weight: 600; color: #a855f7;">ACP Runtime</p>
+                  <p style="font-size: 0.17em; margin: 1px 0 0; color: var(--oc-text-muted);">acpx · 8 sessions</p>
+                </div>
+              </div>
+
+              <div style="color: var(--oc-text-muted); font-size: 0.5em; text-align: center;">⟶</div>
+
+              <!-- Agents: Rafa → Ciel → Claude Code -->
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0;">
+                <div style="background: rgba(255,159,28,0.12); border: 1px solid rgba(255,159,28,0.3); border-radius: 8px; padding: 8px 12px; text-align: center; width: 100%;">
+                  <p style="font-size: 0.32em; margin: 0; font-weight: 700; color: var(--oc-amber);">🌙 RAFA <span style="font-weight: 400; font-size: 0.8em; color: var(--oc-text-muted);">Orchestrator</span></p>
+                  <p style="font-size: 0.18em; margin: 2px 0 0; color: var(--oc-text-muted);">GPT-5.1 Codex Mini · routes &amp; delegates</p>
+                  <div style="display: flex; gap: 3px; justify-content: center; margin-top: 4px; flex-wrap: wrap;">
+                    <span style="font-size: 0.16em; background: rgba(255,159,28,0.15); color: var(--oc-amber); padding: 2px 5px; border-radius: 3px;">SOUL.md</span>
+                    <span style="font-size: 0.16em; background: rgba(255,159,28,0.15); color: var(--oc-amber); padding: 2px 5px; border-radius: 3px;">AGENTS.md</span>
+                    <span style="font-size: 0.16em; background: rgba(255,159,28,0.15); color: var(--oc-amber); padding: 2px 5px; border-radius: 3px;">MEMORY.md</span>
+                  </div>
+                </div>
+                <div style="color: var(--oc-text-muted); font-size: 0.32em; line-height: 1;">↓ delegates coding</div>
+                <div style="background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.25); border-radius: 8px; padding: 8px 12px; text-align: center; width: 100%;">
+                  <p style="font-size: 0.32em; margin: 0; font-weight: 700; color: var(--oc-orange);">⚡ CIEL <span style="font-weight: 400; font-size: 0.8em; color: var(--oc-text-muted);">Engineer</span></p>
+                  <p style="font-size: 0.18em; margin: 2px 0 0; color: var(--oc-text-muted);">GPT-5.3 Codex · coding buddy agent</p>
+                </div>
+                <div style="color: var(--oc-text-muted); font-size: 0.32em; line-height: 1;">↓ spawns</div>
+                <div style="background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 8px; padding: 6px 12px; text-align: center; width: 100%;">
+                  <p style="font-size: 0.28em; margin: 0; font-weight: 700; color: var(--oc-green);">🤖 Claude Code <span style="font-weight: 400; font-size: 0.8em;">(Opus 4.6)</span></p>
+                  <p style="font-size: 0.16em; margin: 2px 0 0; color: var(--oc-text-muted);">Does ALL actual work — code, git, tests, PRs</p>
+                </div>
+              </div>
+
+              <div style="color: var(--oc-text-muted); font-size: 0.5em; text-align: center;">⟷</div>
+
+              <!-- Skills -->
+              <div style="background: rgba(255,159,28,0.06); border: 1px solid rgba(255,159,28,0.2); border-radius: 8px; padding: 8px 6px; display: flex; flex-direction: column; justify-content: center; max-width: 100px;">
+                <p style="font-size: 0.28em; margin: 0 0 5px; font-weight: 700; color: var(--oc-amber); text-align: center;">🛠️ SKILLS</p>
+                <div style="display: flex; flex-direction: column; gap: 3px;">
+                  <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 3px; padding: 3px 5px; text-align: center;">
+                    <p style="font-size: 0.18em; margin: 0; color: var(--oc-text);">37 workspace</p>
+                  </div>
+                  <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 3px; padding: 3px 5px; text-align: center;">
+                    <p style="font-size: 0.18em; margin: 0; color: var(--oc-text);">6 bundled</p>
+                  </div>
+                  <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 3px; padding: 3px 5px; text-align: center;">
+                    <p style="font-size: 0.18em; margin: 0; color: var(--oc-text);">+ skill pkgs</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Connector -->
-          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
-          <div class="arch-connector-label">agent bindings route channel → agent</div>
-
-          <!-- Layer 2: Agents -->
-          <div class="arch-layer">
-            <div class="arch-layer-label orange">Agents</div>
-            <div class="arch-layer-content">
-              <div class="arch-node n-agent">🌙 Ciel<span class="node-sub">Orchestrator &middot; GPT-5.1 Mini</span></div>
-              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
-              <div class="arch-node n-agent" style="border-color: var(--oc-amber); border-left-color: var(--oc-amber);">⚡ Rafa<span class="node-sub">Engineer &middot; GPT-5.3 Codex</span></div>
-              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
-              <div class="arch-node n-tool">🧠 Claude Code<span class="node-sub">Opus 4.6 &middot; does all work</span></div>
+          <!-- RIGHT: Local Resources -->
+          <div style="background: rgba(255,159,28,0.08); border: 1px solid rgba(255,159,28,0.25); border-radius: 0; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;">
+            <p style="font-size: 0.32em; margin: 0 0 4px; font-weight: 800; color: var(--oc-amber); text-align: center;">LOCAL<br>RESOURCES</p>
+            <div style="display: flex; flex-direction: column; gap: 3px; width: 100%;">
+              <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 4px; padding: 3px 5px; text-align: center;">
+                <p style="font-size: 0.2em; margin: 0; color: var(--oc-text);">🧠 Gemma 3 4B</p>
+                <p style="font-size: 0.15em; margin: 1px 0 0; color: var(--oc-text-muted);">Local LLM</p>
+              </div>
+              <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 4px; padding: 3px 5px; text-align: center;">
+                <p style="font-size: 0.2em; margin: 0; color: var(--oc-text);">📂 3 Repos</p>
+              </div>
+              <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 4px; padding: 3px 5px; text-align: center;">
+                <p style="font-size: 0.2em; margin: 0; color: var(--oc-text);">📓 Vault</p>
+              </div>
+              <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 4px; padding: 3px 5px; text-align: center;">
+                <p style="font-size: 0.2em; margin: 0; color: var(--oc-text);">🛠️ gh · git</p>
+              </div>
+              <div style="background: var(--oc-bg-card); border: 1px solid var(--oc-border); border-radius: 4px; padding: 3px 5px; text-align: center;">
+                <p style="font-size: 0.2em; margin: 0; color: var(--oc-text);">🌐 GitHub</p>
+              </div>
             </div>
           </div>
 
-          <!-- Connector -->
-          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
-          <div class="arch-connector-label">reads project resources, writes code, runs tests, commits</div>
+          <!-- Arrow separator -->
+          <div style="display: flex; align-items: center; justify-content: center; color: var(--oc-text-muted); font-size: 0.5em;">⟶</div>
 
-          <!-- Layer 3: Execution -->
-          <div class="arch-layer">
-            <div class="arch-layer-label purple">Exec</div>
-            <div class="arch-layer-content">
-              <div class="arch-node n-tool">git clone / pull<span class="node-sub">~/Projects/*</span></div>
-              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
-              <div class="arch-node n-tool">Code &amp; Test<span class="node-sub">edit, lint, test</span></div>
-              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
-              <div class="arch-node n-tool">git commit + push<span class="node-sub">signed commits</span></div>
-              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
-              <div class="arch-node n-tool">gh pr create<span class="node-sub">+ screenshots</span></div>
-            </div>
-          </div>
-
-          <!-- Connector -->
-          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
-          <div class="arch-connector-label">result delivered back via Telegram</div>
-
-          <!-- Layer 4: Output -->
-          <div class="arch-layer">
-            <div class="arch-layer-label green">Output</div>
-            <div class="arch-layer-content">
-              <div class="arch-node n-output">✅ PR Ready for Review<span class="node-sub">code diff, screenshots, description</span></div>
-              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
-              <div class="arch-node n-channel">📱 Julius reviews on phone<span class="node-sub">approve / request changes</span></div>
-            </div>
+          <!-- Output -->
+          <div style="background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); border-radius: 0 12px 12px 0; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+            <p style="font-size: 0.36em; margin: 0 0 4px; font-weight: 800; color: var(--oc-green); text-align: center;">OUTPUT</p>
+            <span style="font-size: 1em;">✅</span>
+            <p style="font-size: 0.22em; color: var(--oc-text); text-align: center; margin: 0; line-height: 1.5;">PRs, summaries,<br>daily briefings,<br>code reviews</p>
+            <p style="font-size: 0.2em; color: var(--oc-green); text-align: center; margin: 0;">⟵ back to 📱</p>
           </div>
 
         </div>
-        <div class="stats" style="justify-content: center; margin-top: 10px;">
-          <div class="stat"><span class="number">M1 Mac</span><span class="label">Hardware (spare, 24/7)</span></div>
-          <div class="stat"><span class="number">37+6</span><span class="label">Custom + bundled skills</span></div>
-          <div class="stat"><span class="number">8</span><span class="label">ACP concurrent sessions</span></div>
-        </div>
+
         <aside class="notes">
-          Here's my advanced setup. Multi-channel through Telegram and Discord, ACP for 8 concurrent sessions. Ciel orchestrates, delegates to Rafa who spawns Claude Code for the heavy lifting. Running on a spare M1 MacBook Pro 24/7 with 37 custom skills plus 6 bundled. You don't need to start here — start simple, evolve.
+          Here's my actual setup focused on the coding buddy flow. Rafa is the orchestrator running on GPT-5.1 Codex Mini — he routes tasks and delegates coding work to Ciel, the software engineer agent. Ciel uses GPT-5.3 Codex as the driver which spawns Claude Code Opus 4.6 to do all the actual work — reading code, writing code, running tests, committing, pushing, and creating PRs. All running on a spare M1 MacBook Pro 24/7 with 37 custom skills, a local Gemma 3 4B model for heartbeats, and 3 project repos.
         </aside>
       </section>
 
@@ -1137,28 +1185,33 @@ Review pull requests with focus on:
         <span class="tag">Beyond Chat</span>
         <h2>It works even when<br>you <span class="accent">don't ask</span></h2>
         <hr class="divider">
-        <div class="card-grid-3">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; max-width: 800px; margin: 0 auto;">
           <div class="card">
             <span class="icon">☀️</span>
-            <h3>Daily Briefing</h3>
-            <p>Creates daily note, gathers tasks, checks commits, AI news feed</p>
+            <h3>Morning Briefing</h3>
+            <p style="font-size: 0.48em;">Daily 8 AM — creates daily note, gathers open tasks across projects, checks yesterday's commits, fetches AI news feed</p>
           </div>
           <div class="card">
             <span class="icon">💓</span>
             <h3>Heartbeat</h3>
-            <p>Every 30 min: checks server health, stale tasks, memory maintenance</p>
+            <p style="font-size: 0.48em;">Every 30 min — server health, stale task detection, memory maintenance, open correction tickets, runs on local LLM (free)</p>
+          </div>
+          <div class="card">
+            <span class="icon">⚙️</span>
+            <h3>Ops Loop</h3>
+            <p style="font-size: 0.48em;">Every 60 min — gateway health, security audit, QA builds, cost monitoring, changelog tracking. Delta detection: only reports changes</p>
           </div>
           <div class="card">
             <span class="icon">🔄</span>
             <h3>Self-Correction</h3>
-            <p>Detects mistakes, files correction tickets, updates its own memory</p>
+            <p style="font-size: 0.48em;">Detects mistakes, files correction tickets, updates its own memory. Flags unresolved issues automatically</p>
           </div>
         </div>
-        <p style="font-size: 0.52em; color: var(--oc-text-muted); margin-top: 16px; text-align: center;">
-          Configured via <code>cron-jobs.json</code> — scheduled tasks that run autonomously
+        <p style="font-size: 0.48em; color: var(--oc-text-muted); margin-top: 12px; text-align: center;">
+          Configured via <code>cron-jobs.json</code> + <code>HEARTBEAT.md</code> — scheduled tasks that run autonomously
         </p>
         <aside class="notes">
-          The buddy doesn't just respond to messages. It has cron jobs — daily briefings, health checks, self-correction loops. It's actively managing itself.
+          The buddy doesn't just respond to messages. It has 4 autonomous operations. Morning briefing creates your daily note with tasks and AI news at 8 AM. Heartbeat runs every 30 minutes on the local LLM for free — checks health, stale tasks, memory. Ops loop every hour does security audits and QA builds. And the self-correction system files COR tickets when it makes mistakes and tracks them until resolved. All configured via markdown files.
         </aside>
       </section>
 
@@ -1167,14 +1220,13 @@ Review pull requests with focus on:
         <span class="tag">Live Demo</span>
         <h2>One prompt. One landing page.<br><span class="accent">Live on the internet.</span> 🎬</h2>
         <hr class="divider">
-        <div class="demo-placeholder" style="max-width: 700px; margin: 24px auto; padding: 60px 32px;">
-          <span class="demo-icon">📱 &rarr; ⚡ &rarr; 🌍</span>
-          <p class="demo-label">VIDEO DEMO</p>
-          <p class="demo-desc" style="margin-top: 8px;">~2 minutes: prompt to production</p>
-          <p class="demo-desc" style="margin-top: 20px; color: var(--oc-orange); font-size: 0.42em;">Backup: pre-recorded screen capture ready</p>
+        <div style="max-width: 600px; margin: 24px auto; text-align: center;">
+          <img src="kennko-logo.png" alt="Kennko Coffee" style="max-width: 280px; margin: 0 auto 16px; display: block; border-radius: 12px;">
+          <img src="kennko-banner.png" alt="Kennko Coffee Banner" style="width: 100%; border-radius: 8px; margin-bottom: 16px;">
+          <p style="font-size: 0.52em; color: var(--oc-text-muted); margin: 0;">Building a branding page for a local coffee shop — from phone prompt to production</p>
         </div>
         <aside class="notes">
-          LIVE DEMO / VIDEO. Send the prompt, watch Rafa work — reading the project, writing code, committing, pushing, deploying. From prompt to production in about 2 minutes.
+          LIVE DEMO. I'll send a prompt from my phone to build a branding page for Kennko Coffee, a local cafe. Watch the agent read the brand assets, generate the landing page, commit, push, and deploy — all live. From prompt to production.
         </aside>
       </section>
 
@@ -1184,10 +1236,10 @@ Review pull requests with focus on:
         <h2>Thank you!</h2>
         <hr class="divider">
         <p style="font-size: 0.6em; color: #ccc; margin-bottom: 24px;">
-          Scan to learn more
+          Let's connect
         </p>
         <div class="qr-section">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jujulabs.co&bgcolor=ffffff&color=000000&format=png" alt="QR Code - Jujulabs" width="180" height="180">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://linkedin.com/in/juliusbaliling&bgcolor=ffffff&color=000000&format=png" alt="QR Code - LinkedIn" width="180" height="180">
         </div>
         <p style="font-size: 0.5em; color: var(--oc-text-muted); margin-top: 20px;">
           <strong style="color: var(--oc-text);">Julius Baliling</strong><br>
