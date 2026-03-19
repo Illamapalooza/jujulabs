@@ -5,9 +5,12 @@ export function Footer() {
         <p className="font-mono text-xs text-muted">
           &copy; {new Date().getFullYear()} jujulabs
         </p>
-        <p className="font-mono text-xs text-muted">
-          Built with Next.js &amp; Tailwind
-        </p>
+        <a
+          href="mailto:juliusbaliling25@gmail.com?subject=Project%20Inquiry"
+          className="font-mono text-xs text-muted transition-colors hover:text-foreground"
+        >
+          juliusbaliling25@gmail.com
+        </a>
       </div>
     </footer>
   );

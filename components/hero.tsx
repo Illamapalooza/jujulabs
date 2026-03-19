@@ -5,20 +5,24 @@ export function Hero() {
     <section className="flex min-h-svh flex-col items-center justify-center px-6">
       <div className="animate-fade-in-up flex flex-col items-center gap-8">
         <Logo className="w-full max-w-md text-foreground" />
-        <div className="flex flex-col items-center gap-2 text-center">
-          <p className="text-lg font-medium tracking-tight text-foreground sm:text-xl">
-            Julius Baliling
+        <div className="flex flex-col items-center gap-3 text-center">
+          <p className="max-w-md text-lg leading-relaxed text-muted sm:text-xl">
+            Web apps, agentic systems, and automation
+            — engineered to ship.
           </p>
-          <p className="font-mono text-sm tracking-wide text-muted">
-            Fullstack Engineer &amp; Agentic Systems Builder
-          </p>
+          <a
+            href="#contact"
+            className="mt-4 border border-foreground px-6 py-2.5 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-foreground hover:text-background"
+          >
+            Start a project
+          </a>
         </div>
       </div>
       <div className="animate-fade-in-up-delayed mt-16">
         <a
-          href="#about"
+          href="#services"
           className="group flex flex-col items-center gap-2 text-muted transition-colors hover:text-foreground"
-          aria-label="Scroll to about section"
+          aria-label="Scroll to services section"
         >
           <span className="font-mono text-xs uppercase tracking-widest">
             Scroll

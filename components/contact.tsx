@@ -10,19 +10,19 @@ export function Contact() {
         </p>
 
         <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-          Let&apos;s build something.
+          Start a project.
         </h2>
 
-        <p className="mt-6 leading-relaxed text-muted">
-          I&apos;m always open to interesting projects and collaborations. Reach
-          out and let&apos;s talk.
+        <p className="mt-6 max-w-2xl leading-relaxed text-muted">
+          Have a product to build or a system to automate? Reach out with your
+          project details and we&apos;ll take it from there.
         </p>
 
         <a
-          href={`mailto:${socials.email}`}
-          className="mt-6 inline-block border-b border-foreground pb-0.5 font-medium transition-opacity hover:opacity-60"
+          href={`mailto:${socials.email}?subject=Project%20Inquiry`}
+          className="mt-6 inline-block border border-foreground px-6 py-2.5 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-foreground hover:text-background"
         >
-          {socials.email}
+          Get in touch
         </a>
 
         <div className="mt-12 flex gap-6">
@@ -41,14 +41,6 @@ export function Contact() {
             className="font-mono text-sm text-muted transition-colors hover:text-foreground"
           >
             LinkedIn
-          </a>
-          <a
-            href={socials.instagram}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-mono text-sm text-muted transition-colors hover:text-foreground"
-          >
-            Instagram
           </a>
         </div>
       </SectionReveal>

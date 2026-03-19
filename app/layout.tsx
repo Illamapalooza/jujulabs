@@ -15,14 +15,14 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "jujulabs — Julius Baliling",
+  title: "jujulabs — Engineering Studio",
   description:
-    "Portfolio of Julius Baliling — Fullstack Engineer & Agentic Systems Builder. Building products with modern web stacks, AI agents, and compound engineering.",
+    "Independent engineering studio building web applications, agentic AI systems, and workflow automation. Based in the Philippines.",
   metadataBase: new URL("https://jujulabs.co"),
   openGraph: {
-    title: "jujulabs — Julius Baliling",
+    title: "jujulabs — Engineering Studio",
     description:
-      "Fullstack Engineer & Agentic Systems Builder. 3+ years building web apps, AI agents, and compound systems.",
+      "Web apps, agentic systems, and automation — engineered to ship.",
     url: "https://jujulabs.co",
     siteName: "jujulabs",
     locale: "en_US",
@@ -30,9 +30,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "jujulabs — Julius Baliling",
+    title: "jujulabs — Engineering Studio",
     description:
-      "Fullstack Engineer & Agentic Systems Builder. 3+ years building web apps, AI agents, and compound systems.",
+      "Web apps, agentic systems, and automation — engineered to ship.",
   },
   robots: {
     index: true,

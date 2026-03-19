@@ -1,128 +1,95 @@
-export type Project = {
+export type Service = {
   title: string;
   description: string;
+  capabilities: string[];
+};
+
+export type Client = {
+  name: string;
+  description: string;
   tech: string[];
-  url?: string;
 };
 
-export type Experience = {
-  role: string;
-  company: string;
-  period: string;
-  description?: string;
+export type PastWork = {
+  name: string;
+  description: string;
+  tech: string[];
 };
 
-export type Achievement = {
-  title: string;
-  detail: string;
-};
-
-export const projects: Project[] = [
+export const services: Service[] = [
   {
-    title: "Nurture Your Leads",
+    title: "Web Applications",
     description:
-      "SaaS CRM platform for managing sales pipelines, client relationships, and automated follow-ups.",
+      "Full-stack web apps built with modern frameworks. From marketing sites to complex SaaS platforms — designed for performance, scalability, and clean UX.",
+    capabilities: [
+      "Next.js / React applications",
+      "API design & backend systems",
+      "Database architecture",
+      "Authentication & access control",
+    ],
+  },
+  {
+    title: "Agentic Systems",
+    description:
+      "AI-powered agents and compound systems that handle real workflows. Not chatbot wrappers — actual autonomous agents that get work done.",
+    capabilities: [
+      "Autonomous coding agents",
+      "Context engineering pipelines",
+      "Multi-agent orchestration",
+      "LLM integration & prompt systems",
+    ],
+  },
+  {
+    title: "Automation & Integration",
+    description:
+      "Connect your tools, automate your processes, and eliminate manual work. Custom workflows that run without babysitting.",
+    capabilities: [
+      "Workflow automation",
+      "API integrations",
+      "CI/CD pipelines",
+      "Data sync & migration",
+    ],
+  },
+];
+
+export const clients: Client[] = [
+  {
+    name: "Flying Tigers Express",
+    description:
+      "Leading development for a logistics and enterprise platform — shipment tracking, multi-hub operations, partner management, and finance systems.",
+    tech: ["Next.js", "NestJS", "PostgreSQL", "Google Cloud"],
+  },
+  {
+    name: "Nurture Your Leads",
+    description:
+      "Building a SaaS CRM platform from the ground up — sales pipelines, client management, automated follow-ups, and role-based access control.",
     tech: ["React", "Next.js", "Supabase", "Tailwind CSS"],
-    url: "#",
   },
+];
+
+export const pastWork: PastWork[] = [
   {
-    title: "Humanlike",
+    name: "Humanlike",
     description:
-      "AI chatbot platform that enables businesses to deploy conversational agents with human-like interactions.",
+      "AI chatbot platform — built the infrastructure and conversational interfaces for deploying human-like agents to businesses.",
     tech: ["Node.js", "Express", "Firebase"],
-    url: "#",
   },
   {
-    title: "Memor",
+    name: "Memor",
     description:
-      "AI-powered note-taking app that automatically organizes, summarizes, and connects your thoughts.",
+      "AI-powered note-taking app that automatically organizes, summarizes, and connects thoughts across sessions.",
     tech: ["React Native", "OpenAI", "PostgreSQL"],
-    url: "#",
   },
   {
-    title: "Visual Note",
+    name: "Visual Note",
     description:
-      "AI image-to-notes tool that extracts and structures information from visual content into actionable notes.",
+      "AI tool that extracts and structures information from images into actionable, organized notes.",
     tech: ["Next.js", "OpenAI", "Tailwind CSS"],
-    url: "#",
   },
-];
-
-export const experiences: Experience[] = [
-  {
-    role: "Lead Developer",
-    company: "Flying Tigers Express (FTE)",
-    period: "2023 — Present",
-    description: "Leading the development team for a logistics and enterprise application.",
-  },
-  {
-    role: "Software Engineer",
-    company: "Humanlike",
-    period: "2024",
-    description: "Built AI chatbot infrastructure and conversational interfaces.",
-  },
-  {
-    role: "Software Engineer",
-    company: "Nurture Your Leads",
-    period: "2024 — Present",
-    description: "Architecting and developing a SaaS CRM platform from the ground up.",
-  },
-  {
-    role: "Startup Founder",
-    company: "Incubated at Hostari Labs",
-    period: "2024",
-    description: "Founded an incubated app focused on developer tooling and hosting solutions.",
-  },
-  {
-    role: "Computer Science Lead",
-    company: "Google Developer Groups on Campus",
-    period: "2023 — 2024",
-    description: "Led the computer science track, organizing developer events and technical initiatives.",
-  },
-  {
-    role: "Research Assistant",
-    company: "Academic Research",
-    period: "2023 — 2024",
-    description: "Contributed to research in applied computing and AI systems.",
-  },
-];
-
-export const achievements: Achievement[] = [
-  {
-    title: "AI Automation Challenge",
-    detail: "Junior Award",
-  },
-  {
-    title: "Indie Hacker Champion",
-    detail: "1st Place",
-  },
-  {
-    title: "TOPCIT",
-    detail: "Top 10%",
-  },
-  {
-    title: "Google Solution Challenge",
-    detail: "Top Placer",
-  },
-];
-
-export type TechCategory = {
-  category: string;
-  items: string[];
-};
-
-export const techStack: TechCategory[] = [
-  { category: "Web Stack", items: ["Next.js", "NestJS", "React", "TypeScript", "Tailwind CSS"] },
-  { category: "Agentic Coding", items: ["Claude Code", "Context Engineering", "Compound AI Systems"] },
-  { category: "Automations", items: ["n8n", "Agent Workflows", "CI/CD Pipelines"] },
-  { category: "DevOps", items: ["Google Cloud Platform", "Vercel", "Docker", "GitHub Actions"] },
-  { category: "Databases", items: ["Supabase", "PostgreSQL", "Firebase Firestore"] },
-  { category: "Languages", items: ["TypeScript", "Python", "SQL"] },
 ];
 
 export const socials = {
   email: "juliusbaliling25@gmail.com",
   github: "https://github.com/Illamapalooza",
   linkedin: "https://linkedin.com/in/juliusbaliling",
-  instagram: "https://instagram.com/julio.ll",
 };
