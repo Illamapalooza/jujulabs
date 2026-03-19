@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Remote Coding Buddy with OpenClaw</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --oc-bg: #0a0a0a;
+      --oc-bg-elevated: #141414;
+      --oc-bg-card: #1a1a1a;
+      --oc-orange: #ff6b35;
+      --oc-amber: #ff9f1c;
+      --oc-text: #f0f0f0;
+      --oc-text-muted: #888;
+      --oc-border: #2a2a2a;
+      --oc-code-bg: #0d1117;
+      --oc-gradient: linear-gradient(135deg, #ff6b35, #ff9f1c);
+      --oc-green: #22c55e;
+    }
+
+    .reveal-viewport { background: var(--oc-bg); }
+
+    .reveal {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 28px;
+      color: var(--oc-text);
+    }
+
+    .reveal h1, .reveal h2, .reveal h3 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      text-transform: none;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      color: var(--oc-text);
+    }
+
+    .reveal h1 { font-size: 2.2em; }
+    .reveal h2 { font-size: 1.5em; margin-bottom: 0.5em; }
+    .reveal h3 { font-size: 1em; font-weight: 600; color: var(--oc-orange); }
+
+    .reveal p { line-height: 1.6; font-weight: 400; }
+    .reveal strong { color: var(--oc-orange); font-weight: 600; }
+
+    /* Scrollable slides */
+    .reveal .slides section {
+      padding: 32px 48px;
+      text-align: left;
+      overflow-y: auto;
+      max-height: 100%;
+      box-sizing: border-box;
+    }
+
+    .reveal .slides { overflow: visible; }
+
+    .accent { color: var(--oc-orange); }
+    .amber { color: var(--oc-amber); }
+    .green { color: var(--oc-green); }
+    .muted { color: var(--oc-text-muted); font-size: 0.7em; }
+    .gradient-text {
+      background: var(--oc-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(255, 107, 53, 0.15);
+      color: var(--oc-orange);
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.5em;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+    }
+
+    .reveal pre {
+      background: var(--oc-code-bg);
+      border: 1px solid var(--oc-border);
+      border-left: 3px solid var(--oc-orange);
+      border-radius: 8px;
+      padding: 16px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5em;
+      line-height: 1.6;
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .reveal code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(255, 107, 53, 0.1);
+      color: var(--oc-orange);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+
+    .reveal pre code {
+      background: none;
+      color: var(--oc-text);
+      padding: 0;
+      font-size: 1em;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .card-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: var(--oc-bg-card);
+      border: 1px solid var(--oc-border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: left;
+    }
+
+    .card h3 { margin: 0 0 6px 0; font-size: 0.65em; }
+    .card p { margin: 0; font-size: 0.52em; color: var(--oc-text-muted); line-height: 1.5; }
+    .card .icon { font-size: 1.2em; margin-bottom: 8px; display: block; }
+
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+
+    .flow-item {
+      background: var(--oc-bg-card);
+      border: 1px solid var(--oc-border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.5em;
+      font-weight: 500;
+      text-align: center;
+      min-width: 70px;
+    }
+
+    .flow-item.highlight { border-color: var(--oc-orange); background: rgba(255, 107, 53, 0.08); }
+    .flow-item.green-hl { border-color: var(--oc-green); background: rgba(34,197,94,0.08); }
+    .flow-arrow { color: var(--oc-orange); font-size: 0.7em; font-weight: 700; }
+    .flow-down { color: var(--oc-orange); font-size: 0.7em; font-weight: 700; display: block; text-align: center; margin: 4px 0; }
+
+    .demo-placeholder {
+      background: var(--oc-bg-elevated);
+      border: 2px dashed var(--oc-border);
+      border-radius: 12px;
+      padding: 40px 32px;
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .demo-placeholder .demo-icon { font-size: 2em; margin-bottom: 12px; display: block; opacity: 0.6; }
+    .demo-placeholder .demo-label { font-size: 0.6em; color: var(--oc-text-muted); font-weight: 500; }
+    .demo-placeholder .demo-desc { font-size: 0.48em; color: #555; margin-top: 6px; }
+
+    .reveal ul, .reveal ol { margin-left: 0; padding-left: 1.2em; }
+    .reveal li { font-size: 0.65em; margin-bottom: 8px; line-height: 1.5; color: #ccc; }
+    .reveal li strong { color: var(--oc-text); }
+
+    .arch-box {
+      background: var(--oc-code-bg);
+      border: 1px solid var(--oc-border);
+      border-radius: 10px;
+      padding: 18px 22px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.42em;
+      line-height: 1.7;
+      white-space: pre;
+      margin: 12px 0;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .stats { display: flex; gap: 28px; margin: 16px 0; }
+    .stat { text-align: center; }
+    .stat .number {
+      font-size: 1.6em; font-weight: 800;
+      background: var(--oc-gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      display: block; line-height: 1.2;
+    }
+    .stat .label { font-size: 0.45em; color: var(--oc-text-muted); margin-top: 4px; }
+
+    .step { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 14px; }
+    .step-num {
+      background: var(--oc-gradient); color: #000; font-weight: 800; font-size: 0.6em;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-content h3 { margin: 0 0 3px 0; font-size: 0.65em; }
+    .step-content p { margin: 0; font-size: 0.5em; color: var(--oc-text-muted); }
+
+    .qr-section { text-align: center; }
+    .qr-section img {
+      border-radius: 12px; padding: 12px; background: white;
+      box-shadow: 0 8px 32px rgba(255, 107, 53, 0.2);
+    }
+
+    .title-slide { text-align: center !important; }
+    .title-slide h1 { font-size: 2em; margin-bottom: 8px; }
+    .title-slide .subtitle { font-size: 0.65em; color: var(--oc-text-muted); font-weight: 400; margin-bottom: 24px; }
+    .title-slide .author { font-size: 0.55em; color: #aaa; margin-top: 32px; }
+    .title-slide .lobster { font-size: 1.8em; margin-bottom: 12px; display: block; }
+
+    .centered { text-align: center !important; }
+
+    .divider { width: 60px; height: 3px; background: var(--oc-gradient); border: none; border-radius: 2px; margin: 12px 0; }
+    .centered .divider { margin: 12px auto; }
+
+    /* Hide ALL default arrows/controls */
+    .reveal .controls { display: none !important; }
+    .reveal .navigate-left, .reveal .navigate-right,
+    .reveal .navigate-up, .reveal .navigate-down { display: none !important; }
+
+    .reveal .slide-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--oc-text-muted);
+      background: transparent;
+    }
+
+    .reveal .progress span { background: var(--oc-gradient); }
+
+    /* Custom dot navigation */
+    #dot-nav {
+      position: fixed;
+      bottom: 20px;
+      right: 24px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      z-index: 100;
+    }
+
+    #dot-nav .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #333;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    #dot-nav .dot.active {
+      background: var(--oc-orange);
+      width: 10px;
+      height: 10px;
+      box-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
+    }
+
+    #dot-nav .dot:hover { background: #666; }
+    #dot-nav .dot.active:hover { background: var(--oc-orange); }
+
+    .reveal .speaker-notes { font-family: 'Inter', sans-serif; }
+
+    /* Architecture diagram styles */
+    .arch-diagram {
+      background: var(--oc-code-bg);
+      border: 1px solid var(--oc-border);
+      border-radius: 12px;
+      padding: 0;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+
+    .arch-layer {
+      padding: 10px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+    }
+
+    .arch-layer:last-child { border-bottom: none; }
+
+    .arch-layer-label {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.28em;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      color: #444;
+    }
+
+    .arch-layer-label.blue { background: rgba(59,130,246,0.06); color: #5b9bf0; }
+    .arch-layer-label.orange { background: rgba(255,107,53,0.06); color: var(--oc-orange); }
+    .arch-layer-label.purple { background: rgba(167,139,250,0.06); color: #a78bfa; }
+    .arch-layer-label.green { background: rgba(34,197,94,0.06); color: #4ade80; }
+
+    .arch-layer-content {
+      margin-left: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .arch-node {
+      border: 1px solid var(--oc-border);
+      border-radius: 6px;
+      padding: 7px 14px;
+      font-size: 0.38em;
+      font-weight: 500;
+      text-align: center;
+      background: var(--oc-bg-card);
+      min-width: 80px;
+      line-height: 1.4;
+    }
+
+    .arch-node .node-sub {
+      font-size: 0.82em;
+      color: #555;
+      font-weight: 400;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .arch-node.n-channel { border-color: #3b82f6; border-left: 3px solid #3b82f6; }
+    .arch-node.n-gateway { border-color: #3b82f6; background: rgba(59,130,246,0.06); border-left: 3px solid #3b82f6; }
+    .arch-node.n-acp { border-color: var(--oc-amber); border-left: 3px solid var(--oc-amber); color: var(--oc-amber); }
+    .arch-node.n-agent { border-color: var(--oc-orange); border-left: 3px solid var(--oc-orange); }
+    .arch-node.n-tool { border-color: #a78bfa; border-left: 3px solid #a78bfa; color: #c4b5fd; }
+    .arch-node.n-output { border-color: var(--oc-green); border-left: 3px solid var(--oc-green); color: #86efac; }
+
+    .arch-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 6px;
+      color: #333;
+      font-size: 0.32em;
+    }
+
+    .arch-connector svg { width: 16px; height: 16px; }
+    .arch-connector line, .arch-connector polyline { stroke: #444; stroke-width: 1.5; fill: none; }
+    .arch-connector polyline { fill: #444; stroke: none; }
+
+    .arch-connector-v {
+      display: flex;
+      justify-content: center;
+      padding: 2px 0;
+      margin-left: 36px;
+    }
+
+    .arch-connector-v svg { width: 14px; height: 18px; }
+    .arch-connector-v line { stroke: #444; stroke-width: 1.5; stroke-dasharray: 3 2; }
+    .arch-connector-v polyline { fill: #444; stroke: none; }
+
+    .arch-connector-label {
+      font-size: 0.28em;
+      color: #444;
+      text-align: center;
+      margin-left: 36px;
+      padding: 0;
+      font-style: italic;
+    }
+
+    /* Resource links */
+    .resource-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .resource-card {
+      background: var(--oc-bg-card);
+      border: 1px solid var(--oc-border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: left;
+    }
+
+    .resource-card h3 { margin: 0 0 4px 0; font-size: 0.6em; }
+    .resource-card p { margin: 0 0 6px 0; font-size: 0.45em; color: var(--oc-text-muted); line-height: 1.5; }
+    .resource-card .url { font-size: 0.42em; color: var(--oc-orange); font-family: 'JetBrains Mono', monospace; }
+
+    /* Side-by-side architecture */
+    .arch-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .arch-compare .arch-box { margin: 0; font-size: 0.38em; }
+    .arch-label {
+      font-size: 0.5em;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .arch-label .pill {
+      font-size: 0.8em;
+      background: rgba(255,107,53,0.15);
+      color: var(--oc-orange);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* Photo styles */
+    .profile-photo {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 2px solid var(--oc-border);
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- SLIDE 1: Title -->
+      <section style="display: flex !important; align-items: center; height: 100%; padding: 60px 64px; text-align: left;">
+        <div>
+          <span style="font-size: 2.8em; display: block; margin-bottom: 20px;">🦞</span>
+          <h1 style="font-size: 2.8em; margin-bottom: 8px; text-align: left;">Introduction to<br><span class="gradient-text">OpenClaw</span></h1>
+          <h2 style="font-size: 1.4em; font-weight: 600; color: #999; margin-bottom: 40px; text-align: left;">and How to Use It as Your <span class="gradient-text">Remote Coding Buddy</span></h2>
+          <p style="font-size: 0.55em; color: #666; margin-bottom: 6px;">OpenClaw CDO Meetup &middot; March 20, 2026</p>
+          <p style="font-size: 0.6em; color: #666;">Julius Baliling</p>
+        </div>
+        <aside class="notes">
+          Welcome everyone. Today I'll introduce you to OpenClaw and show you how I use it as my remote coding buddy — shipping code from my phone.
+        </aside>
+      </section>
+
+      <!-- SLIDE 2: About Me -->
+      <section>
+        <span class="tag">About Me</span>
+        <div style="display: flex; gap: 32px; align-items: flex-start;">
+          <div style="flex: 0 0 140px; text-align: center;">
+            <img src="/profile-photo.png" alt="Julius Baliling" class="profile-photo">
+          </div>
+          <div style="flex: 1;">
+            <h2 style="margin-top: 0;">Julius Baliling</h2>
+            <hr class="divider">
+            <p style="font-size:0.7em; color:#ccc; margin-bottom: 20px;">
+              <strong>Software Engineer</strong>
+            </p>
+            <div style="display: flex; gap: 12px;">
+              <div class="card" style="flex: 1; text-align: center; padding: 14px;">
+                <span class="icon" style="opacity: 0.4;">⬜</span>
+                <h3>Flying Tigers Express</h3>
+                <p>Full Stack Engineer</p>
+              </div>
+              <div class="card" style="flex: 1; text-align: center; padding: 14px;">
+                <span class="icon" style="opacity: 0.4;">⬜</span>
+                <h3>Nurture Your Leads</h3>
+                <p>Lead Engineer</p>
+              </div>
+              <div class="card" style="flex: 1; text-align: center; padding: 14px;">
+                <span class="icon" style="opacity: 0.4;">⬜</span>
+                <h3>Jujulabs</h3>
+                <p>AI Engineering</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">
+          Quick intro — I'm Julius, a software engineer. I work as a full stack engineer at Flying Tigers Express, lead engineer at Nurture Your Leads, and I run Jujulabs where I do AI engineering work. (PAUSE HERE: Ask audience — "How many of you have used OpenClaw before?")
+        </aside>
+      </section>
+
+      <!-- SLIDE 3: The Pain -->
+      <section class="centered">
+        <span class="tag">The Pain</span>
+        <h2>Work doesn't stop when<br>you leave your laptop</h2>
+        <hr class="divider">
+        <div class="card-grid" style="max-width: 650px; margin: 16px auto 0;">
+          <div class="card">
+            <span class="icon">🔄</span>
+            <h3>PRs Need Reviewing</h3>
+            <p>Team is blocked waiting for your review and approval</p>
+          </div>
+          <div class="card">
+            <span class="icon">🐛</span>
+            <h3>Bugs Need Fixing</h3>
+            <p>Production issues don't wait for office hours</p>
+          </div>
+          <div class="card">
+            <span class="icon">🚀</span>
+            <h3>Features Need Shipping</h3>
+            <p>Deadlines hit whether you're at your desk or not</p>
+          </div>
+          <div class="card">
+            <span class="icon">💻</span>
+            <h3>You Always Need a Laptop</h3>
+            <p>...or do you?</p>
+          </div>
+        </div>
+        <aside class="notes">
+          As someone managing multiple projects — PRs, bugs, features — the work never stops. And you always need to open a laptop to get these things done.
+        </aside>
+      </section>
+
+      <!-- SLIDE 4: The Solution -->
+      <section class="centered">
+        <span class="tag">The Solution</span>
+        <h2>So I built <span class="accent">"Rafa"</span></h2>
+        <hr class="divider">
+        <p style="font-size: 0.6em; color: #aaa; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.7;">
+          An always-on coding buddy I can message on the go.<br>
+          I describe what I need. It reads the project resources, writes the code,<br>
+          commits, pushes, and creates <strong>ready-made PRs with screenshots</strong>.<br>
+          All following my actual development workflows.
+        </p>
+        <p style="font-size: 0.7em; color: #ccc; margin-top: 28px; max-width: 600px; margin-left: auto; margin-right: auto;">
+          Now I have a buddy that codes while I <span class="accent">walk</span>, <span class="accent">talk</span>, <span class="accent">eat</span>,<br>and occasionally <span class="accent">touch grass</span> 🌱
+        </p>
+        <p style="font-size: 0.55em; color: #666; margin-top: 20px;">
+          Powered by <span class="accent">OpenClaw</span> 🦞
+        </p>
+        <aside class="notes">
+          So I built "Rafa" — an always-on coding buddy I can message on the go. It reads the project resources, writes code, commits, pushes, creates PRs with screenshots. Now I have a buddy that codes while I walk, talk, eat, and occasionally touch grass. Powered by OpenClaw.
+        </aside>
+      </section>
+
+      <!-- SLIDE 5: What is OpenClaw? -->
+      <section>
+        <span class="tag">Onboarding</span>
+        <h2>What is <span class="accent">OpenClaw</span>? 🦞</h2>
+        <hr class="divider">
+        <p style="font-size: 0.6em; color: #ccc; margin-bottom: 14px;">
+          An <strong>open-source personal AI platform</strong> that runs on your machine and connects to everything.
+        </p>
+        <div class="card-grid">
+          <div class="card">
+            <span class="icon">🧠</span>
+            <h3>Skills-First</h3>
+            <p>Define capabilities as markdown files. Your AI learns by reading SKILL.md files.</p>
+          </div>
+          <div class="card">
+            <span class="icon">🤖</span>
+            <h3>Multi-Agent</h3>
+            <p>Run multiple specialized agents — each with their own personality and workspace.</p>
+          </div>
+          <div class="card">
+            <span class="icon">💬</span>
+            <h3>Multi-Channel</h3>
+            <p>Telegram, Discord, web UI — talk to your agents from anywhere.</p>
+          </div>
+          <div class="card">
+            <span class="icon">🔓</span>
+            <h3>Open Source</h3>
+            <p>68k+ GitHub stars. MIT licensed. Runs locally or on any server.</p>
+          </div>
+        </div>
+        <p style="font-size: 0.55em; color: #aaa; margin-top: 18px; text-align: center; font-style: italic;">
+          Your AI, supercharged with superpowers &mdash; skills you define, tools you connect, that can run 24/7.
+        </p>
+        <aside class="notes">
+          For those new to OpenClaw — it's an open-source AI platform. Think of it as your AI, supercharged with superpowers — skills you define, tools you connect, that can run 24/7.
+        </aside>
+      </section>
+
+      <!-- SLIDE 6: Getting Started -->
+      <section>
+        <span class="tag">Quick Start</span>
+        <h2>Getting Started</h2>
+        <hr class="divider">
+        <p style="font-size: 0.6em; color: #ccc; margin-bottom: 10px;">
+          <strong>You need a server</strong> &mdash; use a VPS. Hostinger is the easiest with one-click setup for OpenClaw.
+        </p>
+        <div class="demo-placeholder" style="padding: 20px 16px; margin-bottom: 14px;">
+          <span class="demo-icon" style="font-size: 1.2em;">🖥️</span>
+          <p class="demo-label">SCREENSHOT: Hostinger one-click OpenClaw setup</p>
+        </div>
+        <pre><code># Install OpenClaw
+npm install -g openclaw
+
+# Set up your first workspace
+openclaw onboard
+
+# Start the gateway
+openclaw start</code></pre>
+        <div class="demo-placeholder" style="padding: 20px 16px; margin-top: 14px; margin-bottom: 14px;">
+          <span class="demo-icon" style="font-size: 1.2em;">🚀</span>
+          <p class="demo-label">SCREENSHOT: OpenClaw onboarding UI</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>📝 SKILL.md</h3>
+            <p>Teach your agent new abilities. Each skill is a markdown file with instructions.</p>
+          </div>
+          <div class="card">
+            <h3>👤 SOUL.md</h3>
+            <p>Define your agent's personality, behavior rules, and communication style.</p>
+          </div>
+          <div class="card">
+            <h3>🤖 AGENTS.md</h3>
+            <p>Configure multi-agent orchestration and delegation rules.</p>
+          </div>
+          <div class="card">
+            <h3>🔧 TOOLS.md</h3>
+            <p>Server info, integrations, API keys, and available CLI tools.</p>
+          </div>
+        </div>
+        <aside class="notes">
+          To get started you need a server — a VPS works great. Hostinger has a one-click setup for OpenClaw. Then it's 3 commands: install, onboard, start. The key files: SKILL.md teaches abilities, SOUL.md defines personality, AGENTS.md sets up multi-agent orchestration.
+        </aside>
+      </section>
+
+      <!-- SLIDE 7: Skills & Agents -->
+      <section>
+        <span class="tag">Core Concepts</span>
+        <h2>Skills &amp; Agents</h2>
+        <hr class="divider">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+          <div>
+            <h3 style="margin-bottom: 8px;">Skills = Abilities</h3>
+            <pre><code># ~/.openclaw/skills/pr-review/SKILL.md
+
+# PR Review Skill
+Review pull requests with focus on:
+- Code quality and patterns
+- Security vulnerabilities
+- Test coverage
+
+## Steps
+1. Fetch PR diff via `gh pr diff`
+2. Analyze each changed file
+3. Write structured assessment
+4. Post review comments</code></pre>
+          </div>
+          <div>
+            <h3 style="margin-bottom: 8px;">Agents = Specialists</h3>
+            <pre><code># openclaw.json → agents.list
+
+{
+  "id": "software-engineer",
+  "name": "Ciel",
+  "model": "gpt-5.3-codex",
+  "identity": {
+    "name": "Ciel",
+    "theme": "Moonlit orchestrator",
+    "emoji": "🌙"
+  },
+  "tools": { "profile": "full" }
+}</code></pre>
+          </div>
+        </div>
+        <p style="font-size: 0.5em; color: var(--oc-text-muted); margin-top: 14px;">
+          OpenClaw comes with <strong style="color: var(--oc-text);">built-in skills</strong> you can enable during onboarding &mdash; favorites: <strong>agent-config</strong> and <strong>skill-creator</strong>. You can also create your own skills. Browse more on <strong style="color: var(--oc-orange);">ClawHub</strong> 🏪
+        </p>
+        <aside class="notes">
+          Skills are markdown files that teach your agent what to do. Agents are configured in JSON with their own model, personality, and tools. OpenClaw comes with built-in skills you can enable during onboarding — agent-config and skill-creator are the best to start with. You can also create your own skills and browse community skills on ClawHub.
+        </aside>
+      </section>
+
+      <!-- SLIDE 8: Architecture — Simple Coding Buddy -->
+      <section>
+        <span class="tag">Architecture</span>
+        <h2>The <span class="accent">Coding Buddy</span> Setup</h2>
+        <hr class="divider">
+        <p style="font-size: 0.55em; color: #aaa; margin-bottom: 10px;">A simple, workable architecture anyone can start with.</p>
+        <div class="arch-diagram">
+
+          <!-- Layer 1: Client -->
+          <div class="arch-layer">
+            <div class="arch-layer-label blue">Client</div>
+            <div class="arch-layer-content">
+              <div class="arch-node n-channel">📱 Telegram / Discord<span class="node-sub">your messaging app</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-gateway">OpenClaw Gateway<span class="node-sub">receives &amp; routes messages</span></div>
+            </div>
+          </div>
+
+          <!-- Connector -->
+          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
+          <div class="arch-connector-label">message routed to your agent</div>
+
+          <!-- Layer 2: Brain -->
+          <div class="arch-layer">
+            <div class="arch-layer-label orange">Brain</div>
+            <div class="arch-layer-content">
+              <div class="arch-node n-agent">🤖 Your Agent<span class="node-sub">GPT-5.x / Claude (OAuth)</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-tool">📝 SKILL.md + SOUL.md<span class="node-sub">reads skills &amp; personality</span></div>
+            </div>
+          </div>
+
+          <!-- Connector -->
+          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
+          <div class="arch-connector-label">reads project, writes code, runs tests, commits</div>
+
+          <!-- Layer 3: Execution -->
+          <div class="arch-layer">
+            <div class="arch-layer-label purple">Exec</div>
+            <div class="arch-layer-content">
+              <div class="arch-node n-tool">git pull<span class="node-sub">~/Projects/*</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-tool">Read &amp; Code<span class="node-sub">project resources</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-tool">Test &amp; Commit<span class="node-sub">lint, test, push</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-tool">gh pr create<span class="node-sub">+ screenshots</span></div>
+            </div>
+          </div>
+
+          <!-- Connector -->
+          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
+          <div class="arch-connector-label">result delivered back via your channel</div>
+
+          <!-- Layer 4: Output -->
+          <div class="arch-layer">
+            <div class="arch-layer-label green">Output</div>
+            <div class="arch-layer-content">
+              <div class="arch-node n-output">✅ PR Ready for Review<span class="node-sub">code diff, screenshots, description</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-channel">📱 Review on your phone<span class="node-sub">approve / request changes</span></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="stats" style="justify-content: center; margin-top: 10px;">
+          <div class="stat"><span class="number">Any VPS</span><span class="label">Hardware</span></div>
+          <div class="stat"><span class="number">~$20/mo</span><span class="label">Subscription only</span></div>
+          <div class="stat"><span class="number">~2 min</span><span class="label">End to end</span></div>
+        </div>
+        <aside class="notes">
+          Here's the simple setup anyone can start with. Message enters via Telegram or Discord, hits the Gateway, routes to your agent. The agent reads your skills, reads the project, writes code, tests, commits, pushes, creates a PR. Result flows back to your phone. Any VPS, about $20/mo, 2 minutes end to end.
+        </aside>
+      </section>
+
+      <!-- SLIDE 9: My Setup -->
+      <section>
+        <span class="tag">My Setup</span>
+        <h2>How I Run <span class="accent">Mine</span></h2>
+        <hr class="divider">
+        <div class="arch-diagram">
+
+          <!-- Layer 1: Client -->
+          <div class="arch-layer">
+            <div class="arch-layer-label blue">Client</div>
+            <div class="arch-layer-content">
+              <div class="arch-node n-channel">📱 Telegram + Discord<span class="node-sub">multi-channel</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-gateway">OpenClaw Gateway<span class="node-sub">ws://localhost:19000</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-acp">ACP Runtime<span class="node-sub">acpx &middot; 8 sessions</span></div>
+            </div>
+          </div>
+
+          <!-- Connector -->
+          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
+          <div class="arch-connector-label">agent bindings route channel → agent</div>
+
+          <!-- Layer 2: Agents -->
+          <div class="arch-layer">
+            <div class="arch-layer-label orange">Agents</div>
+            <div class="arch-layer-content">
+              <div class="arch-node n-agent">🌙 Ciel<span class="node-sub">Orchestrator &middot; GPT-5.1 Mini</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-agent" style="border-color: var(--oc-amber); border-left-color: var(--oc-amber);">⚡ Rafa<span class="node-sub">Engineer &middot; GPT-5.3 Codex</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-tool">🧠 Claude Code<span class="node-sub">Opus 4.6 &middot; does all work</span></div>
+            </div>
+          </div>
+
+          <!-- Connector -->
+          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
+          <div class="arch-connector-label">reads project resources, writes code, runs tests, commits</div>
+
+          <!-- Layer 3: Execution -->
+          <div class="arch-layer">
+            <div class="arch-layer-label purple">Exec</div>
+            <div class="arch-layer-content">
+              <div class="arch-node n-tool">git clone / pull<span class="node-sub">~/Projects/*</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-tool">Code &amp; Test<span class="node-sub">edit, lint, test</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-tool">git commit + push<span class="node-sub">signed commits</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-tool">gh pr create<span class="node-sub">+ screenshots</span></div>
+            </div>
+          </div>
+
+          <!-- Connector -->
+          <div class="arch-connector-v"><svg><line x1="7" y1="0" x2="7" y2="14"/><polyline points="4,11 7,16 10,11"/></svg></div>
+          <div class="arch-connector-label">result delivered back via Telegram</div>
+
+          <!-- Layer 4: Output -->
+          <div class="arch-layer">
+            <div class="arch-layer-label green">Output</div>
+            <div class="arch-layer-content">
+              <div class="arch-node n-output">✅ PR Ready for Review<span class="node-sub">code diff, screenshots, description</span></div>
+              <div class="arch-connector"><svg><line x1="0" y1="8" x2="16" y2="8"/><polyline points="12,5 16,8 12,11"/></svg></div>
+              <div class="arch-node n-channel">📱 Julius reviews on phone<span class="node-sub">approve / request changes</span></div>
+            </div>
+          </div>
+
+        </div>
+        <div class="stats" style="justify-content: center; margin-top: 10px;">
+          <div class="stat"><span class="number">M1 Mac</span><span class="label">Hardware (spare, 24/7)</span></div>
+          <div class="stat"><span class="number">37+6</span><span class="label">Custom + bundled skills</span></div>
+          <div class="stat"><span class="number">8</span><span class="label">ACP concurrent sessions</span></div>
+        </div>
+        <aside class="notes">
+          Here's my advanced setup. Multi-channel through Telegram and Discord, ACP for 8 concurrent sessions. Ciel orchestrates, delegates to Rafa who spawns Claude Code for the heavy lifting. Running on a spare M1 MacBook Pro 24/7 with 37 custom skills plus 6 bundled. You don't need to start here — start simple, evolve.
+        </aside>
+      </section>
+
+      <!-- SLIDE 10: Beyond Chat -->
+      <section>
+        <span class="tag">Beyond Chat</span>
+        <h2>It works even when<br>you <span class="accent">don't ask</span></h2>
+        <hr class="divider">
+        <div class="card-grid-3">
+          <div class="card">
+            <span class="icon">☀️</span>
+            <h3>Daily Briefing</h3>
+            <p>Creates daily note, gathers tasks, checks commits, AI news feed</p>
+          </div>
+          <div class="card">
+            <span class="icon">💓</span>
+            <h3>Heartbeat</h3>
+            <p>Every 30 min: checks server health, stale tasks, memory maintenance</p>
+          </div>
+          <div class="card">
+            <span class="icon">🔄</span>
+            <h3>Self-Correction</h3>
+            <p>Detects mistakes, files correction tickets, updates its own memory</p>
+          </div>
+        </div>
+        <p style="font-size: 0.52em; color: var(--oc-text-muted); margin-top: 16px; text-align: center;">
+          Configured via <code>cron-jobs.json</code> — scheduled tasks that run autonomously
+        </p>
+        <aside class="notes">
+          The buddy doesn't just respond to messages. It has cron jobs — daily briefings, health checks, self-correction loops. It's actively managing itself.
+        </aside>
+      </section>
+
+      <!-- SLIDE 11: In Production -->
+      <section>
+        <span class="tag">In Production</span>
+        <h2>What it looks like in the wild</h2>
+        <hr class="divider">
+        <div class="card-grid">
+          <div class="card" style="border-left: 3px solid var(--oc-green);">
+            <div class="demo-placeholder" style="padding: 20px 16px; margin-bottom: 10px; border-width: 1px;">
+              <span style="font-size: 1.2em; display: block; margin-bottom: 6px;">🌍</span>
+              <p class="demo-label" style="font-size: 0.5em;">SCREENSHOT: Live Vercel deploy</p>
+            </div>
+            <h3>Prompt &rarr; Production</h3>
+            <p>One message &rarr; site built &rarr; pushed to GitHub &rarr; auto-deployed on Vercel. Live URL in 2 minutes.</p>
+          </div>
+          <div class="card" style="border-left: 3px solid #3b82f6;">
+            <div class="demo-placeholder" style="padding: 20px 16px; margin-bottom: 10px; border-width: 1px;">
+              <span style="font-size: 1.2em; display: block; margin-bottom: 6px;">📱</span>
+              <p class="demo-label" style="font-size: 0.5em;">SCREENSHOT: Real coding task flow</p>
+            </div>
+            <h3>Daily Driver for Real Work</h3>
+            <p>Bug fix on FTE: message Rafa &rarr; reads the project, writes code, creates PR with screenshots</p>
+          </div>
+          <div class="card" style="border-left: 3px solid var(--oc-amber);">
+            <div class="demo-placeholder" style="padding: 20px 16px; margin-bottom: 10px; border-width: 1px;">
+              <span style="font-size: 1.2em; display: block; margin-bottom: 6px;">☀️</span>
+              <p class="demo-label" style="font-size: 0.5em;">SCREENSHOT: Daily briefing</p>
+            </div>
+            <h3>Autonomous Operations</h3>
+            <p>Daily briefing: open tasks, yesterday's commits, AI news feed &mdash; without being asked</p>
+          </div>
+          <div class="card" style="border-left: 3px solid #a78bfa;">
+            <div class="demo-placeholder" style="padding: 20px 16px; margin-bottom: 10px; border-width: 1px;">
+              <span style="font-size: 1.2em; display: block; margin-bottom: 6px;">🤖</span>
+              <p class="demo-label" style="font-size: 0.5em;">SCREENSHOT: Multi-agent delegation</p>
+            </div>
+            <h3>Orchestrated Agents</h3>
+            <p>Ciel receives task &rarr; routes to Rafa &rarr; Rafa spawns Claude Code &rarr; result flows back</p>
+          </div>
+        </div>
+        <aside class="notes">
+          These are real screenshots from my daily workflow. Top-left is a live site deployed from a single message. Top-right is a real coding task on my actual client project. Bottom-left is the autonomous daily briefing. Bottom-right shows the multi-agent chain in action.
+        </aside>
+      </section>
+
+      <!-- SLIDE 12: Live Demo -->
+      <section class="centered">
+        <span class="tag">Live Demo</span>
+        <h2>One prompt. One landing page.<br><span class="accent">Live on the internet.</span> 🎬</h2>
+        <hr class="divider">
+        <div class="demo-placeholder" style="max-width: 700px; margin: 24px auto; padding: 60px 32px;">
+          <span class="demo-icon">📱 &rarr; ⚡ &rarr; 🌍</span>
+          <p class="demo-label">VIDEO DEMO</p>
+          <p class="demo-desc" style="margin-top: 8px;">~2 minutes: prompt to production</p>
+          <p class="demo-desc" style="margin-top: 20px; color: var(--oc-orange); font-size: 0.42em;">Backup: pre-recorded screen capture ready</p>
+        </div>
+        <aside class="notes">
+          LIVE DEMO / VIDEO. Send the prompt, watch Rafa work — reading the project, writing code, committing, pushing, deploying. From prompt to production in about 2 minutes.
+        </aside>
+      </section>
+
+      <!-- SLIDE 13: Thank You -->
+      <section class="centered">
+        <span style="font-size: 1.5em;">🦞</span>
+        <h2>Thank you!</h2>
+        <hr class="divider">
+        <p style="font-size: 0.6em; color: #ccc; margin-bottom: 24px;">
+          Scan to learn more
+        </p>
+        <div class="qr-section">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://jujulabs.co&bgcolor=ffffff&color=000000&format=png" alt="QR Code - Jujulabs" width="180" height="180">
+        </div>
+        <p style="font-size: 0.5em; color: var(--oc-text-muted); margin-top: 20px;">
+          <strong style="color: var(--oc-text);">Julius Baliling</strong><br>
+          Software Engineer<br>
+          <span class="accent">jujulabs.co</span>
+        </p>
+        <aside class="notes">
+          Thank you! Scan the QR to visit jujulabs.co. Happy to chat about the setup, OpenClaw, or building with AI agents.
+        </aside>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Custom dot navigation -->
+  <div id="dot-nav"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: false,
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+      transition: 'slide',
+      transitionSpeed: 'default',
+      backgroundTransition: 'fade',
+      center: false,
+      progress: true,
+      controls: false,
+      showNotes: false,
+    });
+
+    // Build dot navigation
+    const dotNav = document.getElementById('dot-nav');
+    const totalSlides = Reveal.getTotalSlides();
+
+    for (let i = 0; i < totalSlides; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => Reveal.slide(i));
+      dotNav.appendChild(dot);
+    }
+
+    Reveal.on('slidechanged', (event) => {
+      const dots = dotNav.querySelectorAll('.dot');
+      dots.forEach((d, i) => d.classList.toggle('active', i === event.indexh));
+    });
+  </script>
+</body>
+</html>
