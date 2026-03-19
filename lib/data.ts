@@ -81,10 +81,34 @@ export const pastWork: PastWork[] = [
     tech: ["React Native", "OpenAI", "PostgreSQL"],
   },
   {
-    name: "Visual Note",
+    name: "Bidpilot AI",
     description:
-      "AI tool that extracts and structures information from images into actionable, organized notes.",
-    tech: ["Next.js", "OpenAI", "Tailwind CSS"],
+      "AI-powered tender analysis platform — upload bid documents, extract requirements, and generate readiness reports.",
+    tech: ["Next.js", "Firebase", "OpenAI"],
+  },
+];
+
+export type Post = {
+  title: string;
+  description: string;
+  tag: string;
+  date: string;
+};
+
+export const posts: Post[] = [
+  {
+    title: "Building OpenClaw — a self-hosted AI agent platform",
+    description:
+      "Running 3 persistent AI agents + 9 on-demand sub-agents on an M1 server. Orchestration, memory systems, and autonomous coding — all self-hosted.",
+    tag: "Agentic Systems",
+    date: "2026-03",
+  },
+  {
+    title: "Shipping a Personal OS with Claude Code",
+    description:
+      "An Obsidian vault that runs my entire workflow — daily logging, billing sync, task management, and self-learning — all driven by Claude Code skills.",
+    tag: "Automation",
+    date: "2026-02",
   },
 ];
 

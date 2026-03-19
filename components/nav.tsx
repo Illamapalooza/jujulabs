@@ -3,9 +3,10 @@
 import { useEffect, useState } from "react";
 
 const links = [
-  { label: "Services", href: "#services" },
-  { label: "Work", href: "#work" },
-  { label: "Contact", href: "#contact" },
+  { label: "Services", href: "/#services" },
+  { label: "Work", href: "/#work" },
+  { label: "Feed", href: "/feed" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export function Nav() {
@@ -27,7 +28,7 @@ export function Nav() {
     >
       <nav className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
         <a
-          href="#"
+          href="/"
           className="font-mono text-sm font-semibold tracking-tight"
         >
           jujulabs
