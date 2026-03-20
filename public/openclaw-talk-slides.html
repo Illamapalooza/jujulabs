@@ -494,7 +494,7 @@
             <h2 style="margin-top: 0; font-size: 1.8em;">Julius Baliling</h2>
             <hr class="divider">
             <p style="font-size: 0.85em; color:#ccc; margin-bottom: 20px;">
-              <strong>Software Engineer</strong> &middot; Freelancing for 3+ years
+              <strong>Software Engineer</strong> @ Jujulabs
             </p>
             <p style="font-size: 0.68em; color: #aaa; line-height: 1.8; margin: 0 0 28px 0;">
               Experienced working across multiple client projects &mdash;<br>
@@ -569,12 +569,8 @@
               Powered by <span class="accent">OpenClaw</span> 🦞
             </p>
           </div>
-          <div style="flex: 0 0 300px;">
-            <div class="demo-placeholder" style="padding: 40px 24px; height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-              <span style="font-size: 3em; display: block; margin-bottom: 12px; opacity: 0.5;">🤖</span>
-              <p class="demo-label">IMAGE: Rafa</p>
-              <p class="demo-desc">Replace with Rafa avatar</p>
-            </div>
+          <div style="flex: 0 0 300px; display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 8em; opacity: 0.9;">⚡</span>
           </div>
         </div>
         <aside class="notes">
@@ -623,6 +619,8 @@
             <img src="/demo-telegram-conv.png" alt="Telegram conversation with Rafa" style="width: 100%; border-radius: 8px; border: 1px solid var(--oc-border); box-shadow: 0 4px 24px rgba(0,0,0,0.3);">
             <img src="/demo-telegram-pr.png" alt="PR ready message on Telegram" style="width: 100%; border-radius: 8px; border: 1px solid var(--oc-border); box-shadow: 0 4px 24px rgba(0,0,0,0.3);">
             <img src="/demo-github-pr.png" alt="GitHub PR with screenshots" style="width: 100%; border-radius: 8px; border: 1px solid var(--oc-border); box-shadow: 0 4px 24px rgba(0,0,0,0.3);">
+            <img src="/demo-rafa-pr-review.png" alt="Rafa PR review on Telegram" style="width: 100%; border-radius: 8px; border: 1px solid var(--oc-border); box-shadow: 0 4px 24px rgba(0,0,0,0.3);">
+            <img src="/demo-rafa-bugfix.png" alt="Rafa bugfix from ClickUp ticket" style="width: 100%; border-radius: 8px; border: 1px solid var(--oc-border); box-shadow: 0 4px 24px rgba(0,0,0,0.3);">
           </div>
         </div>
         <aside class="notes">
@@ -814,8 +812,8 @@ Review pull requests with focus on:
 }</code></pre>
           </div>
         </div>
-        <p style="font-size: 0.5em; color: var(--oc-text-muted); margin-top: 14px;">
-          OpenClaw comes with <strong style="color: var(--oc-text);">built-in skills</strong> you can enable during onboarding &mdash; favorites: <strong>agent-config</strong> and <strong>skill-creator</strong>. You can also create your own skills. Browse more on <strong style="color: var(--oc-orange);">ClawHub</strong> 🏪
+        <p style="font-size: 0.58em; color: var(--oc-text-muted); margin-top: 14px;">
+          OpenClaw comes with <strong style="color: var(--oc-text);">built-in skills</strong> you can enable during onboarding. For the coding buddy, I use <strong style="color: var(--oc-orange);">Compound Engineering</strong> skill packages &mdash; PR review, QA, DevOps, and research skills that plug right in. Browse more on <strong style="color: var(--oc-orange);">ClawHub</strong> 🏪
         </p>
         <aside class="notes">
           Skills are markdown files that teach your agent what to do. Agents are configured in JSON with their own model, personality, and tools. OpenClaw comes with built-in skills — agent-config and skill-creator are the best to start with.
@@ -1100,7 +1098,7 @@ Review pull requests with focus on:
               <div style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0;">
                 <div style="background: rgba(255,159,28,0.12); border: 1px solid rgba(255,159,28,0.3); border-radius: 8px; padding: 8px 12px; text-align: center; width: 100%;">
                   <p style="font-size: 0.32em; margin: 0; font-weight: 700; color: var(--oc-amber);">🌙 RAFA <span style="font-weight: 400; font-size: 0.8em; color: var(--oc-text-muted);">Orchestrator</span></p>
-                  <p style="font-size: 0.18em; margin: 2px 0 0; color: var(--oc-text-muted);">GPT-5.1 Codex Mini · routes &amp; delegates</p>
+                  <p style="font-size: 0.18em; margin: 2px 0 0; color: var(--oc-text-muted);">GPT-5.4 · routes &amp; delegates</p>
                   <div style="display: flex; gap: 3px; justify-content: center; margin-top: 4px; flex-wrap: wrap;">
                     <span style="font-size: 0.16em; background: rgba(255,159,28,0.15); color: var(--oc-amber); padding: 2px 5px; border-radius: 3px;">SOUL.md</span>
                     <span style="font-size: 0.16em; background: rgba(255,159,28,0.15); color: var(--oc-amber); padding: 2px 5px; border-radius: 3px;">AGENTS.md</span>
@@ -1176,7 +1174,7 @@ Review pull requests with focus on:
         </div>
 
         <aside class="notes">
-          Here's my actual setup focused on the coding buddy flow. Rafa is the orchestrator running on GPT-5.1 Codex Mini — he routes tasks and delegates coding work to Ciel, the software engineer agent. Ciel uses GPT-5.3 Codex as the driver which spawns Claude Code Opus 4.6 to do all the actual work — reading code, writing code, running tests, committing, pushing, and creating PRs. All running on a spare M1 MacBook Pro 24/7 with 37 custom skills, a local Gemma 3 4B model for heartbeats, and 3 project repos.
+          Here's my actual setup focused on the coding buddy flow. Rafa is the orchestrator running on GPT-5.4 — he routes tasks and delegates coding work to Ciel, the software engineer agent. Ciel uses GPT-5.3 Codex as the driver which spawns Claude Code Opus 4.6 to do all the actual work — reading code, writing code, running tests, committing, pushing, and creating PRs. All running on a spare M1 MacBook Pro 24/7 with 37 custom skills, a local Gemma 3 4B model for heartbeats, and 3 project repos.
         </aside>
       </section>
 
@@ -1217,16 +1215,16 @@ Review pull requests with focus on:
 
       <!-- SLIDE 11: Live Demo -->
       <section class="centered">
-        <span class="tag">Live Demo</span>
-        <h2>One prompt. One landing page.<br><span class="accent">Live on the internet.</span> 🎬</h2>
+        <span class="tag">Demo</span>
+        <h2>A prompt. A landing page.<br><span class="accent">Live on the internet.</span></h2>
         <hr class="divider">
         <div style="max-width: 600px; margin: 24px auto; text-align: center;">
           <img src="kennko-logo.png" alt="Kennko Coffee" style="max-width: 280px; margin: 0 auto 16px; display: block; border-radius: 12px;">
           <img src="kennko-banner.png" alt="Kennko Coffee Banner" style="width: 100%; border-radius: 8px; margin-bottom: 16px;">
-          <p style="font-size: 0.52em; color: var(--oc-text-muted); margin: 0;">Building a branding page for a local coffee shop — from phone prompt to production</p>
+          <p style="font-size: 0.52em; color: var(--oc-text-muted); margin: 0;">Before coming here, I had Rafa build a landing page for Kennko Coffee</p>
         </div>
         <aside class="notes">
-          LIVE DEMO. I'll send a prompt from my phone to build a branding page for Kennko Coffee, a local cafe. Watch the agent read the brand assets, generate the landing page, commit, push, and deploy — all live. From prompt to production.
+          Before coming here, I sent a prompt to Rafa to build a landing page for Kennko Coffee. Let me show you the conversation and the output — from a single prompt on my phone to a deployed page on the internet.
         </aside>
       </section>
 
