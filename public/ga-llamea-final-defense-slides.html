@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GA-LLaMEA — Final Thesis Defense</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<style>
+/* ─── DESIGN SYSTEM ─── */
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --accent: #0f172a;
+  --blue: #3b82f6;
+  --blue-soft: #eff6ff;
+  --blue-border: #bfdbfe;
+  --amber: #f59e0b;
+  --amber-soft: #fffbeb;
+  --amber-border: #fde68a;
+  --green: #10b981;
+  --green-soft: #ecfdf5;
+  --green-border: #a7f3d0;
+  --red-soft: #fef2f2;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+
+/* ─── BASE ─── */
+.reveal-viewport { background: var(--bg); }
+.reveal {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 24px;
+  color: var(--text);
+  font-weight: 400;
+}
+.reveal h1, .reveal h2, .reveal h3 {
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+.reveal h1 { font-size: 2em; }
+.reveal h2 { font-size: 1.5em; margin-bottom: 0.4em; }
+.reveal h3 { font-size: 1em; font-weight: 600; }
+.reveal p { line-height: 1.6; margin-bottom: 0.5em; }
+.reveal ul, .reveal ol { line-height: 1.6; }
+.reveal li { margin-bottom: 0.25em; }
+.reveal strong { color: var(--accent); font-weight: 600; }
+.reveal em { color: var(--text-secondary); }
+
+/* ─── SLIDE LAYOUT ─── */
+.reveal section {
+  text-align: left;
+  padding: 48px 64px;
+  overflow-y: auto;
+  max-height: 100%;
+  box-sizing: border-box;
+}
+
+/* ─── PAGE INDICATOR ─── */
+#page-indicator {
+  position: fixed;
+  bottom: 18px;
+  right: 70px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  opacity: 0.5;
+  z-index: 100;
+  font-family: 'DM Mono', monospace;
+}
+.dark-indicator #page-indicator { color: rgba(255,255,255,0.4); }
+
+/* ─── TAG LABEL ─── */
+.tag {
+  display: inline-block;
+  font-size: 0.5em;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  border: 1px solid var(--blue-border);
+}
+.tag.amber { background: var(--amber-soft); color: #b45309; border-color: var(--amber-border); }
+.tag.green { background: var(--green-soft); color: #047857; border-color: var(--green-border); }
+.tag.muted { background: var(--border-light); color: var(--text-secondary); border-color: var(--border); }
+
+/* ─── DIVIDER ─── */
+hr.divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border) 0%, transparent 100%);
+  margin: 8px 0 20px 0;
+}
+
+/* ─── TABLES ─── */
+.reveal table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.75em;
+  margin: 12px 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+.reveal table th {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.92em;
+  letter-spacing: 0.01em;
+}
+.reveal table td {
+  padding: 9px 14px;
+  border-top: 1px solid var(--border-light);
+  vertical-align: top;
+  background: var(--surface);
+}
+.reveal table tr:first-child td { border-top: none; }
+.reveal table.compact { font-size: 0.68em; }
+.reveal table.compact td, .reveal table.compact th { padding: 6px 10px; }
+.reveal table tr.highlight td { background: var(--blue-soft); }
+
+/* ─── CODE ─── */
+.reveal pre {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--radius-sm);
+  padding: 14px 18px;
+  font-size: 0.62em;
+  margin: 10px 0;
+  box-shadow: var(--shadow-sm);
+}
+.reveal code { font-family: 'DM Mono', monospace; font-size: 0.88em; }
+.reveal pre code { font-size: 1em; line-height: 1.55; }
+.reveal p code, .reveal li code {
+  background: var(--border-light);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 0.84em;
+  color: var(--accent);
+}
+
+/* ─── CARDS ─── */
+.card-grid { display: grid; gap: 14px; margin: 14px 0; }
+.card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+.card-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.card-grid.cols-4 { grid-template-columns: 1fr 1fr; gap: 10px; }
+.card-grid.cols-4 .card { padding: 14px 16px; }
+.card-grid.cols-4 .card p { font-size: 0.72em; line-height: 1.45; margin-bottom: 0.3em; }
+.card-grid.cols-4 .card h3 { font-size: 0.85em; margin-bottom: 4px; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s;
+}
+.card h3 { font-size: 0.85em; margin-bottom: 6px; color: var(--accent); }
+.card p { font-size: 0.75em; margin: 0; color: var(--text-secondary); line-height: 1.5; }
+.card.active { border-color: var(--blue); box-shadow: var(--shadow), 0 0 0 1px var(--blue); }
+
+/* ─── FIGURE IMAGES ─── */
+.figure-img {
+  max-width: 85%;
+  max-height: 55vh;
+  margin: 12px auto;
+  display: block;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  object-fit: contain;
+}
+.figure-img.full { max-width: 95%; max-height: 65vh; }
+.figure-img.small { max-width: 60%; max-height: 45vh; }
+.figure-img.tall { max-height: 70vh; }
+.figure-caption {
+  text-align: center;
+  font-size: 0.6em;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ─── STATS ─── */
+.stats { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
+.stat { text-align: center; min-width: 130px; }
+.stat .number {
+  display: block;
+  font-size: 1.8em;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+.stat .label {
+  display: block;
+  font-size: 0.58em;
+  color: var(--text-secondary);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* ─── WORKFLOW ─── */
+.workflow-diagram { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 16px 0; }
+.wf-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.wf-box {
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 0.68em;
+  font-weight: 600;
+  text-align: center;
+  min-width: 100px;
+  box-shadow: var(--shadow-sm);
+}
+.wf-box.init { background: var(--blue-soft); color: #1e40af; border: 1px solid var(--blue-border); }
+.wf-box.eval { background: var(--green-soft); color: #065f46; border: 1px solid var(--green-border); }
+.wf-box.select { background: var(--amber-soft); color: #92400e; border: 1px solid var(--amber-border); }
+.wf-box.operator { background: var(--surface); color: var(--accent); border: 1px solid var(--border); }
+.wf-arrow { font-size: 1.1em; color: var(--text-secondary); }
+.wf-label { font-size: 0.58em; color: var(--text-secondary); text-align: center; font-weight: 500; }
+
+/* ─── ARCH COMPARE ─── */
+.arch-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58em;
+  line-height: 1.6;
+  white-space: pre;
+  box-shadow: var(--shadow-sm);
+}
+.arch-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 12px 0; }
+.arch-label { font-size: 0.75em; font-weight: 600; margin-bottom: 8px; color: var(--accent); }
+
+/* ─── STEPS ─── */
+.step { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
+.step-num {
+  background: var(--accent);
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65em;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.step-content h3 { font-size: 0.92em; margin: 0 0 3px 0; }
+.step-content p { font-size: 0.75em; margin: 0; color: var(--text-secondary); line-height: 1.5; }
+
+/* ─── PILL ─── */
+.pill {
+  display: inline-block;
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 0.6em;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-weight: 600;
+  vertical-align: middle;
+  margin-left: 6px;
+  border: 1px solid var(--green-border);
+}
+
+/* ─── HIGHLIGHT / NOTE BOXES ─── */
+.highlight-box {
+  background: var(--amber-soft);
+  border-left: 3px solid var(--amber);
+  padding: 12px 16px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.75em;
+  margin: 12px 0;
+  line-height: 1.5;
+}
+.note-box {
+  background: var(--blue-soft);
+  border-left: 3px solid var(--blue);
+  padding: 12px 16px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.7em;
+  margin: 12px 0;
+  color: var(--accent);
+  line-height: 1.5;
+}
+
+/* ─── DASHBOARD ─── */
+.dashboard { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin: 18px 0; }
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.dash-card .dash-value {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: var(--accent);
+  display: block;
+  letter-spacing: -0.02em;
+}
+.dash-card .dash-label {
+  font-size: 0.58em;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  display: block;
+  font-weight: 500;
+}
+.dash-card .dash-compare {
+  font-size: 0.52em;
+  color: var(--green);
+  margin-top: 3px;
+  display: block;
+  font-weight: 600;
+}
+
+/* ─── OUTLINE ─── */
+.outline-list { list-style: none; padding: 0; margin: 20px 0; }
+.outline-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.92em;
+  font-weight: 500;
+}
+.outline-list li:last-child { border-bottom: none; }
+.outline-list .ol-num {
+  background: var(--accent);
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65em;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ─── SECTION DIVIDERS ─── */
+.section-divider {
+  text-align: center;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+.section-divider h2 {
+  font-size: 1.8em;
+  color: #fff !important;
+  margin-bottom: 0.2em;
+}
+.section-divider p {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.85em;
+  font-weight: 400;
+}
+.section-divider .section-num {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.5em;
+  font-weight: 600;
+  padding: 5px 16px;
+  border-radius: 100px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.section-divider .section-preview {
+  list-style: none;
+  padding: 0;
+  margin: 18px 0 0 0;
+  text-align: center;
+}
+.section-divider .section-preview li {
+  font-size: 0.65em;
+  color: rgba(255,255,255,0.5);
+  padding: 3px 0;
+}
+
+/* ─── TITLE SLIDE ─── */
+.title-slide {
+  text-align: center;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 72px;
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+.title-slide .university {
+  font-size: 0.52em;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  margin-bottom: 28px;
+}
+.title-slide .acronym {
+  display: inline-block;
+  font-size: 0.52em;
+  color: rgba(255,255,255,0.7);
+  font-weight: 500;
+  padding: 5px 18px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 16px;
+  letter-spacing: 0.02em;
+}
+.title-slide h1 {
+  font-size: 1.7em;
+  color: #fff !important;
+  margin-bottom: 0.15em;
+  max-width: 900px;
+  line-height: 1.2;
+  text-align: justify;
+  text-align-last: center;
+}
+.title-slide .subtitle {
+  font-size: 0.68em;
+  color: rgba(255,255,255,0.55);
+  max-width: 750px;
+  line-height: 1.5;
+  margin-bottom: 32px;
+}
+.title-slide .meta-line {
+  font-size: 0.7em;
+  color: rgba(255,255,255,0.7);
+  font-weight: 400;
+}
+.title-slide .meta-line strong {
+  color: rgba(255,255,255,0.9);
+  font-weight: 500;
+}
+.title-slide .divider-line {
+  width: 60px;
+  height: 2px;
+  background: rgba(255,255,255,0.2);
+  margin: 18px auto;
+  border: none;
+}
+
+/* ─── THANK YOU SLIDE ─── */
+.thank-you {
+  text-align: center;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--accent) !important;
+  color: #fff !important;
+}
+.thank-you h2 { font-size: 2.2em; color: #fff !important; margin-bottom: 0.15em; font-weight: 700; }
+.thank-you p { color: rgba(255,255,255,0.6); }
+.thank-you .authors-line { color: rgba(255,255,255,0.7); font-size: 0.72em; }
+.thank-you .cta { font-size: 1.1em; color: #fff; font-weight: 600; margin-top: 28px; }
+
+/* ─── MAB VISUAL ─── */
+.mab-arms { display: flex; gap: 18px; justify-content: center; align-items: flex-end; margin: 16px 0; }
+.mab-arm { text-align: center; flex: 1; max-width: 140px; }
+.mab-bar {
+  width: 50px;
+  margin: 0 auto 6px;
+  background: var(--blue);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  min-height: 20px;
+}
+.mab-bar .mab-ci {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  background: var(--accent);
+}
+.mab-bar .mab-ci::before, .mab-bar .mab-ci::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  width: 10px;
+  height: 2px;
+  background: var(--accent);
+}
+.mab-bar .mab-ci::before { top: 0; }
+.mab-bar .mab-ci::after { bottom: 0; }
+.mab-arm-label { font-size: 0.6em; font-weight: 600; color: var(--accent); }
+.mab-arm-value { font-size: 0.55em; color: var(--text-secondary); margin-top: 2px; }
+
+/* ─── LINEAGE TIMELINE ─── */
+.lineage-timeline { display: flex; align-items: center; gap: 0; margin: 14px 0; justify-content: center; }
+.lineage-node {
+  padding: 8px 14px;
+  font-size: 0.6em;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  min-width: 100px;
+}
+.lineage-node.base { background: var(--border-light); color: var(--text-secondary); border: 1px solid var(--border); }
+.lineage-node.ext { background: var(--blue-soft); color: #1e40af; border: 1px solid var(--blue-border); }
+.lineage-node.ours { background: var(--green-soft); color: #047857; border: 1px solid var(--green-border); }
+.lineage-arrow { font-size: 0.9em; color: var(--text-secondary); padding: 0 4px; }
+.lineage-desc { font-size: 0.5em; color: var(--text-secondary); font-weight: 400; display: block; margin-top: 2px; }
+
+/* ─── REWARD FLOW ─── */
+.reward-flow { display: flex; align-items: center; gap: 8px; justify-content: center; margin: 14px 0; flex-wrap: wrap; }
+.rf-box {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 0.62em;
+  font-weight: 600;
+  text-align: center;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.rf-box.crash { background: var(--red-soft); color: #dc2626; border-color: #fecaca; }
+.rf-box.valid { background: var(--green-soft); color: #047857; border-color: var(--green-border); }
+.rf-arrow { font-size: 0.9em; color: var(--text-secondary); }
+
+/* ─── FRAGMENT FADE ─── */
+.reveal .slides section .fragment { opacity: 0; transition: opacity 0.3s ease; }
+.reveal .slides section .fragment.visible { opacity: 1; }
+
+/* ─── DOT NAV ─── */
+#dot-nav {
+  position: fixed;
+  bottom: 22px;
+  right: 26px;
+  display: flex;
+  gap: 5px;
+  z-index: 100;
+}
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--border);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.dot.active { background: var(--blue); transform: scale(1.4); }
+.dot:hover { background: var(--text-secondary); }
+.dark-dots .dot { background: rgba(255,255,255,0.25); }
+.dark-dots .dot.active { background: #fff; }
+.dark-dots .dot:hover { background: rgba(255,255,255,0.5); }
+
+.reveal .slide-number { display: none !important; }
+
+/* ─── FOOTNOTE ─── */
+.footnote {
+  font-size: 0.55em;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* ─── RESPONSIVE TWEAKS ─── */
+@media (max-width: 960px) {
+  .card-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+  .card-grid.cols-4 { grid-template-columns: 1fr; }
+  .dashboard { grid-template-columns: 1fr 1fr; }
+  .arch-compare { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 1 — Title                               -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="title-slide" data-dark="true">
+  <div class="university">University of Science and Technology of Southern Philippines</div>
+  <div class="acronym">GA-LLaMEA: Generative-Adaptive Large Language Model Evolutionary Algorithm</div>
+  <h1>A Framework using Discounted Thompson Sampling for Adaptive Operator Selection in Automated Algorithm Design</h1>
+  <div class="divider-line"></div>
+  <div class="meta-line"><strong>Rigel Ray O. Cabaya</strong> &nbsp;&middot;&nbsp; <strong>Julius G. Baliling</strong> &nbsp;&middot;&nbsp; <strong>Keycee Rhaye T. Rivas</strong></div>
+  <div class="meta-line" style="margin-top:6px;">Adviser: Cheryll S. Pagal, MSAMS</div>
+  <div class="meta-line" style="margin-top:14px; opacity:0.5;">April 2026</div>
+  <aside class="notes">Good morning/afternoon. We present GA-LLaMEA, a generative-adaptive evolutionary framework that uses Discounted Thompson Sampling for adaptive operator selection in automated algorithm design.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 2 — Outline                             -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Overview</span>
+  <h2>Presentation Outline</h2>
+  <hr class="divider">
+  <ul class="outline-list">
+    <li><span class="ol-num">1</span> Introduction &amp; Problem Statement</li>
+    <li><span class="ol-num">2</span> Research Objectives</li>
+    <li><span class="ol-num">3</span> Review of Literature</li>
+    <li><span class="ol-num">4</span> Methodology</li>
+    <li><span class="ol-num">5</span> Results &amp; Discussion</li>
+    <li><span class="ol-num">6</span> Ablation Studies</li>
+    <li><span class="ol-num">7</span> Conclusion &amp; Recommendations</li>
+  </ul>
+  <aside class="notes">Here is the structure of our presentation.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 3 — Problem Statement                   -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Introduction</span>
+  <h2>Problem Statement</h2>
+  <hr class="divider">
+  <table style="font-size:0.78em;">
+    <thead><tr><th style="width:28px">#</th><th style="width:30%">Problem</th><th>Why It Matters</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td><strong>Underutilized Populations</strong></td>
+        <td>Frameworks like LLaMEA rely on mutation-based refinement &mdash; candidates improved in isolation, preventing recombination of complementary strategies, leading to premature convergence</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td><strong>Ineffective Recombination</strong></td>
+        <td>No general-purpose crossover exists for LLaMEA in continuous optimization; syntactic crossover produces invalid or logically inconsistent offspring</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td><strong>No Adaptive Selection</strong></td>
+        <td>Multiple operators without adaptive control creates a scheduling challenge &mdash; static probabilities cannot respond to shifting exploration/exploitation needs</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="footnote">Bouras et al., 2025; Hemberg &amp; O'Reilly, 2024; Aydin et al., 2023</p>
+  <aside class="notes">Three core research problems. First, mutation-centric frameworks underutilize population diversity. Second, existing crossover mechanisms produce syntactically invalid code. Third, there is no adaptive mechanism to select among operators.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 4 — Research Objectives                 -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Introduction</span>
+  <h2>Research Objectives</h2>
+  <hr class="divider">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>Develop the GA-LLaMEA Framework</h3>
+      <p>A generative-adaptive evolutionary framework integrating a modified bandit-based operator selection policy derived from Discounted Thompson Sampling (Qi et al., 2023)</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>Implement Generative Crossover Mechanisms</h3>
+      <p>Upgrade the baseline LLaMEA architecture with Generative Crossover that leverages LLM reasoning to synthesize coherent offspring from multiple parent strategies</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Validate using MA-BBOB Benchmarking</h3>
+      <p>Evaluate performance through Elo ratings, AOCC, behavioural profiling, Code Evolution Graphs, and operator selection dynamics</p>
+    </div>
+  </div>
+  <p class="footnote">AOCC: Area Over the Convergence Curve, scored in [0,1] &mdash; higher = faster, more consistent convergence across the evaluation budget.</p>
+  <aside class="notes">Three objectives. AOCC, or Area Over the Convergence Curve, is a metric in [0,1] where higher means faster and more consistent convergence.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 5 — Significance                        -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Introduction</span>
+  <h2>Significance of the Study</h2>
+  <hr class="divider">
+  <div class="card-grid cols-2">
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Modernizing LLaMEA with Generative Crossover</h3>
+        <p>Introduces Inspiration-Based Generative Crossover, advancing explorative capabilities in line with state-of-the-art population frameworks (Meyerson et al., 2023; Elsken et al., 2019)</p>
+      </div>
+      <div class="card">
+        <h3>Bandit-Based Adaptive Control</h3>
+        <p>Pioneers integration of adaptive decision-making into LLM-driven evolutionary optimization via D-TS, eliminating fragile static schedules</p>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Rigorous Empirical Standards</h3>
+        <p>Validates generated algorithms using MA-BBOB and standardized metrics including AOCC (van Stein et al., 2025)</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">Three contributions: modernizing LLaMEA with generative crossover, pioneering bandit-based adaptive control, and establishing rigorous empirical standards.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 6 — Scope & Limitations                 -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Introduction</span>
+  <h2>Scope &amp; Limitations</h2>
+  <hr class="divider">
+  <div class="card-grid cols-2">
+    <div class="card">
+      <h3>Scope</h3>
+      <ul style="font-size:0.78em; margin:0; padding-left:16px; color:var(--text-secondary);">
+        <li>Single-objective continuous black-box optimization</li>
+        <li>BBOB suite: 24 noiseless functions</li>
+        <li>Generative component: <strong style="color:var(--text);">Gemini-2.5-flash</strong> via API (ICL only)</li>
+        <li>All heuristics in Python (COCO-compatible)</li>
+        <li>D-TS with &gamma; managing operator trade-offs</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Limitations</h3>
+      <ul style="font-size:0.78em; margin:0; padding-left:16px; color:var(--text-secondary);">
+        <li>No model fine-tuning or weight retraining &mdash; ICL only</li>
+        <li>Excludes combinatorial, LSGO (&gt;100D), and multi-objective</li>
+        <li>Computational budget constraints (API costs + latency)</li>
+        <li>Framework validated on Gemini-2.5-Flash only (no fine-tuning, ICL-only). Multi-model generalization is a future direction.</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">Scope: single-objective continuous optimization, BBOB 24 functions, Gemini Flash with in-context learning. Framework is architecturally model-agnostic but empirically validated on a single LLM family.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 7 — Section: Literature                 -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section-divider" data-dark="true">
+  <span class="section-num">Section II</span>
+  <h2>Review of Literature</h2>
+  <p>Theoretical foundations and research gaps</p>
+  <ul class="section-preview">
+    <li>Theoretical foundations: EC, NFL, Building Block Hypothesis</li>
+    <li>LLM-driven AAD landscape and frameworks</li>
+    <li>Three research gaps addressed by GA-LLaMEA</li>
+  </ul>
+  <aside class="notes">We now cover the theoretical foundations and research gaps.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 8 — Theoretical Foundations (REWRITTEN) -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag blue">Literature</span>
+  <h2>Theoretical Foundations</h2>
+  <hr class="divider">
+  <div class="card-grid cols-4">
+    <div class="card">
+      <h3>What does current AAD already do?</h3>
+      <p>LLaMEA and EoH generate metaheuristics via iterative LLM prompting with &mu;+&lambda; selection. However, they remain <strong>mutation-centric</strong> &mdash; candidates evolve in isolation without cross-population information sharing.</p>
+      <p class="footnote">van Stein &amp; B&auml;ck, 2024; Liu et al., 2024</p>
+    </div>
+    <div class="card">
+      <h3>Why add an Adaptive Operator Selector?</h3>
+      <p>With 4 operators, static probabilities cannot respond to shifting effectiveness. A <strong>bandit controller</strong> learns which operator is productive at each stage, eliminating fragile manual scheduling.</p>
+      <p class="footnote">Aydin et al., 2024; Fialho et al., 2008; Yin et al., 2024</p>
+    </div>
+    <div class="card">
+      <h3>Why D-TS over UCB or sliding-window?</h3>
+      <p>UCB uses time-scheduled decay &mdash; exploration decreases with elapsed evaluations. <strong>D-TS</strong> uses exponential discounting (&gamma;=0.99), responding to actual reward history rather than a clock.</p>
+      <p class="footnote">Qi et al., 2023; Zheng et al., 2025; Cavenaghi et al., 2021</p>
+    </div>
+    <div class="card">
+      <h3>Why introduce crossover?</h3>
+      <p>Mutation alone restricts search to local basins (Opris et al., 2025). Crossover exists in LLaMEA-BO and ReEvo, but <strong>no prior work</strong> introduces general-purpose crossover within LLaMEA for continuous black-box heuristics.</p>
+      <p class="footnote">Opris, 2025; Li et al., 2025; Assump&ccedil;&atilde;o et al., 2026</p>
+    </div>
+  </div>
+  <aside class="notes">Four targeted questions addressing our theoretical foundation. Each maps directly to a research problem and design decision.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 9 — LLM-Driven AAD                     -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag blue">Literature</span>
+  <h2>LLM-Driven Automated Algorithm Design</h2>
+  <hr class="divider">
+  <table class="compact">
+    <thead><tr><th>Framework</th><th>Year</th><th>Key Contribution</th></tr></thead>
+    <tbody>
+      <tr><td>GP (Koza)</td><td>1992</td><td>Foundational tree-based program evolution; established automated algorithm generation</td></tr>
+      <tr><td>Hyper-heuristics</td><td>~2000s</td><td>Heuristics to select/generate heuristics; introduced selection vs. generation paradigm</td></tr>
+      <tr><td>FunSearch</td><td>Nature 2024</td><td>LLM + systematic evaluator for combinatorial problems; best-so-far prompting</td></tr>
+      <tr><td>EoH</td><td>Liu et al., ICML 2024</td><td>Dual-population: evolves Python code AND natural-language thought jointly</td></tr>
+      <tr><td>Eureka</td><td>Ma et al., 2024</td><td>GPT-4 writes RL reward functions; evolutionary reflection mechanism</td></tr>
+      <tr><td>LLaMEA</td><td>van Stein &amp; B&auml;ck, 2024</td><td>LLM evolutionary algorithm for metaheuristic synthesis; feedback-driven refinement</td></tr>
+      <tr><td>MetaBBO Taxonomy</td><td>Zhang et al., 2025</td><td>Formalizes Algorithm Selection vs. Generation; positions LLM-AAD at frontier</td></tr>
+      <tr><td>CodeEvolve</td><td>Assump&ccedil;&atilde;o et al., 2026</td><td>Multi-model code evolution; inspiration-based crossover with &ge;2 parent solutions</td></tr>
+      <tr class="highlight"><td><strong>GA-LLaMEA</strong></td><td><strong>This Study</strong></td><td><strong>First general-purpose generative crossover + D-TS adaptive operator selection in LLaMEA</strong></td></tr>
+    </tbody>
+  </table>
+  <!-- LLaMEA Research Lineage -->
+  <div style="margin-top:12px;">
+    <p style="font-size:0.65em; font-weight:600; color:var(--accent); margin-bottom:6px;">LLaMEA Research Lineage</p>
+    <div class="lineage-timeline">
+      <div class="lineage-node base">LLaMEA<span class="lineage-desc">Mutation-centric; (1+1)-ES</span></div>
+      <span class="lineage-arrow">&rarr;</span>
+      <div class="lineage-node ext">Photonic-LLaMEA<span class="lineage-desc">Domain extension to photonics</span></div>
+      <span class="lineage-arrow">&rarr;</span>
+      <div class="lineage-node ext">LLaMEA-BO<span class="lineage-desc">Population + crossover for BO</span></div>
+      <span class="lineage-arrow">&rarr;</span>
+      <div class="lineage-node ext">LLaMEA-SAGE<span class="lineage-desc">Structural feedback; CEG-informed</span></div>
+      <span class="lineage-arrow">&rarr;</span>
+      <div class="lineage-node ours">GA-LLaMEA<span class="lineage-desc">Generative crossover + D-TS</span></div>
+    </div>
+  </div>
+  <aside class="notes">The evolution from GP to LLM-driven AAD. Our work sits at the frontier, extending the LLaMEA lineage with generative crossover and adaptive operator selection.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 10 — Research Gap                       -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag blue">Literature</span>
+  <h2>Research Gap &mdash; The Three Deficits</h2>
+  <hr class="divider">
+  <table>
+    <thead><tr><th>Gap</th><th>Current State</th><th>Our Solution</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Gap 1</strong><br><span style="font-size:0.85em; color:var(--text-secondary)">Mutation-centric</span></td>
+        <td>Single-parent refinement only; no mechanism to recombine complementary strategies (Opris, 2025; Li et al., 2025; Yin et al., 2024; Assump&ccedil;&atilde;o et al., 2026)</td>
+        <td>Inspiration-Based Generative Crossover</td>
+      </tr>
+      <tr>
+        <td><strong>Gap 2</strong><br><span style="font-size:0.85em; color:var(--text-secondary)">Invalid recombination</span></td>
+        <td>Syntactic crossover produces structurally erroneous offspring without semantic constraints (Hemberg &amp; O'Reilly, 2024; Meyerson et al., 2024; Bouras et al., 2025)</td>
+        <td>Strategy-level semantic synthesis via LLM reasoning</td>
+      </tr>
+      <tr>
+        <td><strong>Gap 3</strong><br><span style="font-size:0.85em; color:var(--text-secondary)">Static scheduling</span></td>
+        <td>Fixed operator probabilities cannot adapt to non-stationary dynamics (Aydin et al., 2024; Zheng et al., 2025; Qi et al., 2023; Cavenaghi et al., 2021)</td>
+        <td>D-TS adaptive control with discounted posteriors</td>
+      </tr>
+    </tbody>
+  </table>
+  <aside class="notes">Three specific gaps with strengthened citations. We address each with generative crossover, semantic synthesis, and Discounted Thompson Sampling.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 11 — Section: Methodology               -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section-divider" data-dark="true">
+  <span class="section-num">Section III</span>
+  <h2>Methodology</h2>
+  <p>Framework architecture and experimental design</p>
+  <ul class="section-preview">
+    <li>GA-LLaMEA pipeline architecture</li>
+    <li>Four genetic operators + D-TS controller</li>
+    <li>Experimental setup: MA-BBOB, metrics, baselines</li>
+  </ul>
+  <aside class="notes">We now present our methodology.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 12 — Framework Architecture             -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag amber">Methodology</span>
+  <h2>Framework Architecture</h2>
+  <hr class="divider">
+  <img src="GA-LLAMEA-GRAPH.png" alt="GA-LLaMEA Architecture" class="figure-img full">
+  <aside class="notes">The GA-LLaMEA pipeline. Initialize population via LLM, evaluate on MA-BBOB, D-TS selects an operator, offspring is evaluated, reward computed, posteriors updated, mu-plus-lambda selection.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 13 — Genetic Operators (CORRECTED)      -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag amber">Methodology</span>
+  <h2>Genetic Operators</h2>
+  <hr class="divider">
+  <table class="compact">
+    <thead><tr><th>Operator</th><th>Input</th><th>Prompt Strategy</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Refine</strong></td><td>1 parent (code)</td><td>"Expand and deepen the strategy"</td><td>Exploitation &mdash; increases algorithmic complexity by introducing new logic, adaptive parameters, or sophisticated selection rules</td></tr>
+      <tr><td><strong>Simplify</strong></td><td>1 parent (code)</td><td>"Refine and simplify to improve"</td><td>Exploitation &mdash; reduces redundancy and streamlines code</td></tr>
+      <tr><td><strong>Crossover</strong></td><td>Best parent + diverse inspirations</td><td>"Synthesize merging strategies"</td><td>Exploration &mdash; recombines complementary traits from multiple parents</td></tr>
+      <tr><td><strong>Random New</strong></td><td>Population history</td><td>"Generate completely different"</td><td>Exploration &mdash; diversity injection, escape local optima</td></tr>
+    </tbody>
+  </table>
+  <div class="arch-compare" style="margin-top:14px;">
+    <div>
+      <div class="arch-label">Syntactic Crossover</div>
+      <div class="arch-box">Parent A code ──┐
+                ├─ Code concatenation
+Parent B code ──┘
+  (no semantic reasoning)
+
+Result: often structurally invalid
+or logically inconsistent</div>
+      <p class="footnote">Assump&ccedil;&atilde;o et al., 2026 (without inspiration sources)</p>
+    </div>
+    <div>
+      <div class="arch-label">Inspiration-Based <span class="pill">Novel</span></div>
+      <div class="arch-box">Parent A (full code)    ──┐
+Parent B (strategy desc)  ├─ LLM reasons
+Parent C (strategy desc)  ├─ at strategy level
+                           └─ Synthesizes child
+
+Result: semantically coherent</div>
+      <p class="footnote">GA-LLaMEA: the LLM reasons about concepts, not text</p>
+    </div>
+  </div>
+  <aside class="notes">Four operators with corrected descriptions. Refine INCREASES complexity by adding new logic. Simplify reduces redundancy. The key crossover contrast: syntactic crossover concatenates code without reasoning; our approach operates at the strategy level using LLM semantic understanding.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 14 — D-TS (with MAB Visual)             -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag amber">Methodology</span>
+  <h2>Discounted Thompson Sampling</h2>
+  <hr class="divider">
+  <p style="font-size:0.78em; color:var(--text-secondary); margin-bottom:12px;">Operator effectiveness changes over the run &mdash; requires a non-stationary bandit controller.</p>
+  <!-- MAB Visual Diagram -->
+  <div class="mab-arms">
+    <div class="mab-arm">
+      <div class="mab-bar" style="height:93px; background:#6366f1;"><div class="mab-ci" style="height:18px;"></div></div>
+      <div class="mab-arm-label">Refine</div>
+      <div class="mab-arm-value">&mu;=0.62</div>
+    </div>
+    <div class="mab-arm">
+      <div class="mab-bar" style="height:107px; background:#8b5cf6;"><div class="mab-ci" style="height:12px;"></div></div>
+      <div class="mab-arm-label">Simplify</div>
+      <div class="mab-arm-value">&mu;=0.71</div>
+    </div>
+    <div class="mab-arm">
+      <div class="mab-bar" style="height:117px; background:var(--blue);"><div class="mab-ci" style="height:10px;"></div></div>
+      <div class="mab-arm-label">Crossover</div>
+      <div class="mab-arm-value">&mu;=0.78</div>
+    </div>
+    <div class="mab-arm">
+      <div class="mab-bar" style="height:51px; background:#94a3b8;"><div class="mab-ci" style="height:28px;"></div></div>
+      <div class="mab-arm-label">Random New</div>
+      <div class="mab-arm-value">&mu;=0.34</div>
+    </div>
+  </div>
+  <p style="font-size:0.62em; text-align:center; color:var(--text-secondary); margin:4px 0 14px;">D-TS samples from each arm's posterior distribution. Higher mean + lower uncertainty = more likely selected. Discount factor &gamma;=0.99 fades old observations so the system adapts to shifting operator effectiveness.</p>
+  <div class="card-grid cols-2">
+    <div class="card">
+      <h3>Key Parameters</h3>
+      <table class="compact" style="margin:0; box-shadow:none; border:none;">
+        <tbody>
+          <tr><td style="border:none; background:none; font-weight:600;">&gamma;</td><td style="border:none; background:none;">0.99 &nbsp;<span style="color:var(--text-secondary); font-size:0.85em;">(effective window &asymp; 100)</span></td></tr>
+          <tr><td style="border:none; background:none; font-weight:600;">&tau;<sub>max</sub></td><td style="border:none; background:none;">0.2 &nbsp;<span style="color:var(--text-secondary); font-size:0.85em;">(variance cap)</span></td></tr>
+          <tr><td style="border:none; background:none; font-weight:600;">&epsilon;</td><td style="border:none; background:none;">0.15 &nbsp;<span style="color:var(--text-secondary); font-size:0.85em;">(exploration rate)</span></td></tr>
+          <tr><td style="border:none; background:none; font-weight:600;">s<sub>max</sub></td><td style="border:none; background:none;">10 &nbsp;<span style="color:var(--text-secondary); font-size:0.85em;">(stagnation threshold)</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Concrete Update Example</h3>
+      <p>After Crossover produces fitness 0.82, the posterior mean for Crossover shifts upward slightly. Over time, D-TS allocates more trials to Crossover as its track record strengthens.</p>
+    </div>
+  </div>
+  <aside class="notes">Visual explanation of D-TS. Each operator arm has a posterior. Crossover has the highest mean. The bar chart makes the bandit concept intuitive for the panel.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 15 — Reward System (ALIGNED)            -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag amber">Methodology</span>
+  <h2>Reward System</h2>
+  <hr class="divider">
+  <p style="font-size:0.8em; margin-bottom:10px;">Per Equation 3-14 (p. 42) &mdash; piecewise reward function:</p>
+  <div class="card-grid cols-2" style="margin-bottom:12px;">
+    <div class="card" style="border-color:#fecaca;">
+      <h3 style="color:#dc2626;">If v = 0 (invalid/crash)</h3>
+      <p style="font-size:0.9em;"><code>r<sub>t</sub> = 0</code></p>
+      <p>Where v is the validity flag &mdash; 1 if the algorithm runs and evaluates, 0 if it crashes.</p>
+    </div>
+    <div class="card" style="border-color:var(--green-border);">
+      <h3 style="color:#047857;">If v = 1 (valid)</h3>
+      <p style="font-size:0.9em;"><code>r<sub>t</sub> = max(0, min(1, f<sub>child</sub>))</code></p>
+      <p>Absolute fitness reward clipped to [0,1]. Not relative-to-parent &mdash; prevents reward inflation when parents are already near the fitness ceiling.</p>
+    </div>
+  </div>
+  <!-- Reward Flow -->
+  <div class="reward-flow">
+    <div class="rf-box">LLM generates offspring</div>
+    <span class="rf-arrow">&rarr;</span>
+    <div class="rf-box">Execute on MA-BBOB</div>
+    <span class="rf-arrow">&rarr;</span>
+    <div class="rf-box crash">Crash: r=0</div>
+    <span style="font-size:0.7em; color:var(--text-secondary);">/</span>
+    <div class="rf-box valid">Valid: r=clipped AOCC</div>
+    <span class="rf-arrow">&rarr;</span>
+    <div class="rf-box">Update D-TS posterior</div>
+  </div>
+  <aside class="notes">The reward is absolute fitness clipped to [0,1] for valid algorithms, and 0 for crashes. This is absolute, not relative-to-parent, preventing reward inflation.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 16 — Experimental Setup (FIXED)         -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag amber">Methodology</span>
+  <h2>Experimental Setup</h2>
+  <hr class="divider">
+  <table>
+    <thead><tr><th style="width:180px;">Parameter</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Benchmark</strong></td><td>MA-BBOB (5D) &mdash; affine extensions of classical BBOB (Vermetten et al., 2023)</td></tr>
+      <tr><td><strong>Functions</strong></td><td>24 (separable, ill-conditioned, multimodal noiseless)</td></tr>
+      <tr><td><strong>Budget</strong></td><td>100 LLM evaluations per run</td></tr>
+      <tr><td><strong>Runs</strong></td><td>5 independent (seeds 0&ndash;4)</td></tr>
+      <tr><td><strong>Population</strong></td><td>&mu; = 4 (maintained), &lambda; = 8 offspring; Initialization size = 8 parents</td></tr>
+      <tr><td><strong>LLM</strong></td><td>Gemini-2.5-flash via Vertex AI API</td></tr>
+      <tr><td><strong>Baselines</strong></td><td>Baseline LLaMEA (Prompt5), EoH</td></tr>
+      <tr><td><strong>Metrics</strong></td><td>Elo, AOCC, convergence, 11 behavioural metrics, CEGs, operator dynamics</td></tr>
+    </tbody>
+  </table>
+  <aside class="notes">MA-BBOB in 5 dimensions, 24 functions, 100 LLM evaluations per run, 5 seeds. Population of mu=4 maintained parents, lambda=8 offspring, with initialization size of 8 parents. This is why result figures are labeled GA-LLAMEA-8-INIT-100.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 17 — Section: Results                   -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section-divider" data-dark="true">
+  <span class="section-num">Section IV</span>
+  <h2>Results &amp; Discussion</h2>
+  <p>Performance, convergence, behaviour, and operator dynamics</p>
+  <ul class="section-preview">
+    <li>Headline metrics: Elo, fitness, AOCC, Q4 rate</li>
+    <li>Convergence, behavioural profiles, CEGs</li>
+    <li>D-TS operator selection dynamics</li>
+  </ul>
+  <aside class="notes">We now present our results.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 18 — Consolidated Performance (TRIMMED) -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag green">Results</span>
+  <h2>Consolidated Performance</h2>
+  <hr class="divider">
+  <table>
+    <thead><tr><th>Method</th><th>Elo</th><th>Mean Fitness</th><th>&sigma;</th><th>Mean AOCC</th><th>Q4 Algorithms</th></tr></thead>
+    <tbody>
+      <tr class="highlight">
+        <td><strong>GA-LLaMEA</strong></td>
+        <td><strong>~1575</strong></td>
+        <td><strong>0.8348</strong></td>
+        <td><strong>0.0255</strong></td>
+        <td><strong>0.6028</strong></td>
+        <td><strong>36.3%</strong></td>
+      </tr>
+      <tr>
+        <td>EoH</td><td>~1490</td><td>0.8197</td><td>0.0119</td><td>0.5081</td><td>17.6%</td>
+      </tr>
+      <tr>
+        <td>Baseline LLaMEA</td><td>~1435</td><td>0.8098</td><td>0.0432</td><td>0.5315</td><td>21.0%</td>
+      </tr>
+    </tbody>
+  </table>
+  <img src="4.2-Boxplot.png" alt="Fitness Distribution Box Plot" class="figure-img" style="max-width:70%; margin-top:8px;">
+  <div class="highlight-box">
+    <strong>Key takeaway:</strong> GA-LLaMEA leads across all primary metrics. These numbers are explained by three behavioural mechanisms we examine after convergence analysis.
+  </div>
+  <aside class="notes">Table 1 trimmed to 5 key columns. GA-LLaMEA leads across all metrics. The box plot shows the tightest IQR with highest median.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 19 — Elo Rankings                       -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag green">Results</span>
+  <h2>Elo Tournament Rankings</h2>
+  <hr class="divider">
+  <img src="4.1-Elo.png" alt="Elo Rating Point Plot" class="figure-img" style="max-width:75%;">
+  <div class="stats">
+    <div class="stat">
+      <span class="number">~1575</span>
+      <span class="label">GA-LLaMEA Elo</span>
+    </div>
+    <div class="stat">
+      <span class="number">+85</span>
+      <span class="label">vs EoH (&asymp;62% win)</span>
+    </div>
+    <div class="stat">
+      <span class="number">+140</span>
+      <span class="label">vs Baseline LLaMEA</span>
+    </div>
+  </div>
+  <div class="note-box" style="font-size:0.68em;">
+    <strong>What is Elo?</strong> Pairwise tournament across MA-BBOB instances; each method's best algorithms compete head-to-head across seeds. +85 Elo translates to approximately 62% expected win rate. <strong>Elo vs AOCC:</strong> Elo captures quality of the <em style="color:inherit;">best</em> algorithms; AOCC aggregates over <em style="color:inherit;">all</em> generated algorithms.
+  </div>
+  <aside class="notes">Elo rankings with interpretation. Pairwise tournament, +85 Elo means 62% expected win rate.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 20 — Convergence                        -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag green">Results</span>
+  <h2>Convergence Analysis</h2>
+  <hr class="divider">
+  <img src="4.3-CT_a.png" alt="Convergence Trajectories" class="figure-img" style="max-width:78%;">
+  <div class="card-grid cols-3" style="margin-top:10px;">
+    <div class="card active">
+      <h3>GA-LLaMEA</h3>
+      <p>Steepest climb, highest plateau. Sustained improvement throughout.</p>
+    </div>
+    <div class="card">
+      <h3>EoH</h3>
+      <p>Fast early gains, flattens after eval ~40. Limited late-stage refinement.</p>
+    </div>
+    <div class="card">
+      <h3>Baseline LLaMEA</h3>
+      <p>Slowest convergence. Mutation-only search limitation.</p>
+    </div>
+  </div>
+  <aside class="notes">Convergence trajectories. GA-LLaMEA has the steepest climb and highest plateau. EoH plateaus around evaluation 40. Baseline converges most slowly due to mutation-only refinement.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 21 — Behavioural Profile (TRIMMED)      -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag green">Results</span>
+  <h2>Behavioural Profile Analysis</h2>
+  <hr class="divider">
+  <p style="font-size:0.72em; color:var(--text-secondary); margin-bottom:8px;">Every algorithm generated during evolution &mdash; not just the final best &mdash; is profiled. 1,442 algorithms total: 472 (Baseline LLaMEA), 482 (EoH), 488 (GA-LLaMEA).</p>
+  <table class="compact">
+    <thead><tr><th>Metric</th><th>GA-LLaMEA</th><th>Baseline</th><th>EoH</th><th>Q4 Gold Std</th></tr></thead>
+    <tbody>
+      <tr><td>Expl %</td><td><strong>6.66%</strong></td><td>9.70%</td><td>10.95%</td><td>4.03%</td></tr>
+      <tr><td>Inten-ratio</td><td><strong>0.8927</strong></td><td>0.8362</td><td>0.7761</td><td>0.9395</td></tr>
+      <tr><td>Dist&rarr;best</td><td><strong>0.4241</strong></td><td>0.6312</td><td>0.7277</td><td>0.2441</td></tr>
+      <tr><td>Last-imp frac</td><td><strong>0.3501</strong></td><td>0.2677</td><td>0.1436</td><td>0.5252</td></tr>
+    </tbody>
+  </table>
+  <div class="card-grid cols-2" style="margin-top:8px;">
+    <img src="4.5-BehaviourAll.png" alt="Behaviour Profile of All 1,442 Algorithms" class="figure-img" style="max-width:100%; margin:0;">
+    <img src="4.6-Top100Profiles.png" alt="Top-100 Profiles per Method" class="figure-img" style="max-width:100%; margin:0;">
+  </div>
+  <aside class="notes">Behavioural profiles of all 1,442 generated algorithms, not just the best. GA-LLaMEA aligns most closely with the Q4 gold standard: lowest exploration, highest intensification ratio, lowest distance-to-best, highest late improvement fraction.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 22 — Behavioural Interpretation         -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag green">Results</span>
+  <h2>Why GA-LLaMEA Outperforms</h2>
+  <hr class="divider">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>Generative Crossover Enables Trait Combination</h3>
+      <p>High Intensification Ratio (0.8927), low Distance-to-Best (0.4241). Per-method correlation: Inten-Ratio &rarr; fitness r&nbsp;=&nbsp;0.667</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>D-TS Steers Toward Gold Standard</h3>
+      <p>Progressively shifts selection toward Simplify and Crossover &mdash; steering meta-level search toward the gold standard behavioural region</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Sustained Late-Stage Improvement</h3>
+      <p>Last Improvement Fraction: 0.3501 vs 0.2677 (Baseline) vs 0.1436 (EoH) &mdash; progress continues near the optimum</p>
+    </div>
+  </div>
+  <div class="note-box" style="font-size:0.68em;">
+    <strong>EoH weakness:</strong> Most exploratory profile (Expl% 10.95%, Inten-ratio 0.7761). Its e1/e2 operators prioritise diversity over refinement &rarr; persistent exploration bias.
+  </div>
+  <aside class="notes">Three behavioural factors drive GA-LLaMEA's advantage: crossover enables trait combination, D-TS steers toward gold standard, and sustained late-stage improvement.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 23 — CEGs (SWAPPED — now before Dynamics) -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag green">Results</span>
+  <h2>Code Evolution Graphs</h2>
+  <hr class="divider">
+  <img src="4.7-CEG.png" alt="Code Evolution Graphs — 3 methods x 5 runs" class="figure-img full">
+  <div class="card-grid cols-3" style="margin-top:10px;">
+    <div class="card">
+      <h3>EoH</h3>
+      <p>Disconnected point clouds. No lineage tracking, obscures evolutionary pathways.</p>
+    </div>
+    <div class="card">
+      <h3>Baseline LLaMEA</h3>
+      <p>Branching with high variability. Abrupt complexity increases (code bloat).</p>
+    </div>
+    <div class="card active">
+      <h3>GA-LLaMEA</h3>
+      <p>Coherent, directed trajectories. Connected lineages, smoother transitions, constructive growth.</p>
+    </div>
+  </div>
+  <aside class="notes">Code Evolution Graphs show the structural impact of crossover. EoH: disconnected. Baseline: branching with bloat. GA-LLaMEA: coherent directed trajectories.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 24 — D-TS Dynamics (SWAPPED)            -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag green">Results</span>
+  <h2>Operator Selection Dynamics</h2>
+  <hr class="divider">
+  <div class="card-grid cols-2">
+    <div>
+      <img src="Fig-4.8.png" alt="Operator Selection Probabilities" class="figure-img" style="max-width:100%; margin:0;">
+      <p class="figure-caption">Fig. 4.8 &mdash; Selection probabilities per generation</p>
+    </div>
+    <div>
+      <img src="4.9-MeanReward.png" alt="Mean Operator Reward" class="figure-img" style="max-width:100%; margin:0;">
+      <p class="figure-caption">Fig. 4.9 &mdash; Mean reward per operator arm</p>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:10px;">
+    D-TS transitions from exploration &rarr; exploitation. Crossover achieves the highest mean reward, validating generative recombination. The shift from diversification to refinement demonstrates successful adaptation to non-stationary reward distributions.
+  </div>
+  <aside class="notes">D-TS operator dynamics. Early: even distribution. Late: simplify and crossover dominate. Crossover achieves the highest mean reward. This mechanistically explains the CEG patterns we just saw.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 25 — Section: Ablation                  -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section-divider" data-dark="true">
+  <span class="section-num">Section V</span>
+  <h2>Ablation Studies</h2>
+  <p>Isolating the contributions of key components</p>
+  <ul class="section-preview">
+    <li>Crossover ablation: 1 vs 3 inspiration sources</li>
+    <li>Population size ablation: 4 vs 8 initial parents</li>
+  </ul>
+  <aside class="notes">Ablation studies to isolate contributions of crossover and population size.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 26 — Crossover Ablation                 -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag amber">Ablation</span>
+  <h2>Crossover Ablation</h2>
+  <hr class="divider">
+  <table>
+    <thead><tr><th>Configuration</th><th>Mean AOCC</th><th>&Delta; vs Baseline</th></tr></thead>
+    <tbody>
+      <tr><td>Baseline LLaMEA (no crossover)</td><td>0.8098</td><td>&mdash;</td></tr>
+      <tr><td>Crossover1-NoRefine (1 inspiration)</td><td>0.7994</td><td style="color:#dc2626; font-weight:600;">-1.0%</td></tr>
+      <tr class="highlight"><td>Crossover3-NoRefine (3 inspirations)</td><td>0.8364</td><td style="color:#059669; font-weight:600;">+2.7%</td></tr>
+    </tbody>
+  </table>
+  <div class="card-grid cols-2" style="margin-top:10px;">
+    <img src="4.10-CrossoverBoxplot.png" alt="Crossover Ablation Box Plot" class="figure-img" style="max-width:100%; margin:0;">
+    <img src="4.11-CrossoverConv_a.png" alt="Crossover Ablation Convergence" class="figure-img" style="max-width:100%; margin:0;">
+  </div>
+  <div class="highlight-box" style="font-size:0.7em;">
+    Single-inspiration crossover <em>hurts</em> (-1.0%) &mdash; insufficient building-block diversity. Multi-inspiration (+2.7%) unlocks meaningful recombination. Full GA-LLaMEA vs Crossover3-NoRefine: D-TS slightly reduces mean but substantially reduces variance &rarr; <strong>D-TS is primarily a variance-reduction mechanism.</strong>
+  </div>
+  <aside class="notes">Crossover ablation. Single-inspiration hurts — insufficient diversity. Multi-inspiration with 3 sources improves by 2.7%. D-TS primarily reduces variance from 0.0432 to 0.0255.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 27 — Population Size Ablation           -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag amber">Ablation</span>
+  <h2>Population Size Ablation</h2>
+  <hr class="divider">
+  <table>
+    <thead><tr><th>Configuration</th><th>Mean AOCC</th><th>&sigma;</th><th>Min</th><th>Max</th></tr></thead>
+    <tbody>
+      <tr><td>GA-LLaMEA-4 (4 init parents)</td><td>0.7737</td><td>0.0850</td><td>0.6491</td><td>0.8586</td></tr>
+      <tr class="highlight"><td><strong>GA-LLaMEA-8 (8 init parents)</strong></td><td><strong>0.8348</strong></td><td><strong>0.0255</strong></td><td>0.8050</td><td>0.8640</td></tr>
+    </tbody>
+  </table>
+  <div class="stats" style="margin-top:18px;">
+    <div class="stat">
+      <span class="number">+7.9%</span>
+      <span class="label">Mean AOCC improvement</span>
+    </div>
+    <div class="stat">
+      <span class="number">~3&times;</span>
+      <span class="label">Lower variance</span>
+    </div>
+    <div class="stat">
+      <span class="number">100%</span>
+      <span class="label">8-init runs &gt; 0.80</span>
+    </div>
+  </div>
+  <div class="card-grid cols-2" style="margin-top:10px;">
+    <img src="4.12-PopConv_a.png" alt="Population Size Convergence" class="figure-img" style="max-width:100%; margin:0;">
+    <img src="4.13-PopBoxplot.png" alt="Population Size Box Plot" class="figure-img" style="max-width:100%; margin:0;">
+  </div>
+  <aside class="notes">Population size ablation. 8-parent initialization is strictly better: 7.9% higher mean, 3 times lower variance, all runs above 0.80. The 4-parent config includes a lower outlier around 0.65.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 28 — Section: Conclusion                -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="section-divider" data-dark="true">
+  <span class="section-num">Section VI</span>
+  <h2>Conclusion</h2>
+  <p>Contributions and future directions</p>
+  <ul class="section-preview">
+    <li>Three validated contributions</li>
+    <li>Recommendations for future work</li>
+  </ul>
+  <aside class="notes">We now present our conclusions.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 29 — Merged Contributions + Conclusion  -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Conclusion</span>
+  <h2>Contributions &amp; Conclusion</h2>
+  <hr class="divider">
+  <table>
+    <thead><tr><th style="width:28px">#</th><th>Contribution</th><th>Evidence</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td><strong>Generative Crossover &gt; Mutation-Only</strong><br><span style="color:var(--text-secondary); font-size:0.9em;">Semantic recombination via LLM reasoning</span></td>
+        <td>+2.7% with 3 inspirations; interconnected CEGs; highest mean reward; coherent evolutionary lineages</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td><strong>Adaptive &gt; Static (D-TS)</strong><br><span style="color:var(--text-secondary); font-size:0.9em;">Bandit-driven, non-stationary aware</span></td>
+        <td>Exploration&rarr;exploitation shift (Fig 4.8); variance reduced 0.0255 vs 0.0432 baseline; primarily a variance-reduction mechanism</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td><strong>GA-LLaMEA Framework Validated</strong><br><span style="color:var(--text-secondary); font-size:0.9em;">First crossover + adaptive control in LLM-driven AAD</span></td>
+        <td>Fitness 0.8348, Elo ~1575, 36.3% Q4, closest to gold standard &mdash; consistent across 5 runs on 120 unseen test instances</td>
+      </tr>
+    </tbody>
+  </table>
+  <aside class="notes">Three contributions consolidated: generative crossover outperforms mutation-only, D-TS adaptive selection reduces variance, and the framework is validated across multiple metrics.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 30 — Key Results Dashboard              -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Conclusion</span>
+  <h2>Key Results at a Glance</h2>
+  <hr class="divider">
+  <div class="dashboard">
+    <div class="dash-card">
+      <span class="dash-value">0.8348</span>
+      <span class="dash-label">Mean Fitness</span>
+      <span class="dash-compare">&plusmn; 0.0255 (tightest)</span>
+    </div>
+    <div class="dash-card">
+      <span class="dash-value">~1575</span>
+      <span class="dash-label">Elo Rating</span>
+      <span class="dash-compare">+85 vs EoH</span>
+    </div>
+    <div class="dash-card">
+      <span class="dash-value">0.6028</span>
+      <span class="dash-label">Mean AOCC</span>
+      <span class="dash-compare">vs 0.5081 EoH</span>
+    </div>
+    <div class="dash-card">
+      <span class="dash-value">36.3%</span>
+      <span class="dash-label">Q4 Algorithms</span>
+      <span class="dash-compare">vs 17.6% EoH</span>
+    </div>
+    <div class="dash-card">
+      <span class="dash-value">0.8927</span>
+      <span class="dash-label">Intensification Ratio</span>
+      <span class="dash-compare">vs 0.7761 EoH</span>
+    </div>
+    <div class="dash-card">
+      <span class="dash-value">Highest</span>
+      <span class="dash-label">Crossover Reward</span>
+      <span class="dash-compare">D-TS validates crossover</span>
+    </div>
+  </div>
+  <aside class="notes">Dashboard summary. GA-LLaMEA leads across all metrics.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 31 — Recommendations                    -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Future Work</span>
+  <h2>Recommendations</h2>
+  <hr class="divider">
+  <table>
+    <thead><tr><th style="width:28px">#</th><th>Direction</th><th>Rationale</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1</strong></td><td><strong>Higher Dimensions</strong></td><td>10D, 20D, 50D+ MA-BBOB scalability assessment</td></tr>
+      <tr><td><strong>2</strong></td><td><strong>Multi-Model Ensembles</strong></td><td>Multiple LLMs (GPT-4, Claude, Gemini) as generative engines</td></tr>
+      <tr><td><strong>3</strong></td><td><strong>Multi-Objective</strong></td><td>Extend beyond single-objective continuous problems</td></tr>
+      <tr><td><strong>4</strong></td><td><strong>Formal D-TS Isolation</strong></td><td>Multi-inspiration crossover + uniform selection vs D-TS &mdash; isolate D-TS contribution independently</td></tr>
+      <tr><td><strong>5</strong></td><td><strong>D-TS Sensitivity Sweep</strong></td><td>&gamma; &isin; {0.7, 0.8, 0.9, 0.95, 0.99} for optimal discount rate</td></tr>
+    </tbody>
+  </table>
+  <aside class="notes">Five recommendations for future work: higher dimensions, multi-model ensembles, multi-objective optimization, formal D-TS isolation ablation, and a gamma sensitivity sweep.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 32 — Thank You                          -->
+<!-- ══════════════════════════════════════════════ -->
+<section class="thank-you" data-dark="true">
+  <h2>Thank You</h2>
+  <div style="width:60px; height:2px; background:rgba(255,255,255,0.2); margin:12px auto 20px;"></div>
+  <p style="font-size:0.75em; color:rgba(255,255,255,0.55); max-width:600px; margin-bottom:24px;">GA-LLaMEA: A Generative-Adaptive Evolutionary Framework using Discounted Thompson Sampling</p>
+  <p class="authors-line">Rigel Ray O. Cabaya &nbsp;&middot;&nbsp; Julius G. Baliling &nbsp;&middot;&nbsp; Keycee Rhaye T. Rivas</p>
+  <p style="font-size:0.65em; color:rgba(255,255,255,0.45); margin-top:4px;">Adviser: Cheryll S. Pagal, MSAMS</p>
+  <p style="font-size:0.6em; color:rgba(255,255,255,0.35); margin-top:18px; max-width:500px;">Key open questions: D-TS isolation condition, prompt sensitivity, and scaling to higher dimensions.</p>
+  <p class="cta">Questions?</p>
+  <aside class="notes">Thank you. We acknowledge our adviser Ma'am Cheryll Pagal for her guidance. We are happy to take your questions.</aside>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<div id="dot-nav"></div>
+<div id="page-indicator"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: false,
+  width: 1280,
+  height: 720,
+  margin: 0.04,
+  transition: 'slide',
+  transitionSpeed: 'default',
+  backgroundTransition: 'fade',
+  center: false,
+  progress: false,
+  controls: false,
+  showNotes: false,
+});
+
+// Dot navigation + page indicator
+const dotNav = document.getElementById('dot-nav');
+const pageIndicator = document.getElementById('page-indicator');
+const totalSlides = Reveal.getTotalSlides();
+for (let i = 0; i < totalSlides; i++) {
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => Reveal.slide(i));
+  dotNav.appendChild(dot);
+}
+
+function updateNav(index) {
+  dotNav.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === index));
+  const currentSlide = Reveal.getCurrentSlide();
+  const isDark = currentSlide && currentSlide.getAttribute('data-dark') === 'true';
+  dotNav.classList.toggle('dark-dots', isDark);
+  document.body.classList.toggle('dark-indicator', isDark);
+  pageIndicator.textContent = (index + 1) + ' / ' + totalSlides;
+}
+
+Reveal.on('slidechanged', (event) => updateNav(event.indexh));
+updateNav(0);
+</script>
+</body>
+</html>
