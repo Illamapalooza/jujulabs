@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Defense Script — Member 2 (Rigel Ray Cabaya) | GA-LLaMEA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --text: #1e293b;
+  --text-secondary: #64748b;
+  --accent: #0f172a;
+  --blue: #3b82f6;
+  --blue-soft: #eff6ff;
+  --blue-border: #bfdbfe;
+  --amber: #f59e0b;
+  --amber-soft: #fffbeb;
+  --amber-border: #fde68a;
+  --green: #10b981;
+  --green-soft: #ecfdf5;
+  --green-border: #a7f3d0;
+  --purple: #8b5cf6;
+  --purple-soft: #f5f3ff;
+  --purple-border: #ddd6fe;
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.04), 0 2px 4px rgba(0,0,0,0.03);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 17px;
+}
+
+/* ─── HEADER ─── */
+.header {
+  background: var(--accent);
+  color: #fff;
+  padding: 48px 24px 40px;
+  text-align: center;
+}
+.header .tag {
+  display: inline-block;
+  font-size: 0.65em;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.7);
+  border: 1px solid rgba(255,255,255,0.15);
+  margin-bottom: 16px;
+}
+.header h1 {
+  font-size: 1.8em;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin-bottom: 8px;
+}
+.header p {
+  color: rgba(255,255,255,0.55);
+  font-size: 0.95em;
+}
+.header .meta {
+  margin-top: 16px;
+  font-size: 0.8em;
+  color: rgba(255,255,255,0.45);
+}
+
+/* ─── CONTAINER ─── */
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ─── TIMING BAR ─── */
+.timing-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.75em;
+  color: var(--text-secondary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.timing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  flex-shrink: 0;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+.timing-dot.intro { background: var(--blue); }
+.timing-dot.lit { background: var(--amber); }
+.timing-dot.method { background: var(--green); }
+.timing-dot.results { background: var(--purple); }
+.timing-dot:hover { transform: scale(1.4); }
+.timing-legend {
+  display: flex;
+  gap: 14px;
+  margin-left: 16px;
+  font-size: 0.9em;
+}
+.timing-legend span { display: flex; align-items: center; gap: 4px; }
+.legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─── SLIDE SECTION ─── */
+.slide-section {
+  margin-top: 48px;
+  scroll-margin-top: 60px;
+}
+.slide-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.slide-num {
+  background: var(--accent);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.slide-num.divider-num {
+  background: var(--text-secondary);
+}
+.slide-title {
+  font-size: 1.15em;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+.slide-time {
+  margin-left: auto;
+  font-size: 0.72em;
+  color: var(--text-secondary);
+  font-family: 'DM Mono', monospace;
+  background: var(--border-light);
+  padding: 3px 10px;
+  border-radius: 100px;
+  flex-shrink: 0;
+}
+
+/* ─── SCRIPT CARD ─── */
+.script-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  box-shadow: var(--shadow);
+  font-size: 1em;
+  line-height: 1.8;
+  color: var(--text);
+}
+.script-card p {
+  margin-bottom: 16px;
+}
+.script-card p:last-child {
+  margin-bottom: 0;
+}
+.script-card strong {
+  color: var(--accent);
+  font-weight: 600;
+}
+.script-card em {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.script-card .quote {
+  background: var(--blue-soft);
+  border-left: 3px solid var(--blue);
+  padding: 12px 18px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin: 16px 0;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: var(--accent);
+}
+.script-card .stage-direction {
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 0.88em;
+  background: var(--border-light);
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  margin: 8px 0;
+}
+.script-card .transition {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  padding: 12px 0;
+  border-top: 1px dashed var(--border);
+  margin-top: 16px;
+}
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  display: inline-block;
+  font-size: 0.6em;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+.section-label.intro { background: var(--blue-soft); color: var(--blue); border: 1px solid var(--blue-border); }
+.section-label.lit { background: var(--amber-soft); color: #b45309; border: 1px solid var(--amber-border); }
+.section-label.method { background: var(--green-soft); color: #047857; border: 1px solid var(--green-border); }
+.section-label.results { background: var(--purple-soft); color: #6d28d9; border: 1px solid var(--purple-border); }
+
+/* ─── DIVIDER SLIDE ─── */
+.divider-card {
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 24px 32px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+.divider-card p {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.95em;
+}
+
+/* ─── TIMING TABLE ─── */
+.timing-table {
+  margin-top: 48px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.timing-table h3 {
+  padding: 16px 24px;
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+}
+.timing-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+}
+.timing-table th {
+  background: var(--border-light);
+  text-align: left;
+  padding: 10px 16px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.timing-table td {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-light);
+}
+.timing-table tr:last-child td {
+  font-weight: 700;
+  border-top: 2px solid var(--border);
+}
+
+/* ─── TIPS ─── */
+.tips {
+  margin-top: 32px;
+  background: var(--amber-soft);
+  border: 1px solid var(--amber-border);
+  border-radius: var(--radius);
+  padding: 24px 28px;
+}
+.tips h3 {
+  font-size: 0.85em;
+  font-weight: 700;
+  color: #92400e;
+  margin-bottom: 12px;
+}
+.tips ul {
+  list-style: none;
+  padding: 0;
+}
+.tips li {
+  font-size: 0.88em;
+  color: #78350f;
+  padding: 6px 0;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.5;
+}
+.tips li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--amber);
+  font-weight: 700;
+  font-family: 'DM Mono', monospace;
+}
+
+/* ─── PRINT ─── */
+@media print {
+  .timing-bar { display: none; }
+  .header { padding: 32px 24px; }
+  .slide-section { break-inside: avoid; }
+  .script-card { box-shadow: none; border: 1px solid #ccc; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="tag">Defense Script</div>
+  <h1>Member 2 &mdash; Rigel Ray Cabaya</h1>
+  <p>Slides 14&ndash;22: D-TS Mechanism &rarr; Why GA-LLaMEA Outperforms</p>
+  <div class="meta">GA-LLaMEA Final Thesis Defense &middot; April 2026</div>
+</div>
+
+<div class="timing-bar">
+  <div class="timing-dot method" title="Slide 14"></div>
+  <div class="timing-dot method" title="Slide 14+1"></div>
+  <div class="timing-dot method" title="Slide 14+2"></div>
+  <div class="timing-dot method" title="Slide 15"></div>
+  <div class="timing-dot method" title="Slide 16"></div>
+  <div class="timing-dot method" title="Slide 16b"></div>
+  <div class="timing-dot results" title="Slide 17"></div>
+  <div class="timing-dot results" title="Slide 18"></div>
+  <div class="timing-dot results" title="Slide 19"></div>
+  <div class="timing-dot results" title="Slide 20"></div>
+  <div class="timing-dot results" title="Slide 21"></div>
+  <div class="timing-dot results" title="Slide 22"></div>
+  <div class="timing-legend">
+    <span><div class="legend-dot" style="background:var(--green)"></div> Methodology</span>
+    <span><div class="legend-dot" style="background:var(--purple)"></div> Results</span>
+    <span style="font-family:'DM Mono',monospace; color:var(--accent); font-weight:600;">~15:00</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════ SLIDE 14 ═══════════════════════ -->
+<div class="slide-section" id="slide-1">
+  <div class="slide-header">
+    <div class="slide-num">14</div>
+    <div>
+      <span class="section-label method">Methodology</span>
+      <div class="slide-title">Discounted Thompson Sampling</div>
+    </div>
+    <span class="slide-time">1:30</span>
+  </div>
+  <div class="script-card">
+    <p>Continuing with our methodology, I will explain the core adaptive mechanism of GA-LLaMEA &mdash; Discounted Thompson Sampling, or D-T-S.</p>
+    <p><strong>The fundamental challenge is that operator effectiveness changes over the course of an evolutionary run.</strong> Generative Crossover may be highly productive early when population diversity is high, but less effective once the population has converged. A fixed schedule cannot respond to this shifting landscape.</p>
+    <p><strong>D-T-S addresses this as a non-stationary multi-armed bandit problem.</strong> As you can see in the bar chart, each of our four operators &mdash; Refine, Simplify, Crossover, and Random New &mdash; is modeled as an arm with its own posterior distribution. The height represents the estimated mean reward, and the shaded region represents uncertainty.</p>
+    <p><strong>The key parameters are shown on the left:</strong> gamma equals 0.99, which gives us an effective memory window of approximately 100 steps &mdash; matching our evaluation budget. Tau-max equals 0.2 as a variance ceiling. Epsilon equals 0.15 as an exploration floor. And s-max equals 10 as the stagnation patience threshold.</p>
+    <p><strong>On the right, the core equations</strong> &mdash; Equation 3-5 computes the posterior mean, Equation 3-7 draws a Thompson sample from each arm&rsquo;s Gaussian posterior, and Equation 3-8 selects the arm with the highest sampled value.</p>
+    <div class="stage-direction">Point to the bar chart to explain the visual bandit concept. Reference left and right cards.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 14+1 ═══════════════════════ -->
+<div class="slide-section" id="slide-2">
+  <div class="slide-header">
+    <div class="slide-num">14<small>+1</small></div>
+    <div>
+      <span class="section-label method">Methodology</span>
+      <div class="slide-title">D-TS: Statistical Foundation</div>
+    </div>
+    <span class="slide-time">1:30</span>
+  </div>
+  <div class="script-card">
+    <p>Let me now walk through the mathematical foundation. Equations 3-1 and 3-2 define the discounted statistics.</p>
+    <p><strong>N-t-of-i is the discounted count</strong> &mdash; how many times operator i has been selected, weighted by recency. S-t-of-i is the discounted cumulative reward. The key is the gamma-to-the-power-of-t-minus-j term &mdash; this exponentially down-weights older observations. At gamma equals 0.99, an observation from 100 steps ago receives weight 0.99 to the power of 100, which is approximately 0.37 &mdash; still meaningful, but far less influential than a recent observation.</p>
+    <p><strong>Equations 3-5 and 3-6 derive the posterior parameters.</strong> Mu-hat &mdash; the posterior mean &mdash; is simply the discounted reward divided by the discounted count. Tau-squared &mdash; the posterior variance &mdash; decreases as we collect more data, making the posterior tighter. The tau-max ceiling of 0.2 prevents unstable sampling for under-explored arms.</p>
+    <p><strong>The three annotation cards summarize the practical behavior:</strong> discounted statistics adapt to non-stationarity, the discount-then-add update runs in O-of-K time per step, and less data means wider posteriors which means more exploration &mdash; Thompson Sampling&rsquo;s natural exploration-exploitation balance.</p>
+    <div class="stage-direction">Walk through equations left to right. Emphasize the recency weighting concept.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 14+2 ═══════════════════════ -->
+<div class="slide-section" id="slide-3">
+  <div class="slide-header">
+    <div class="slide-num">14<small>+2</small></div>
+    <div>
+      <span class="section-label method">Methodology</span>
+      <div class="slide-title">D-TS: Operator Selection Policy</div>
+    </div>
+    <span class="slide-time">1:30</span>
+  </div>
+  <div class="script-card">
+    <p>This slide presents the complete operator selection policy &mdash; Equation 3-13 &mdash; which integrates all three control mechanisms in strict priority order.</p>
+    <p><strong>Case 1, the highest priority, is the stagnation override.</strong> If the stagnation counter s reaches s-max equals 10 &mdash; meaning 10 consecutive evaluations with no A-O-C-C improvement &mdash; the framework overrides normal D-T-S selection and forces a call from the best operator group k-star. This is computed by Equation 3-12, a nested double-max that selects whichever group &mdash; exploitation or exploration &mdash; has the highest-performing single member based on posterior mean.</p>
+    <p><strong>Case 2 is the exploration floor.</strong> With probability epsilon equals 0.15, an operator is chosen uniformly at random from all four arms, regardless of posterior estimates. This prevents permanent abandonment of any arm due to early bad luck &mdash; a well-documented failure mode in constrained bandit settings.</p>
+    <p><strong>Case 3 is standard Thompson Sampling.</strong> With probability 0.85, we draw a sample from each arm&rsquo;s Gaussian posterior and select the arm with the highest sampled value. This is where the adaptive learning happens &mdash; arms with higher estimated means are selected more often, but arms with high uncertainty can still win, providing natural exploration.</p>
+    <p>These three mechanisms are complementary, not redundant. The epsilon floor provides guaranteed coverage, D-T-S provides adaptive temporal selection, and the stagnation override provides deterministic escape from convergence traps.</p>
+    <div class="stage-direction">Point to each case box on the right as you explain it. This is the slide the panel will probe most &mdash; speak slowly and clearly.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 15 ═══════════════════════ -->
+<div class="slide-section" id="slide-4">
+  <div class="slide-header">
+    <div class="slide-num">15</div>
+    <div>
+      <span class="section-label method">Methodology</span>
+      <div class="slide-title">Reward System</div>
+    </div>
+    <span class="slide-time">1:00</span>
+  </div>
+  <div class="script-card">
+    <p>The reward function, defined in Equation 3-14, is how the D-T-S controller receives feedback about operator quality.</p>
+    <p><strong>It is a piecewise function with two cases.</strong> If the generated algorithm is invalid &mdash; meaning the LLM produced code that crashes or fails to execute &mdash; the reward is zero. If the algorithm is valid, the reward equals the A-O-C-C fitness score, clipped to the range zero to one.</p>
+    <p><strong>A critical design choice is that we use absolute fitness, not relative improvement over the parent.</strong> Using improvement over the current best would create reward inflation &mdash; as the population approaches the fitness ceiling, even good operators would receive near-zero rewards, corrupting the posterior estimates.</p>
+    <p>The visual flow at the bottom shows the complete pipeline: the LLM generates an offspring, it is executed on MA-BBOB, and the outcome is either a crash &mdash; which yields reward zero &mdash; or a valid solution &mdash; which yields the clipped A-O-C-C score. This reward then updates the D-T-S posterior for the operator that was used.</p>
+    <div class="stage-direction">Follow the reward flow diagram from left to right.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 16 ═══════════════════════ -->
+<div class="slide-section" id="slide-5">
+  <div class="slide-header">
+    <div class="slide-num">16</div>
+    <div>
+      <span class="section-label method">Methodology</span>
+      <div class="slide-title">Experimental Setup</div>
+    </div>
+    <span class="slide-time">1:30</span>
+  </div>
+  <div class="script-card">
+    <p>For our experimental setup, we follow the BLADE benchmarking protocol by van Stein et al., 2025.</p>
+    <p><strong>The benchmark is MA-BBOB</strong> by Vermetten et al. in 2023 &mdash; which constructs benchmark instances by computing affine combinations of classical BBOB functions, placing the global optimum uniformly at random. This prevents LLM-generated algorithms from achieving artificially high performance by exploiting structural regularities.</p>
+    <p><strong>We use 24 noiseless functions in 5 dimensions</strong>, with 100 LLM evaluations per run across 5 independent seeds. The population is configured with mu equals 4 maintained parents and lambda equals 8 offspring, with an initialization size of 8 parents &mdash; meaning we generate 8 initial candidates and keep the best 4.</p>
+    <p><strong>The A-O-C-C formula shown at the top</strong> is our primary convergence metric &mdash; Equation 3-16. It measures how quickly an algorithm converges toward the global optimum, integrating performance across the entire evaluation budget. The nested min-max clipping ensures numerical stability by constraining log-scaled precision to the range negative 8 to 2.</p>
+    <p><strong>Our baselines are Baseline LLaMEA</strong> &mdash; the original framework by van Stein and B&auml;ck &mdash; <strong>and Evolution of Heuristics</strong> by Liu et al.</p>
+    <div class="stage-direction">Reference the table parameters as you go.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 16b ═══════════════════════ -->
+<div class="slide-section" id="slide-6">
+  <div class="slide-header">
+    <div class="slide-num">16<small>b</small></div>
+    <div>
+      <span class="section-label method">Methodology</span>
+      <div class="slide-title">Evaluation Metrics</div>
+    </div>
+    <span class="slide-time">1:00</span>
+  </div>
+  <div class="script-card">
+    <p>We evaluate our framework using four complementary instruments.</p>
+    <p><strong>First, A-O-C-C</strong> &mdash; Area Over the Convergence Curve &mdash; our primary anytime performance metric. Higher values in the range zero to one indicate faster and more consistent convergence.</p>
+    <p><strong>Second, Competitive Elo Ratings</strong> &mdash; a standardized relative ranking based on pairwise tournament matches across all 120 benchmark instances. While A-O-C-C measures aggregate performance over all algorithms, Elo specifically measures the quality of the best algorithms produced.</p>
+    <p><strong>Third, Behaviour-Space Analysis</strong> &mdash; which profiles every single generated algorithm &mdash; not just the final best &mdash; across 11 metrics covering spatial exploration, exploitation intensity, and convergence stability.</p>
+    <p><strong>And fourth, Code Evolution Graphs, or CEGs</strong> &mdash; structural analyses that trace the genealogical lineage and code complexity progression across generations, revealing whether evolution builds constructively or drifts.</p>
+    <div class="stage-direction">Gesture to each card in the 2x2 grid.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 17 ═══════════════════════ -->
+<div class="slide-section" id="slide-7">
+  <div class="slide-header">
+    <div class="slide-num divider-num">17</div>
+    <div>
+      <span class="section-label results">Results</span>
+      <div class="slide-title">Section Divider: Results &amp; Discussion</div>
+    </div>
+    <span class="slide-time">0:15</span>
+  </div>
+  <div class="divider-card">
+    <p>We now move to Section Four &mdash; Results and Discussion, where we present the performance, convergence, behavioural, and operator dynamics findings.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 18 ═══════════════════════ -->
+<div class="slide-section" id="slide-8">
+  <div class="slide-header">
+    <div class="slide-num">18</div>
+    <div>
+      <span class="section-label results">Results</span>
+      <div class="slide-title">Consolidated Performance</div>
+    </div>
+    <span class="slide-time">1:30</span>
+  </div>
+  <div class="script-card">
+    <p>Starting with our headline results &mdash; this table summarizes the consolidated performance across all metrics.</p>
+    <p><strong>GA-LLaMEA leads across every column.</strong> It achieves the highest Elo rating at approximately 1575, the highest mean fitness at 0.8348, the highest mean A-O-C-C at 0.6028, and the highest Q4 algorithm rate at 36.3 percent &mdash; meaning over a third of all algorithms it generates fall in the top quartile.</p>
+    <p><strong>Compared to EoH</strong>, GA-LLaMEA achieves 18.6 percent higher A-O-C-C. <strong>Compared to Baseline LLaMEA</strong>, the improvement is 13.4 percent in A-O-C-C.</p>
+    <p><strong>The box plot below</strong> visualizes the fitness distribution. Notice GA-LLaMEA has both the highest median and the tightest interquartile range &mdash; indicating not just better average performance, but more consistent algorithm generation.</p>
+    <p><strong>These numbers are explained by three behavioural mechanisms we will examine in the following slides.</strong></p>
+    <div class="stage-direction">Point to the highlighted row. Reference the box plot for visual confirmation.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 19 ═══════════════════════ -->
+<div class="slide-section" id="slide-9">
+  <div class="slide-header">
+    <div class="slide-num">19</div>
+    <div>
+      <span class="section-label results">Results</span>
+      <div class="slide-title">Elo Tournament Rankings</div>
+    </div>
+    <span class="slide-time">1:00</span>
+  </div>
+  <div class="script-card">
+    <p>The Elo rankings provide a more nuanced view of relative algorithm quality.</p>
+    <p><strong>GA-LLaMEA achieves an Elo rating of approximately 1575.</strong> For context, an Elo difference of 85 points &mdash; the gap between GA-LLaMEA and EoH &mdash; translates to an approximately 62 percent expected win rate in pairwise tournament matches. The gap versus Baseline LLaMEA is even larger at 140 Elo points.</p>
+    <p><strong>The point plot visualizes the distribution.</strong> GA-LLaMEA consistently produces algorithms that win in head-to-head comparisons across diverse benchmark instances.</p>
+    <p><strong>An important distinction:</strong> Elo measures the quality of the best algorithms produced by each framework, while A-O-C-C captures aggregate performance over the entire evolutionary run. GA-LLaMEA leads on both &mdash; indicating superiority in both peak performance and overall search efficiency.</p>
+    <div class="stage-direction">Reference the three stat cards for quick numbers.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 20 ═══════════════════════ -->
+<div class="slide-section" id="slide-10">
+  <div class="slide-header">
+    <div class="slide-num">20</div>
+    <div>
+      <span class="section-label results">Results</span>
+      <div class="slide-title">Convergence Analysis</div>
+    </div>
+    <span class="slide-time">1:00</span>
+  </div>
+  <div class="script-card">
+    <p>The convergence trajectories reveal how each framework improves over the course of the evaluation budget.</p>
+    <p><strong>GA-LLaMEA shows the steepest initial climb and reaches the highest plateau.</strong> This indicates that both the crossover mechanism and D-T-S are driving rapid early improvement &mdash; crossover recombines promising strategies from the initial population, while D-T-S quickly identifies and favors productive operators.</p>
+    <p><strong>EoH starts competitively</strong> but plateaus around evaluation 40. Its mutation-based operators explore well initially but cannot sustain improvement once the population matures.</p>
+    <p><strong>Baseline LLaMEA converges most slowly</strong>, consistent with its mutation-only limitation &mdash; each candidate evolves in isolation without cross-population information sharing.</p>
+    <p>The key insight is that GA-LLaMEA maintains progress throughout the budget, consistent with the sustained late-stage improvement we see in the behavioural metrics.</p>
+    <div class="stage-direction">Trace the convergence curves with hand gestures &mdash; steepest (GA-LLaMEA), early plateau (EoH), slowest (Baseline).</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 21 ═══════════════════════ -->
+<div class="slide-section" id="slide-11">
+  <div class="slide-header">
+    <div class="slide-num">21</div>
+    <div>
+      <span class="section-label results">Results</span>
+      <div class="slide-title">Behavioural Profile Analysis</div>
+    </div>
+    <span class="slide-time">1:30</span>
+  </div>
+  <div class="script-card">
+    <p>One of our most important analyses &mdash; behavioural profiling of every algorithm generated during evolution. We profiled 1,442 total algorithms: 472 from Baseline, 482 from EoH, and 488 from GA-LLaMEA.</p>
+    <p><strong>The table shows four key behavioural metrics compared against the Q4 Gold Standard</strong> &mdash; the behavioural profile of the top-quartile algorithms across all frameworks.</p>
+    <p><strong>Exploration percentage:</strong> GA-LLaMEA generates algorithms with only 6.66 percent exploration &mdash; the lowest and closest to the gold standard of 4.03 percent. EoH is the highest at 10.95 percent.</p>
+    <p><strong>Intensification ratio:</strong> GA-LLaMEA achieves 0.8927 &mdash; closest to the gold standard of 0.9395. This means its algorithms spend more time exploiting promising regions.</p>
+    <p><strong>Distance to best:</strong> GA-LLaMEA&rsquo;s algorithms are closest to optimal solutions at 0.4241, compared to 0.6312 for Baseline and 0.7277 for EoH.</p>
+    <p><strong>Last improvement fraction:</strong> At 0.3501, GA-LLaMEA&rsquo;s algorithms continue improving much later in their evaluation budgets &mdash; indicating they avoid premature convergence.</p>
+    <p><strong>The scatter plots below</strong> show the full behavioural landscape. The left plot shows all 1,442 algorithms, and the right shows the top 100 per method. GA-LLaMEA&rsquo;s cluster is consistently closest to the gold standard region.</p>
+    <div class="stage-direction">Reference the table row by row, then gesture to the scatter plots.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ SLIDE 22 ═══════════════════════ -->
+<div class="slide-section" id="slide-12">
+  <div class="slide-header">
+    <div class="slide-num">22</div>
+    <div>
+      <span class="section-label results">Results</span>
+      <div class="slide-title">Why GA-LLaMEA Outperforms</div>
+    </div>
+    <span class="slide-time">1:30</span>
+  </div>
+  <div class="script-card">
+    <p>So why does GA-LLaMEA outperform? We identify three converging behavioural mechanisms.</p>
+    <p><strong>First, Generative Crossover enables trait combination.</strong> The high intensification ratio and low distance-to-best indicate that crossover successfully combines complementary strategies from multiple parents. This is consistent with Goldberg&rsquo;s Building Block Hypothesis &mdash; effective recombination assembles high-performing sub-strategies into superior composite algorithms. The per-method correlation between intensification ratio and fitness is 0.667.</p>
+    <p><strong>Second, D-T-S steers the evolutionary search toward the gold standard behavioural region.</strong> By progressively shifting operator selection toward Simplify and Crossover &mdash; the operators that produce the most gold-standard-like algorithms &mdash; the adaptive controller optimizes not just individual algorithm quality but the meta-level search trajectory.</p>
+    <p><strong>Third, sustained late-stage improvement.</strong> GA-LLaMEA&rsquo;s last improvement fraction of 0.3501 &mdash; compared to 0.2677 for Baseline and just 0.1436 for EoH &mdash; means the framework continues finding better solutions near the evaluation budget limit. This is a direct consequence of the stagnation override mechanism and the adaptive operator selection working together.</p>
+    <p><strong>A key observation about EoH</strong> &mdash; shown in the note box &mdash; is that it has the most exploratory profile of all three frameworks. Its e1 and e2 operators prioritize diversity over refinement, creating a persistent exploration bias that limits final performance.</p>
+    <div class="transition">&mdash; Hand off to next presenter &mdash;</div>
+    <p>That covers our main results. I will now hand over to my groupmate who will present the ablation studies and conclusion.</p>
+    <div class="stage-direction">Use the numbered steps to build the argument progressively. This is a critical slide for panel Q&amp;A &mdash; be prepared to elaborate on any of the three mechanisms.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TIMING TABLE ═══════════════════════ -->
+<div class="timing-table">
+  <h3>Timing Guide</h3>
+  <table>
+    <thead>
+      <tr><th>Slide</th><th>Topic</th><th style="text-align:right;">Est. Time</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>14</td><td>D-TS Mechanism</td><td style="text-align:right;">1:30</td></tr>
+      <tr><td>14+1</td><td>Statistical Foundation</td><td style="text-align:right;">1:30</td></tr>
+      <tr><td>14+2</td><td>Selection Policy</td><td style="text-align:right;">1:30</td></tr>
+      <tr><td>15</td><td>Reward System</td><td style="text-align:right;">1:00</td></tr>
+      <tr><td>16</td><td>Experimental Setup</td><td style="text-align:right;">1:30</td></tr>
+      <tr><td>16b</td><td>Evaluation Metrics</td><td style="text-align:right;">1:00</td></tr>
+      <tr><td>17</td><td>Results divider</td><td style="text-align:right;">0:15</td></tr>
+      <tr><td>18</td><td>Consolidated Performance</td><td style="text-align:right;">1:30</td></tr>
+      <tr><td>19</td><td>Elo Rankings</td><td style="text-align:right;">1:00</td></tr>
+      <tr><td>20</td><td>Convergence Analysis</td><td style="text-align:right;">1:00</td></tr>
+      <tr><td>21</td><td>Behavioural Profiles</td><td style="text-align:right;">1:30</td></tr>
+      <tr><td>22</td><td>Why GA-LLaMEA Outperforms</td><td style="text-align:right;">1:30</td></tr>
+      <tr><td></td><td><strong>Total</strong></td><td style="text-align:right;"><strong>~14:45</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════ TIPS ═══════════════════════ -->
+<div class="tips">
+  <h3>Delivery Tips</h3>
+  <ul>
+    <li>On Slide 14, use the bar chart to make the bandit concept intuitive &mdash; point to the arms</li>
+    <li>On Slide 14+2, this is the slide the panel will probe most &mdash; speak slowly on the three cases</li>
+    <li>On Slide 15, follow the reward flow diagram left to right</li>
+    <li>On Slide 18, emphasize the highlighted row and reference the box plot</li>
+    <li>On Slide 21, go row by row through the behavioural table</li>
+    <li>On Slide 22, build the three mechanisms progressively &mdash; this is your strongest argumentative slide</li>
+    <li>Keep "D-TS" pronunciation: "D-T-S" (spell it out)</li>
+    <li>AOCC: say "A-O-C-C" (spell it out)</li>
+    <li>When referencing equations, say "Equation three-dash-five" not "Equation 3.5"</li>
+  </ul>
+</div>
+
+</div>
+
+<script>
+// Click dots to jump to slides
+document.querySelectorAll('.timing-dot').forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    const target = document.getElementById('slide-' + (i + 1));
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+</script>
+
+</body>
+</html>
