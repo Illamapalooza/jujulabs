@@ -69,18 +69,31 @@ window.MathJax = {
 /* ─── SLIDE LAYOUT ─── */
 .reveal section {
   text-align: left;
-  padding: 48px 64px;
-  overflow: hidden;
+  padding: 48px 64px 48px 64px;
+  overflow-y: auto;
+  overflow-x: hidden;
   max-height: 100%;
   box-sizing: border-box;
 }
-/* Contain MathJax assistive elements within their parent */
-mjx-assistive-mml {
-  position: absolute !important;
-  overflow: hidden !important;
-  clip: rect(1px,1px,1px,1px) !important;
-  width: 1px !important;
-  height: 1px !important;
+
+/* ─── SCROLLBAR STYLING ─── */
+.reveal section::-webkit-scrollbar {
+  width: 6px;
+}
+.reveal section::-webkit-scrollbar-track {
+  background: transparent;
+}
+.reveal section::-webkit-scrollbar-thumb {
+  background: rgba(100,116,139,0.25);
+  border-radius: 3px;
+}
+.reveal section::-webkit-scrollbar-thumb:hover {
+  background: rgba(100,116,139,0.45);
+}
+/* Firefox */
+.reveal section {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100,116,139,0.25) transparent;
 }
 
 /* ─── PAGE INDICATOR ─── */
@@ -1062,28 +1075,26 @@ Result: semantically coherent</div>
 <!-- SLIDE 14+1 — D-TS: Statistical Foundation     -->
 <!-- ══════════════════════════════════════════════ -->
 <section data-transition="slide" style="padding:24px 56px;">
-  <div style="transform:scale(0.97);transform-origin:top left;width:103%;">
-    <div class="slide-tag methodology">Methodology</div>
-    <h2 style="margin-bottom:0.15em;font-size:1.3em;">D-TS &mdash; Statistical Foundation</h2>
-    <hr class="divider" style="margin:2px 0 6px;">
-    <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Discounted statistics per operator <em>i</em> (recency-weighted):</p>
-    <div class="eq-block" style="font-size:0.6em;margin:0;">
-      \[ N_t(i) = \textstyle\sum_{j=1}^{t} \gamma^{t-j}\mathbf{1}\{i_j\!=\!i\} \quad S_t(i) = \textstyle\sum_{j=1}^{t} \gamma^{t-j} r_j\mathbf{1}\{i_j\!=\!i\} \tag{3-1,2} \]
+  <div class="slide-tag methodology">Methodology</div>
+  <h2 style="margin-bottom:0.15em;font-size:1.3em;">D-TS &mdash; Statistical Foundation</h2>
+  <hr class="divider" style="margin:2px 0 6px;">
+  <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Discounted statistics per operator <em>i</em> (recency-weighted):</p>
+  <div class="eq-block" style="font-size:0.6em;margin:0;">
+    \[ N_t(i) = \textstyle\sum_{j=1}^{t} \gamma^{t-j}\mathbf{1}\{i_j\!=\!i\} \quad S_t(i) = \textstyle\sum_{j=1}^{t} \gamma^{t-j} r_j\mathbf{1}\{i_j\!=\!i\} \tag{3-1,2} \]
+  </div>
+  <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Posterior belief from discounted sufficient statistics:</p>
+  <div class="eq-block" style="font-size:0.6em;margin:0;">
+    \[ \hat{\mu}_t(i) = \frac{S_t(i)}{\max(\epsilon,N_t(i))} \qquad \tau_t^2(i) = \min\!\bigl\{\tfrac{1}{\max(\epsilon, N_t(i))},\,\tau_{\max}^2\bigr\} \tag{3-5,6} \]
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px;font-size:0.55em;">
+    <div class="annotation-card" style="padding:4px 8px;">
+      <b>N<sub>t</sub></b> = discounted count, <b>S<sub>t</sub></b> = discounted reward. &gamma;=0.99 &rarr; memory &asymp; 100 steps.
     </div>
-    <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Posterior belief from discounted sufficient statistics:</p>
-    <div class="eq-block" style="font-size:0.6em;margin:0;">
-      \[ \hat{\mu}_t(i) = \frac{S_t(i)}{\max(\epsilon,N_t(i))} \qquad \tau_t^2(i) = \min\!\bigl\{\tfrac{1}{\max(\epsilon, N_t(i))},\,\tau_{\max}^2\bigr\} \tag{3-5,6} \]
+    <div class="annotation-card" style="padding:4px 8px;">
+      <b>Discount-then-add:</b> all arms decay each step, selected arm gains +1 count and +r<sub>t</sub> reward.
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px;font-size:0.55em;">
-      <div class="annotation-card" style="padding:4px 8px;">
-        <b>N<sub>t</sub></b> = discounted count, <b>S<sub>t</sub></b> = discounted reward. &gamma;=0.99 &rarr; memory &asymp; 100 steps.
-      </div>
-      <div class="annotation-card" style="padding:4px 8px;">
-        <b>Discount-then-add:</b> all arms decay each step, selected arm gains +1 count and +r<sub>t</sub> reward.
-      </div>
-      <div class="annotation-card" style="padding:4px 8px;">
-        <b>&mu;&#770;</b> = performance signal. <b>&tau;&sup2;</b> = uncertainty (capped at &tau;<sub>max</sub>=0.2). Less data &rarr; wider exploration.
-      </div>
+    <div class="annotation-card" style="padding:4px 8px;">
+      <b>&mu;&#770;</b> = performance signal. <b>&tau;&sup2;</b> = uncertainty (capped at &tau;<sub>max</sub>=0.2). Less data &rarr; wider exploration.
     </div>
   </div>
   <aside class="notes">This slide presents the discounted statistics and posterior estimation that underpin D-TS. Equations 3-1 through 3-6. Recursive update (Eq 3-3,4): N_t(i) ← γN_{t-1}(i), S_t(i) ← γS_{t-1}(i); then N_t(i_t) += 1, S_t(i_t) += r_t. O(K) per step.</aside>
@@ -1093,31 +1104,29 @@ Result: semantically coherent</div>
 <!-- SLIDE 14+2 — D-TS: Selection Policy           -->
 <!-- ══════════════════════════════════════════════ -->
 <section data-transition="slide" style="padding:24px 56px;">
-  <div style="transform:scale(0.97);transform-origin:top left;width:103%;">
-    <div class="slide-tag methodology">Methodology</div>
-    <h2 style="margin-bottom:0.15em;font-size:1.3em;">D-TS &mdash; Operator Selection Policy</h2>
-    <hr class="divider" style="margin:2px 0 6px;">
-    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:0.6em;align-items:start">
-      <div>
-        <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Sample from each arm&rsquo;s posterior:</p>
-        <div class="eq-block" style="font-size:0.65em;margin:0;">
-          \[ \theta_t(i)\sim\mathcal{N}\!\left(\hat{\mu}_t(i),\,\tau_t^2(i)\right) \tag{3-7} \]
-        </div>
-        <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Stagnation-aware selection (3 cases):</p>
-        <div class="eq-block" style="font-size:0.62em;margin:0;">
-          \[ i_t = \begin{cases} \text{Uniform}(k^*), & s \geq s_{\max} \\ \text{Uniform}(\mathcal{A}), & \text{prob}\;\epsilon \\ \arg\max_{i}\,\theta_t(i), & \text{otherwise} \end{cases} \tag{3-13} \]
-        </div>
+  <div class="slide-tag methodology">Methodology</div>
+  <h2 style="margin-bottom:0.15em;font-size:1.3em;">D-TS &mdash; Operator Selection Policy</h2>
+  <hr class="divider" style="margin:2px 0 6px;">
+  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:0.6em;align-items:start">
+    <div>
+      <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Sample from each arm&rsquo;s posterior:</p>
+      <div class="eq-block" style="font-size:0.65em;margin:0;">
+        \[ \theta_t(i)\sim\mathcal{N}\!\left(\hat{\mu}_t(i),\,\tau_t^2(i)\right) \tag{3-7} \]
       </div>
-      <div style="font-size:0.55em;display:flex;flex-direction:column;gap:0.2em">
-        <div class="annotation-card highlight" style="padding:3px 8px;">
-          <b>Case 1 — Stagnation</b>: s &ge; 10 &rarr; switch to best group k*
-        </div>
-        <div class="annotation-card" style="padding:3px 8px;">
-          <b>Case 2 — Exploration</b>: &epsilon;=0.15 uniform random
-        </div>
-        <div class="annotation-card" style="padding:3px 8px;">
-          <b>Case 3 — Thompson</b>: highest posterior sample
-        </div>
+      <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Stagnation-aware selection (3 cases):</p>
+      <div class="eq-block" style="font-size:0.62em;margin:0;">
+        \[ i_t = \begin{cases} \text{Uniform}(k^*), & s \geq s_{\max} \\ \text{Uniform}(\mathcal{A}), & \text{prob}\;\epsilon \\ \arg\max_{i}\,\theta_t(i), & \text{otherwise} \end{cases} \tag{3-13} \]
+      </div>
+    </div>
+    <div style="font-size:0.55em;display:flex;flex-direction:column;gap:0.2em">
+      <div class="annotation-card highlight" style="padding:3px 8px;">
+        <b>Case 1 — Stagnation</b>: s &ge; 10 &rarr; switch to best group k*
+      </div>
+      <div class="annotation-card" style="padding:3px 8px;">
+        <b>Case 2 — Exploration</b>: &epsilon;=0.15 uniform random
+      </div>
+      <div class="annotation-card" style="padding:3px 8px;">
+        <b>Case 3 — Thompson</b>: highest posterior sample
       </div>
     </div>
   </div>
@@ -1639,7 +1648,7 @@ Reveal.initialize({
   slideNumber: false,
   width: 1280,
   height: 720,
-  margin: 0.04,
+  margin: 0,
   transition: 'slide',
   transitionSpeed: 'default',
   backgroundTransition: 'fade',
