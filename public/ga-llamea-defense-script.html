@@ -418,7 +418,7 @@ body {
     <p>Before we discuss the specific problems, let us first establish the context of our study.</p>
     <p><strong>The fundamental challenge in optimization</strong> is designing metaheuristic algorithms &mdash; search strategies that solve complex mathematical problems. Traditionally, this has been done manually by domain experts, requiring extensive trial-and-error, deep mathematical intuition, and significant time investment. As Wolpert and Macready showed in their No Free Lunch theorem, no single algorithm dominates across all problem types &mdash; which means we constantly need new, specialized algorithms.</p>
     <p><strong>Large Language Models have changed this.</strong> LLMs can now generate executable optimization code directly from natural-language prompts, enabling a new paradigm called LLM-driven Automated Algorithm Design, or AAD. Frameworks like LLaMEA by van Stein and B&auml;ck, and Evolution of Heuristics by Liu et al., treat the LLM as an evolutionary operator &mdash; the system iteratively prompts the model to refine and improve candidate algorithms, evaluates them on benchmarks, and selects the best performers.</p>
-    <p><strong>However, current frameworks have fundamental limitations.</strong> They remain mutation-centric &mdash; each candidate algorithm evolves in isolation, with no mechanism to recombine complementary strategies from different candidates. They also rely on static operator scheduling, meaning the system cannot adapt its search strategy as the evolutionary run progresses. These limitations motivated us to develop GA-LLaMEA.</p>
+    <p><strong>However, despite these advances, current LLM-driven frameworks still have fundamental architectural limitations</strong> that restrict the quality and diversity of generated algorithms. These limitations are what motivated us to develop GA-LLaMEA &mdash; and they form the core of our problem statement.</p>
     <div class="stage-direction">The highlight box on screen summarizes the core insight &mdash; you can gesture toward it.</div>
     <p>Our core insight is that by combining generative crossover &mdash; multi-parent recombination via LLM reasoning &mdash; with Discounted Thompson Sampling for adaptive operator selection, we can address these fundamental limitations.</p>
   </div>
@@ -435,7 +435,7 @@ body {
     <span class="slide-time">1:30</span>
   </div>
   <div class="script-card">
-    <p>Now let us formalize these into three specific research problems.</p>
+    <p>Building on those limitations, we formalize three specific problems in LLM-driven Automated Algorithm Design.</p>
     <p><strong>First, underutilized populations.</strong> Current frameworks like LLaMEA rely on mutation-based refinement &mdash; each candidate is improved in isolation. There is no mechanism for recombining complementary strategies across the population, which leads to premature convergence.</p>
     <p><strong>Second, ineffective recombination.</strong> No general-purpose crossover operator exists within LLaMEA for continuous optimization. Existing syntactic crossover approaches &mdash; which simply concatenate code from two parents &mdash; produce logically inconsistent or structurally invalid offspring.</p>
     <p><strong>Third, the absence of adaptive operator selection.</strong> When you have multiple genetic operators, you need a way to decide which one to apply at each step. Static probabilities cannot respond to the shifting exploration-exploitation needs throughout an evolutionary run.</p>
