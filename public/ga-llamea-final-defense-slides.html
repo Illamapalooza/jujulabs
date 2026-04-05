@@ -207,6 +207,37 @@ hr.divider {
   margin-top: 4px;
 }
 
+/* ─── INLINE CITATIONS ─── */
+.cite {
+  font-size: 0.6em;
+  color: var(--text-secondary);
+  font-style: italic;
+  display: block;
+  margin-top: 4px;
+}
+.cite-inline {
+  font-size: 0.82em;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* ─── REFERENCES SLIDE ─── */
+.ref-list {
+  columns: 2;
+  column-gap: 28px;
+  font-size: 0.56em;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+.ref-list li {
+  margin-bottom: 4px;
+  break-inside: avoid;
+}
+.ref-list li strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
 /* ─── STATS ─── */
 .stats { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; margin: 20px 0; }
 .stat { text-align: center; min-width: 130px; }
@@ -1214,6 +1245,7 @@ Result: semantically coherent</div>
   <div class="highlight-box">
     <strong>Key takeaway:</strong> GA-LLaMEA leads across all primary metrics. These numbers are explained by three behavioural mechanisms we examine after convergence analysis.
   </div>
+  <span class="cite">Baselines: Baseline LLaMEA (van Stein &amp; B&auml;ck, 2024), EoH (Liu et al., 2024). Benchmark: MA-BBOB 5D (Vermetten et al., 2023). Evaluation: BLADE (van Stein et al., 2025).</span>
   <aside class="notes">Table 1 trimmed to 5 key columns. GA-LLaMEA leads across all metrics. The box plot shows the tightest IQR with highest median.</aside>
 </section>
 
@@ -1240,7 +1272,7 @@ Result: semantically coherent</div>
     </div>
   </div>
   <div class="note-box" style="font-size:0.68em;">
-    <strong>What is Elo?</strong> Pairwise tournament across MA-BBOB instances; each method's best algorithms compete head-to-head across seeds. +85 Elo translates to approximately 62% expected win rate. <strong>Elo vs AOCC:</strong> Elo captures quality of the <em style="color:inherit;">best</em> algorithms; AOCC aggregates over <em style="color:inherit;">all</em> generated algorithms.
+    <strong>What is Elo?</strong> Pairwise tournament across MA-BBOB instances; each method's best algorithms compete head-to-head across seeds. +85 Elo translates to approximately 62% expected win rate <span class="cite-inline">(Albers &amp; de Vries, 2001)</span>. <strong>Elo vs AOCC:</strong> Elo captures quality of the <em style="color:inherit;">best</em> algorithms; AOCC aggregates over <em style="color:inherit;">all</em> generated algorithms.
   </div>
   <aside class="notes">Elo rankings with interpretation. Pairwise tournament, +85 Elo means 62% expected win rate.</aside>
 </section>
@@ -1291,6 +1323,7 @@ Result: semantically coherent</div>
     <img src="4.5-BehaviourAll.png" alt="Behaviour Profile of All 1,442 Algorithms" class="figure-img" style="max-width:100%; margin:0;">
     <img src="4.6-Top100Profiles.png" alt="Top-100 Profiles per Method" class="figure-img" style="max-width:100%; margin:0;">
   </div>
+  <span class="cite">Behavioural profiling methodology and metrics: van Stein et al. (2025). Exploration/exploitation framework: Berger-Tal et al. (2014).</span>
   <aside class="notes">Behavioural profiles of all 1,442 generated algorithms, not just the best. GA-LLaMEA aligns most closely with the Q4 gold standard: lowest exploration, highest intensification ratio, lowest distance-to-best, highest late improvement fraction.</aside>
 </section>
 
@@ -1305,21 +1338,21 @@ Result: semantically coherent</div>
     <div class="step-num">1</div>
     <div class="step-content">
       <h3>Generative Crossover Enables Trait Combination</h3>
-      <p>High Intensification Ratio (0.8927), low Distance-to-Best (0.4241). Per-method correlation: Inten-Ratio &rarr; fitness r&nbsp;=&nbsp;0.667</p>
+      <p>High Intensification Ratio (0.8927), low Distance-to-Best (0.4241). Per-method correlation: Inten-Ratio &rarr; fitness r&nbsp;=&nbsp;0.667 <span class="cite-inline">(Building Block Hypothesis: Goldberg, 1989; Holland, 1992)</span></p>
     </div>
   </div>
   <div class="step">
     <div class="step-num">2</div>
     <div class="step-content">
       <h3>D-TS Steers Toward Gold Standard</h3>
-      <p>Progressively shifts selection toward Simplify and Crossover &mdash; steering meta-level search toward the gold standard behavioural region</p>
+      <p>Progressively shifts selection toward Simplify and Crossover &mdash; steering meta-level search toward the gold standard behavioural region <span class="cite-inline">(Qi et al., 2023; non-stationary bandits: Branke, 2001)</span></p>
     </div>
   </div>
   <div class="step">
     <div class="step-num">3</div>
     <div class="step-content">
       <h3>Sustained Late-Stage Improvement</h3>
-      <p>Last Improvement Fraction: 0.3501 vs 0.2677 (Baseline) vs 0.1436 (EoH) &mdash; progress continues near the optimum</p>
+      <p>Last Improvement Fraction: 0.3501 vs 0.2677 (Baseline) vs 0.1436 (EoH) &mdash; progress continues near the optimum <span class="cite-inline">(stagnation avoidance: Rajabi &amp; Witt, 2023)</span></p>
     </div>
   </div>
   <div class="note-box" style="font-size:0.68em;">
@@ -1350,6 +1383,7 @@ Result: semantically coherent</div>
       <p>Coherent, directed trajectories. Connected lineages, smoother transitions, constructive growth.</p>
     </div>
   </div>
+  <span class="cite">Code Evolution Graphs: van Stein et al. (2025). Building block recombination theory: McPhee et al. (2008); Angeline (1997).</span>
   <aside class="notes">Code Evolution Graphs show the structural impact of crossover. EoH: disconnected. Baseline: branching with bloat. GA-LLaMEA: coherent directed trajectories.</aside>
 </section>
 
@@ -1371,7 +1405,7 @@ Result: semantically coherent</div>
     </div>
   </div>
   <div class="highlight-box" style="margin-top:10px;">
-    D-TS transitions from exploration &rarr; exploitation. Crossover achieves the highest mean reward, validating generative recombination. The shift from diversification to refinement demonstrates successful adaptation to non-stationary reward distributions.
+    D-TS transitions from exploration &rarr; exploitation. Crossover achieves the highest mean reward, validating generative recombination. The shift from diversification to refinement demonstrates successful adaptation to non-stationary reward distributions <span class="cite-inline">(Adaptive operator selection: Fialho et al., 2008; Tian et al., 2022)</span>.
   </div>
   <aside class="notes">D-TS operator dynamics. Early: even distribution. Late: simplify and crossover dominate. Crossover achieves the highest mean reward. This mechanistically explains the CEG patterns we just saw.</aside>
 </section>
@@ -1410,7 +1444,7 @@ Result: semantically coherent</div>
     <img src="4.11-CrossoverConv_a.png" alt="Crossover Ablation Convergence" class="figure-img" style="max-width:100%; margin:0;">
   </div>
   <div class="highlight-box" style="font-size:0.7em;">
-    Single-inspiration crossover <em>hurts</em> (-1.0%) &mdash; insufficient building-block diversity. Multi-inspiration (+2.7%) unlocks meaningful recombination. Full GA-LLaMEA vs Crossover3-NoRefine: D-TS slightly reduces mean but substantially reduces variance &rarr; <strong>D-TS is primarily a variance-reduction mechanism.</strong>
+    Single-inspiration crossover <em>hurts</em> (-1.0%) &mdash; insufficient building-block diversity <span class="cite-inline">(Goldberg, 1989)</span>. Multi-inspiration (+2.7%) unlocks meaningful recombination <span class="cite-inline">(Sudholt, 2014)</span>. Full GA-LLaMEA vs Crossover3-NoRefine: D-TS slightly reduces mean but substantially reduces variance &rarr; <strong>D-TS is primarily a variance-reduction mechanism.</strong>
   </div>
   <aside class="notes">Crossover ablation. Single-inspiration hurts — insufficient diversity. Multi-inspiration with 3 sources improves by 2.7%. D-TS primarily reduces variance from 0.0432 to 0.0255.</aside>
 </section>
@@ -1447,6 +1481,7 @@ Result: semantically coherent</div>
     <img src="4.12-PopConv_a.png" alt="Population Size Convergence" class="figure-img" style="max-width:100%; margin:0;">
     <img src="4.13-PopBoxplot.png" alt="Population Size Box Plot" class="figure-img" style="max-width:100%; margin:0;">
   </div>
+  <span class="cite">Population sizing in evolutionary computation: Goldberg et al. (2001). Evaluation: COCO/BBOB framework (Hansen et al., 2021).</span>
   <aside class="notes">Population size ablation. 8-parent initialization is strictly better: 7.9% higher mean, 3 times lower variance, all runs above 0.80. The 4-parent config includes a lower outlier around 0.65.</aside>
 </section>
 
@@ -1477,17 +1512,17 @@ Result: semantically coherent</div>
       <tr>
         <td><strong>1</strong></td>
         <td><strong>Generative Crossover &gt; Mutation-Only</strong><br><span style="color:var(--text-secondary); font-size:0.9em;">Semantic recombination via LLM reasoning</span></td>
-        <td>+2.7% with 3 inspirations; interconnected CEGs; highest mean reward; coherent evolutionary lineages</td>
+        <td>+2.7% with 3 inspirations; interconnected CEGs; highest mean reward; coherent evolutionary lineages <span class="cite-inline">(Goldberg, 1989; Opris, 2025)</span></td>
       </tr>
       <tr>
         <td><strong>2</strong></td>
         <td><strong>Adaptive &gt; Static (D-TS)</strong><br><span style="color:var(--text-secondary); font-size:0.9em;">Bandit-driven, non-stationary aware</span></td>
-        <td>Exploration&rarr;exploitation shift (Fig 4.8); variance reduced 0.0255 vs 0.0432 baseline; primarily a variance-reduction mechanism</td>
+        <td>Exploration&rarr;exploitation shift (Fig 4.8); variance reduced 0.0255 vs 0.0432 baseline; primarily a variance-reduction mechanism <span class="cite-inline">(Qi et al., 2023)</span></td>
       </tr>
       <tr>
         <td><strong>3</strong></td>
         <td><strong>GA-LLaMEA Framework Validated</strong><br><span style="color:var(--text-secondary); font-size:0.9em;">First crossover + adaptive control in LLM-driven AAD</span></td>
-        <td>Fitness 0.8348, Elo ~1575, 36.3% Q4, closest to gold standard &mdash; consistent across 5 runs on 120 unseen test instances</td>
+        <td>Fitness 0.8348, Elo ~1575, 36.3% Q4, closest to gold standard &mdash; consistent across 5 runs on 120 unseen test instances <span class="cite-inline">(van Stein et al., 2025; Vermetten et al., 2023)</span></td>
       </tr>
     </tbody>
   </table>
@@ -1557,7 +1592,44 @@ Result: semantically coherent</div>
 </section>
 
 <!-- ══════════════════════════════════════════════ -->
-<!-- SLIDE 32 — Thank You                          -->
+<!-- SLIDE 32 — References                         -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag muted">References</span>
+  <h2>Key References</h2>
+  <hr class="divider">
+  <ol class="ref-list">
+    <li><strong>Albers, W. &amp; de Vries, C.</strong> (2001)."; Elo chess ratings and the lognormal distribution."</li>
+    <li><strong>Angeline, P. J.</strong> (1997). "Subtree crossover: Building block engine or macromutation?" <em>Genetic Programming Theory and Practice</em>.</li>
+    <li><strong>Assump&ccedil;&atilde;o, G. et al.</strong> (2026). "CodeEvolve: Multi-model code evolution with inspiration-based crossover." <em>Preprint</em>.</li>
+    <li><strong>Aydin, Z. et al.</strong> (2024). "Adaptive operator selection in evolutionary multi-objective optimization." <em>Swarm and Evolutionary Computation</em>.</li>
+    <li><strong>Berger-Tal, O. et al.</strong> (2014). "The exploration-exploitation dilemma: A multidisciplinary framework." <em>PLoS ONE, 9</em>(4).</li>
+    <li><strong>Branke, J.</strong> (2001). "Evolutionary optimization in dynamic environments." <em>Kluwer Academic Publishers</em>.</li>
+    <li><strong>Cavenaghi, E. et al.</strong> (2021). "Non-stationary multi-armed bandit: Empirical evaluation of a new concept drift-aware algorithm." <em>Entropy, 23</em>(3).</li>
+    <li><strong>Fialho, A. et al.</strong> (2008). "Adaptive operator selection with dynamic multi-armed bandits." <em>GECCO '08</em>.</li>
+    <li><strong>Goldberg, D. E.</strong> (1989). <em>Genetic Algorithms in Search, Optimization, and Machine Learning.</em> Addison-Wesley.</li>
+    <li><strong>Hansen, N. et al.</strong> (2021). "COCO: A platform for comparing continuous optimizers in a black-box setting." <em>Optimization Methods and Software, 36</em>(1).</li>
+    <li><strong>Holland, J. H.</strong> (1992). <em>Adaptation in Natural and Artificial Systems.</em> MIT Press (2nd ed.).</li>
+    <li><strong>Li, X. et al.</strong> (2025). "LLaMEA-BO: Bayesian optimization with LLM-generated operators and population-based crossover."</li>
+    <li><strong>Liu, F. et al.</strong> (2024). "Evolution of Heuristics: Towards efficient automatic algorithm design using LLMs." <em>ICML 2024</em>.</li>
+    <li><strong>McPhee, N. F. et al.</strong> (2008). "Semantic building blocks in genetic programming." <em>EuroGP 2008</em>.</li>
+    <li><strong>Meyerson, E. et al.</strong> (2024). "Language Model Crossover: Variation through few-shot prompting." <em>ACM TELO, 4</em>(2).</li>
+    <li><strong>Opris, A.</strong> (2025). "LLM-based mutation operators for evolutionary algorithm design." <em>GECCO '25</em>.</li>
+    <li><strong>Qi, H. et al.</strong> (2023). "Discounted Thompson Sampling for non-stationary bandits." <em>NeurIPS 2023</em>.</li>
+    <li><strong>Rajabi, A. &amp; Witt, C.</strong> (2023). "Stagnation detection in evolutionary computation." <em>Algorithmica, 85</em>.</li>
+    <li><strong>Sudholt, D.</strong> (2014). "Crossover speeds up building-block assembly." <em>GECCO '14</em>.</li>
+    <li><strong>Tian, Y. et al.</strong> (2022). "Automated selection of evolutionary operators with deep reinforcement learning." <em>IEEE TEVC, 26</em>(5).</li>
+    <li><strong>van Stein, B. &amp; B&auml;ck, T.</strong> (2024). "LLaMEA: A Large Language Model Evolutionary Algorithm for automatically generating metaheuristics." <em>arXiv:2405.20132</em>.</li>
+    <li><strong>van Stein, B. et al.</strong> (2025). "BLADE: Benchmarking LLM-generated Algorithm Design and Evolution." <em>arXiv</em>.</li>
+    <li><strong>van Stein, B. et al.</strong> (2025). "Behavioural profiling and Code Evolution Graphs for LLM-generated algorithms."</li>
+    <li><strong>Vermetten, D. et al.</strong> (2023). "MA-BBOB: Many-affine BBOB benchmark for testing large-scale optimization." <em>GECCO '23</em>.</li>
+    <li><strong>Zheng, B. et al.</strong> (2025). "Adaptive operator selection with contextual Thompson Sampling." <em>AAAI 2025</em>.</li>
+  </ol>
+  <aside class="notes">Key references that support our methodology, baselines, and theoretical claims. Full bibliography available in the manuscript.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 33 — Thank You                          -->
 <!-- ══════════════════════════════════════════════ -->
 <section class="thank-you" data-dark="true">
   <h2>Thank You</h2>
