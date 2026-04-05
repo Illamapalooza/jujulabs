@@ -972,8 +972,49 @@ hr.divider {
   <span class="tag amber">Methodology</span>
   <h2>Framework Architecture</h2>
   <hr class="divider">
-  <img src="GA-LLAMEA-GRAPH.png" alt="GA-LLaMEA Architecture" class="figure-img full">
-  <aside class="notes">The GA-LLaMEA pipeline. Initialize population via LLM, evaluate on MA-BBOB, D-TS selects an operator, offspring is evaluated, reward computed, posteriors updated, mu-plus-lambda selection.</aside>
+  <div class="card-grid cols-2" style="gap:16px; align-items:start;">
+    <!-- Baseline LLaMEA -->
+    <div class="card" style="padding:16px 18px;">
+      <h3 style="margin-bottom:10px; font-size:0.85em; color:var(--text-secondary);">Baseline LLaMEA <span style="font-weight:400; font-size:0.85em;">(van Stein &amp; B&auml;ck, 2024)</span></h3>
+      <div style="display:flex; flex-direction:column; gap:6px; font-size:0.6em;">
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <div class="rf-box" style="font-size:1em;">Initialization</div>
+          <span class="rf-arrow">&rarr;</span>
+          <div class="rf-box" style="font-size:1em;">Population</div>
+          <span class="rf-arrow">&rarr;</span>
+          <div class="rf-box" style="font-size:1em; background:var(--border-light);">Random Prompt Selection</div>
+        </div>
+        <div style="text-align:center; font-size:1.2em; color:var(--text-secondary);">&darr;</div>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:center;">
+          <div class="rf-box" style="font-size:1em;">Refine</div>
+          <span style="color:var(--text-secondary);">/</span>
+          <div class="rf-box" style="font-size:1em;">Random New</div>
+          <span style="color:var(--text-secondary);">/</span>
+          <div class="rf-box" style="font-size:1em;">Refine-Simplify</div>
+        </div>
+        <div style="text-align:center; font-size:1.2em; color:var(--text-secondary);">&darr;</div>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <div class="rf-box" style="font-size:1em;">LLM Generation</div>
+          <span class="rf-arrow">&rarr;</span>
+          <div class="rf-box" style="font-size:1em;">Evaluation</div>
+          <span class="rf-arrow">&rarr;</span>
+          <div class="rf-box" style="font-size:1em;">Update Population</div>
+        </div>
+      </div>
+      <p style="font-size:0.55em; color:var(--text-secondary); margin-top:8px; margin-bottom:0; line-height:1.4;">
+        <strong style="color:var(--text-secondary);">Key limitation:</strong> Parallel but isolated refinement paths &mdash; <strong style="color:#dc2626;">no recombination</strong> across candidates. Static random operator selection.
+      </p>
+    </div>
+    <!-- GA-LLaMEA -->
+    <div class="card" style="padding:16px 18px; border: 1.5px solid var(--blue-border); background:var(--blue-soft);">
+      <h3 style="margin-bottom:10px; font-size:0.85em; color:var(--blue);">GA-LLaMEA <span class="pill" style="font-size:0.75em;">Ours</span></h3>
+      <img src="GA-LLAMEA-GRAPH.png" alt="GA-LLaMEA Architecture" style="width:100%; border-radius:var(--radius-sm);">
+      <p style="font-size:0.55em; color:var(--text-secondary); margin-top:8px; margin-bottom:0; line-height:1.4;">
+        <strong style="color:var(--text-secondary);">Key additions:</strong> <strong style="color:#047857;">Generative Crossover</strong> for multi-parent recombination + <strong style="color:#047857;">D-TS adaptive</strong> operator selection replacing static scheduling.
+      </p>
+    </div>
+  </div>
+  <aside class="notes">Side-by-side comparison. Baseline LLaMEA uses random prompt selection among isolated refinement paths with no recombination. GA-LLaMEA adds generative crossover for multi-parent information sharing and D-TS for adaptive operator selection.</aside>
 </section>
 
 <!-- ══════════════════════════════════════════════ -->
@@ -1191,6 +1232,49 @@ Result: semantically coherent</div>
     </tbody>
   </table>
   <aside class="notes">MA-BBOB in 5 dimensions, 24 functions, 100 LLM evaluations per run, 5 seeds. Population of mu=4 maintained parents, lambda=8 offspring, with initialization size of 8 parents. This is why result figures are labeled GA-LLAMEA-8-INIT-100.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 16b — Evaluation Metrics                -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag amber">Methodology</span>
+  <h2>Evaluation Metrics</h2>
+  <hr class="divider">
+  <div class="card-grid cols-2" style="gap:12px;">
+    <!-- AOCC -->
+    <div class="card" style="padding:14px 18px;">
+      <h3 style="margin-bottom:6px; color:var(--blue);"><span style="font-size:0.85em;">&#9632;</span> Area Over the Convergence Curve (AOCC)</h3>
+      <p style="font-size:0.65em; margin-bottom:6px;">An anytime performance metric capturing <strong>convergence speed</strong> and <strong>final solution quality</strong>.</p>
+      <div class="eq-block" style="font-size:0.7em; margin:4px 0; text-align:center;">
+        \[ \text{AOCC}=\frac{1}{B}\sum_{i=1}^{B}\frac{\log_{10}(\text{ub})-\min\!\left(\max(y_{i},\,\log_{10}(\text{lb})),\,\log_{10}(\text{ub})\right)}{\log_{10}(\text{ub})-\log_{10}(\text{lb})} \]
+      </div>
+      <p style="font-size:0.58em; color:var(--text-secondary); margin:0;">Higher values in [0, 1] indicate faster and more consistent convergence.</p>
+    </div>
+    <!-- Elo -->
+    <div class="card" style="padding:14px 18px;">
+      <h3 style="margin-bottom:6px; color:var(--blue);"><span style="font-size:0.85em;">&#9632;</span> Competitive Elo Ratings</h3>
+      <p style="font-size:0.65em; margin-bottom:0;">Provides a standardized <strong>relative ranking</strong> based on tournament-style one-against-one matches across all 120 benchmark instances (24 functions &times; 5 seeds).</p>
+      <p style="font-size:0.58em; color:var(--text-secondary); margin-top:6px; margin-bottom:0;">Measures the quality of <em>best</em> algorithms produced, complementing AOCC which measures <em>all</em> algorithms.</p>
+    </div>
+    <!-- Behaviour-Space -->
+    <div class="card" style="padding:14px 18px;">
+      <h3 style="margin-bottom:6px; color:var(--blue);"><span style="font-size:0.85em;">&#9632;</span> Behaviour-Space Analysis</h3>
+      <p style="font-size:0.65em; margin-bottom:6px;">Profiles every generated algorithm across <strong>11 metrics</strong>:</p>
+      <ul style="font-size:0.6em; margin:0; padding-left:18px; line-height:1.5;">
+        <li><strong>Spatial exploration:</strong> Avg Nearest-Neighbors Distance, Coverage Dispersion</li>
+        <li><strong>Exploitation:</strong> Intensification Ratio</li>
+        <li><strong>Stability:</strong> Longest No-Improvement Streak</li>
+      </ul>
+    </div>
+    <!-- CEGs -->
+    <div class="card" style="padding:14px 18px;">
+      <h3 style="margin-bottom:6px; color:var(--blue);"><span style="font-size:0.85em;">&#9632;</span> Code Evolution Graphs (CEGs)</h3>
+      <p style="font-size:0.65em; margin-bottom:0;">Structural analysis tracing <strong>genealogical lineage</strong>, algorithmic stability, and <strong>code complexity progression</strong> across generations.</p>
+      <p style="font-size:0.58em; color:var(--text-secondary); margin-top:6px; margin-bottom:0;">Reveals whether evolution builds constructively or drifts &mdash; a unique diagnostic for LLM-driven code synthesis.</p>
+    </div>
+  </div>
+  <aside class="notes">Four core evaluation instruments. AOCC captures anytime convergence performance. Elo provides relative ranking via pairwise tournaments. Behaviour-space profiles all 1,442 generated algorithms across 11 metrics. CEGs trace code lineage and complexity evolution.</aside>
 </section>
 
 <!-- ══════════════════════════════════════════════ -->
