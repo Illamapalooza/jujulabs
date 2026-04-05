@@ -70,9 +70,17 @@ window.MathJax = {
 .reveal section {
   text-align: left;
   padding: 48px 64px;
-  overflow-y: auto;
+  overflow: hidden;
   max-height: 100%;
   box-sizing: border-box;
+}
+/* Contain MathJax assistive elements within their parent */
+mjx-assistive-mml {
+  position: absolute !important;
+  overflow: hidden !important;
+  clip: rect(1px,1px,1px,1px) !important;
+  width: 1px !important;
+  height: 1px !important;
 }
 
 /* ─── PAGE INDICATOR ─── */
@@ -224,9 +232,9 @@ hr.divider {
 /* ─── REFERENCES SLIDE ─── */
 .ref-list {
   columns: 2;
-  column-gap: 28px;
-  font-size: 0.56em;
-  line-height: 1.65;
+  column-gap: 24px;
+  font-size: 0.48em;
+  line-height: 1.5;
   color: var(--text-secondary);
 }
 .ref-list li {
@@ -971,25 +979,22 @@ hr.divider {
       <tr><td><strong>Random New</strong></td><td>Population history</td><td>"Generate completely different"</td><td>Exploration &mdash; diversity injection, escape local optima</td></tr>
     </tbody>
   </table>
-  <div class="arch-compare" style="margin-top:14px;">
+  <div class="arch-compare" style="margin-top:8px;">
     <div>
       <div class="arch-label">Syntactic Crossover</div>
-      <div class="arch-box">Parent A code ──┐
+      <div class="arch-box" style="font-size:0.52em;">Parent A code ──┐
                 ├─ Code concatenation
 Parent B code ──┘
   (no semantic reasoning)
-
-Result: often structurally invalid
-or logically inconsistent</div>
+Result: often structurally invalid</div>
       <p class="footnote">Assump&ccedil;&atilde;o et al., 2026 (without inspiration sources)</p>
     </div>
     <div>
       <div class="arch-label">Inspiration-Based <span class="pill">Novel</span></div>
-      <div class="arch-box">Parent A (full code)    ──┐
+      <div class="arch-box" style="font-size:0.52em;">Parent A (full code)    ──┐
 Parent B (strategy desc)  ├─ LLM reasons
 Parent C (strategy desc)  ├─ at strategy level
                            └─ Synthesizes child
-
 Result: semantically coherent</div>
       <p class="footnote">GA-LLaMEA: the LLM reasons about concepts, not text</p>
     </div>
@@ -1004,49 +1009,49 @@ Result: semantically coherent</div>
   <span class="tag amber">Methodology</span>
   <h2>Discounted Thompson Sampling</h2>
   <hr class="divider">
-  <p style="font-size:0.78em; color:var(--text-secondary); margin-bottom:12px;">Operator effectiveness changes over the run &mdash; requires a non-stationary bandit controller.</p>
+  <p style="font-size:0.72em; color:var(--text-secondary); margin-bottom:6px;">Operator effectiveness changes over the run &mdash; requires a non-stationary bandit controller.</p>
   <!-- MAB Visual Diagram -->
-  <div class="mab-arms">
+  <div class="mab-arms" style="margin:8px 0;">
     <div class="mab-arm">
-      <div class="mab-bar" style="height:93px; background:#6366f1;"><div class="mab-ci" style="height:18px;"></div></div>
+      <div class="mab-bar" style="height:62px; background:#6366f1;"><div class="mab-ci" style="height:14px;"></div></div>
       <div class="mab-arm-label">Refine</div>
       <div class="mab-arm-value">&mu;=0.62</div>
     </div>
     <div class="mab-arm">
-      <div class="mab-bar" style="height:107px; background:#8b5cf6;"><div class="mab-ci" style="height:12px;"></div></div>
+      <div class="mab-bar" style="height:71px; background:#8b5cf6;"><div class="mab-ci" style="height:10px;"></div></div>
       <div class="mab-arm-label">Simplify</div>
       <div class="mab-arm-value">&mu;=0.71</div>
     </div>
     <div class="mab-arm">
-      <div class="mab-bar" style="height:117px; background:var(--blue);"><div class="mab-ci" style="height:10px;"></div></div>
+      <div class="mab-bar" style="height:78px; background:var(--blue);"><div class="mab-ci" style="height:8px;"></div></div>
       <div class="mab-arm-label">Crossover</div>
       <div class="mab-arm-value">&mu;=0.78</div>
     </div>
     <div class="mab-arm">
-      <div class="mab-bar" style="height:51px; background:#94a3b8;"><div class="mab-ci" style="height:28px;"></div></div>
+      <div class="mab-bar" style="height:34px; background:#94a3b8;"><div class="mab-ci" style="height:20px;"></div></div>
       <div class="mab-arm-label">Random New</div>
       <div class="mab-arm-value">&mu;=0.34</div>
     </div>
   </div>
-  <p style="font-size:0.62em; text-align:center; color:var(--text-secondary); margin:4px 0 14px;">D-TS samples from each arm's posterior distribution. Higher mean + lower uncertainty = more likely selected. Discount factor &gamma;=0.99 fades old observations so the system adapts to shifting operator effectiveness.</p>
-  <div class="card-grid cols-2">
-    <div class="card">
-      <h3>Key Parameters</h3>
-      <table class="compact" style="margin:0; box-shadow:none; border:none;">
+  <p style="font-size:0.58em; text-align:center; color:var(--text-secondary); margin:2px 0 8px;">D-TS samples from each arm's posterior. Higher mean + lower uncertainty = more likely selected. &gamma;=0.99 fades old observations.</p>
+  <div class="card-grid cols-2" style="gap:10px;">
+    <div class="card" style="padding:12px 16px;">
+      <h3 style="margin-bottom:4px;">Key Parameters</h3>
+      <table class="compact" style="margin:0; box-shadow:none; border:none; font-size:0.9em;">
         <tbody>
-          <tr><td style="border:none; background:none; font-weight:600;">&gamma;</td><td style="border:none; background:none;">0.99 &nbsp;<span style="color:var(--text-secondary); font-size:0.85em;">(effective window &asymp; 100)</span></td></tr>
-          <tr><td style="border:none; background:none; font-weight:600;">&tau;<sub>max</sub></td><td style="border:none; background:none;">0.2 &nbsp;<span style="color:var(--text-secondary); font-size:0.85em;">(variance cap)</span></td></tr>
-          <tr><td style="border:none; background:none; font-weight:600;">&epsilon;</td><td style="border:none; background:none;">0.15 &nbsp;<span style="color:var(--text-secondary); font-size:0.85em;">(exploration rate)</span></td></tr>
-          <tr><td style="border:none; background:none; font-weight:600;">s<sub>max</sub></td><td style="border:none; background:none;">10 &nbsp;<span style="color:var(--text-secondary); font-size:0.85em;">(stagnation threshold)</span></td></tr>
+          <tr><td style="border:none; background:none; font-weight:600; padding:3px 8px;">&gamma;</td><td style="border:none; background:none; padding:3px 8px;">0.99 <span style="color:var(--text-secondary); font-size:0.85em;">(window &asymp; 100)</span></td></tr>
+          <tr><td style="border:none; background:none; font-weight:600; padding:3px 8px;">&tau;<sub>max</sub></td><td style="border:none; background:none; padding:3px 8px;">0.2 <span style="color:var(--text-secondary); font-size:0.85em;">(variance cap)</span></td></tr>
+          <tr><td style="border:none; background:none; font-weight:600; padding:3px 8px;">&epsilon;</td><td style="border:none; background:none; padding:3px 8px;">0.15 <span style="color:var(--text-secondary); font-size:0.85em;">(exploration rate)</span></td></tr>
+          <tr><td style="border:none; background:none; font-weight:600; padding:3px 8px;">s<sub>max</sub></td><td style="border:none; background:none; padding:3px 8px;">10 <span style="color:var(--text-secondary); font-size:0.85em;">(stagnation)</span></td></tr>
         </tbody>
       </table>
     </div>
-    <div class="card">
-      <h3>Core Equations</h3>
-      <div class="eq-block" style="text-align:left; font-size:0.85em;">
-        \[ \hat{\mu}_t(i) = \frac{S_t(i)}{\max(\epsilon,\, N_t(i))} \quad \text{(Eq 3-5)} \]
-        \[ \theta_t(i) \sim \mathcal{N}\!\left(\hat{\mu}_t(i),\, \tau_t^2(i)\right) \quad \text{(Eq 3-7)} \]
-        \[ i_t = \arg\max_{i \in \mathcal{A}} \theta_t(i) \quad \text{(Eq 3-8)} \]
+    <div class="card" style="padding:12px 16px;">
+      <h3 style="margin-bottom:2px;">Core Equations</h3>
+      <div class="eq-block" style="text-align:left; font-size:0.75em; margin:0.3em 0;">
+        \[ \hat{\mu}_t(i) = \frac{S_t(i)}{\max(\epsilon,\, N_t(i))} \quad \text{(3-5)} \]
+        \[ \theta_t(i) \sim \mathcal{N}\!\left(\hat{\mu}_t(i),\, \tau_t^2(i)\right) \quad \text{(3-7)} \]
+        \[ i_t = \arg\max_{i \in \mathcal{A}} \theta_t(i) \quad \text{(3-8)} \]
       </div>
     </div>
   </div>
@@ -1056,103 +1061,82 @@ Result: semantically coherent</div>
 <!-- ══════════════════════════════════════════════ -->
 <!-- SLIDE 14+1 — D-TS: Statistical Foundation     -->
 <!-- ══════════════════════════════════════════════ -->
-<section data-transition="slide">
-  <div class="slide-tag methodology">Methodology</div>
-  <h2>D-TS &mdash; Statistical Foundation</h2>
-  <hr class="divider">
-  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:1.5em;align-items:start">
-    <!-- LEFT: equations -->
-    <div>
-      <p style="font-size:0.75em;color:var(--text-secondary)">For each operator i, maintain recency-weighted statistics:</p>
-      <div class="eq-block">
-        \[ N_t(i) = \sum_{j=1}^{t} \gamma^{t-j} \mathbf{1}\{i_j = i\} \tag{3-1} \]
-        \[ S_t(i) = \sum_{j=1}^{t} \gamma^{t-j} r_j\, \mathbf{1}\{i_j = i\} \tag{3-2} \]
-      </div>
-      <p style="font-size:0.75em;color:var(--text-secondary)">Updated recursively each step (O(K) per iteration):</p>
-      <div class="eq-block">
-        \[ N_t(i){\leftarrow}\gamma\, N_{t-1}(i),\quad S_t(i){\leftarrow}\gamma\, S_{t-1}(i) \tag{3-3} \]
-        \[ N_t(i_t){\leftarrow}N_t(i_t)+1,\quad S_t(i_t){\leftarrow}S_t(i_t)+r_t \tag{3-4} \]
-      </div>
-      <p style="font-size:0.75em;color:var(--text-secondary)">Posterior belief for operator i:</p>
-      <div class="eq-block">
-        \[ \hat{\mu}_t(i) = \frac{S_t(i)}{\max(\epsilon,\,N_t(i))} \tag{3-5} \]
-        \[ \tau_t^2(i) = \min\!\left\{\frac{1}{\max(\epsilon,\, N_t(i))},\,\tau_{\max}^2\right\} \tag{3-6} \]
-      </div>
+<section data-transition="slide" style="padding:24px 56px;">
+  <div style="transform:scale(0.97);transform-origin:top left;width:103%;">
+    <div class="slide-tag methodology">Methodology</div>
+    <h2 style="margin-bottom:0.15em;font-size:1.3em;">D-TS &mdash; Statistical Foundation</h2>
+    <hr class="divider" style="margin:2px 0 6px;">
+    <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Discounted statistics per operator <em>i</em> (recency-weighted):</p>
+    <div class="eq-block" style="font-size:0.6em;margin:0;">
+      \[ N_t(i) = \textstyle\sum_{j=1}^{t} \gamma^{t-j}\mathbf{1}\{i_j\!=\!i\} \quad S_t(i) = \textstyle\sum_{j=1}^{t} \gamma^{t-j} r_j\mathbf{1}\{i_j\!=\!i\} \tag{3-1,2} \]
     </div>
-    <!-- RIGHT: annotations -->
-    <div style="font-size:0.8em;display:flex;flex-direction:column;gap:0.9em">
-      <div class="annotation-card">
-        <b>N<sub>t</sub>(i)</b> &mdash; discounted selection count.<br>
-        <b>S<sub>t</sub>(i)</b> &mdash; discounted cumulative reward.<br>
-        &gamma; = 0.99 &rarr; effective memory &asymp; 100 steps = full budget.
+    <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Posterior belief from discounted sufficient statistics:</p>
+    <div class="eq-block" style="font-size:0.6em;margin:0;">
+      \[ \hat{\mu}_t(i) = \frac{S_t(i)}{\max(\epsilon,N_t(i))} \qquad \tau_t^2(i) = \min\!\bigl\{\tfrac{1}{\max(\epsilon, N_t(i))},\,\tau_{\max}^2\bigr\} \tag{3-5,6} \]
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:6px;font-size:0.55em;">
+      <div class="annotation-card" style="padding:4px 8px;">
+        <b>N<sub>t</sub></b> = discounted count, <b>S<sub>t</sub></b> = discounted reward. &gamma;=0.99 &rarr; memory &asymp; 100 steps.
       </div>
-      <div class="annotation-card">
-        <b>Discount-then-add:</b> all arms decay first (Eq 3-3), then only the selected arm i<sub>t</sub> gains a new count and reward (Eq 3-4). Non-selected arms grow in uncertainty &rarr; more likely sampled later.
+      <div class="annotation-card" style="padding:4px 8px;">
+        <b>Discount-then-add:</b> all arms decay each step, selected arm gains +1 count and +r<sub>t</sub> reward.
       </div>
-      <div class="annotation-card">
-        <b>&mu;&#770;</b> = performance signal for operator i.<br>
-        <b>&tau;&sup2;</b> = uncertainty (decreases with evidence, capped at &tau;<sub>max</sub> = 0.2 to prevent instability).
+      <div class="annotation-card" style="padding:4px 8px;">
+        <b>&mu;&#770;</b> = performance signal. <b>&tau;&sup2;</b> = uncertainty (capped at &tau;<sub>max</sub>=0.2). Less data &rarr; wider exploration.
       </div>
     </div>
   </div>
-  <aside class="notes">This slide presents the discounted statistics and posterior estimation that underpin D-TS. Equations 3-1 through 3-6.</aside>
+  <aside class="notes">This slide presents the discounted statistics and posterior estimation that underpin D-TS. Equations 3-1 through 3-6. Recursive update (Eq 3-3,4): N_t(i) ← γN_{t-1}(i), S_t(i) ← γS_{t-1}(i); then N_t(i_t) += 1, S_t(i_t) += r_t. O(K) per step.</aside>
 </section>
 
 <!-- ══════════════════════════════════════════════ -->
 <!-- SLIDE 14+2 — D-TS: Selection Policy           -->
 <!-- ══════════════════════════════════════════════ -->
-<section data-transition="slide">
-  <div class="slide-tag methodology">Methodology</div>
-  <h2>D-TS &mdash; Operator Selection Policy</h2>
-  <hr class="divider">
-  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:1.5em;align-items:start">
-    <!-- LEFT: full selection policy -->
-    <div>
-      <p style="font-size:0.75em;color:var(--text-secondary)">Sample from each arm&rsquo;s posterior:</p>
-      <div class="eq-block">
-        \[ \theta_t(i)\sim\mathcal{N}\!\left(\hat{\mu}_t(i),\,\tau_t^2(i)\right) \tag{3-7} \]
+<section data-transition="slide" style="padding:24px 56px;">
+  <div style="transform:scale(0.97);transform-origin:top left;width:103%;">
+    <div class="slide-tag methodology">Methodology</div>
+    <h2 style="margin-bottom:0.15em;font-size:1.3em;">D-TS &mdash; Operator Selection Policy</h2>
+    <hr class="divider" style="margin:2px 0 6px;">
+    <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:0.6em;align-items:start">
+      <div>
+        <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Sample from each arm&rsquo;s posterior:</p>
+        <div class="eq-block" style="font-size:0.65em;margin:0;">
+          \[ \theta_t(i)\sim\mathcal{N}\!\left(\hat{\mu}_t(i),\,\tau_t^2(i)\right) \tag{3-7} \]
+        </div>
+        <p style="font-size:0.5em;color:var(--text-secondary);margin:0 0 2px;">Stagnation-aware selection (3 cases):</p>
+        <div class="eq-block" style="font-size:0.62em;margin:0;">
+          \[ i_t = \begin{cases} \text{Uniform}(k^*), & s \geq s_{\max} \\ \text{Uniform}(\mathcal{A}), & \text{prob}\;\epsilon \\ \arg\max_{i}\,\theta_t(i), & \text{otherwise} \end{cases} \tag{3-13} \]
+        </div>
       </div>
-      <p style="font-size:0.75em;color:var(--text-secondary)">Full stagnation-aware selection rule:</p>
-      <div class="eq-block">
-        \[ i_t = \begin{cases} \text{Uniform}(k^*), & s \geq s_{\max} \\ \text{Uniform}(\mathcal{A}), & \text{prob}\;\epsilon\;(s < s_{\max}) \\ \arg\max_{i}\,\theta_t(i), & \text{otherwise} \end{cases} \tag{3-13} \]
-      </div>
-      <p style="font-size:0.75em;color:var(--text-secondary)">where k* = best-performing group (exploitation vs. exploration):</p>
-      <div class="eq-block">
-        \[ k^* = \arg\max_{G\in\{\mathcal{G}_e,\mathcal{G}_x\}}\max_{i\in G}\hat{\mu}_t(i) \tag{3-12} \]
-      </div>
-    </div>
-    <!-- RIGHT: case annotations -->
-    <div style="font-size:0.8em;display:flex;flex-direction:column;gap:0.9em">
-      <div class="annotation-card highlight">
-        <b>Case 1 &mdash; Stagnation Override</b><br>
-        When s &ge; 10 (no improvement for 10 evals), force a group switch. k* is the best-performing group (G<sub>e</sub> = Refine+Simplify or G<sub>x</sub> = Crossover+Random New) based on learned posteriors &mdash; not a blind coin flip.
-      </div>
-      <div class="annotation-card">
-        <b>Case 2 &mdash; Exploration Floor</b><br>
-        &epsilon; = 0.15: 15% of selections are uniform random. Prevents arm extinction under the 100-eval budget.
-      </div>
-      <div class="annotation-card">
-        <b>Case 3 &mdash; Thompson Sampling</b><br>
-        Default: select the arm with the highest sample from its posterior &mdash; balances performance and uncertainty without manual tuning.
+      <div style="font-size:0.55em;display:flex;flex-direction:column;gap:0.2em">
+        <div class="annotation-card highlight" style="padding:3px 8px;">
+          <b>Case 1 — Stagnation</b>: s &ge; 10 &rarr; switch to best group k*
+        </div>
+        <div class="annotation-card" style="padding:3px 8px;">
+          <b>Case 2 — Exploration</b>: &epsilon;=0.15 uniform random
+        </div>
+        <div class="annotation-card" style="padding:3px 8px;">
+          <b>Case 3 — Thompson</b>: highest posterior sample
+        </div>
       </div>
     </div>
   </div>
-  <aside class="notes">This slide presents the complete operator selection policy — Thompson sampling (Eq 3-7, 3-8), the exploration floor (Eq 3-10), and the full stagnation-aware 3-case rule (Eq 3-13). This is the slide the panel will probe most directly.</aside>
+  <aside class="notes">Complete operator selection policy. Thompson sampling (Eq 3-7), exploration floor (Eq 3-10), and full stagnation-aware 3-case rule (Eq 3-13). k* = argmax over operator groups G_e, G_x of max posterior mean (Eq 3-12). This is the slide the panel will probe most directly.</aside>
 </section>
 
 <!-- ══════════════════════════════════════════════ -->
 <!-- SLIDE 15 — Reward System (ALIGNED)            -->
 <!-- ══════════════════════════════════════════════ -->
-<section>
+<section style="padding:44px 64px;">
   <span class="tag amber">Methodology</span>
   <h2>Reward System</h2>
   <hr class="divider">
-  <p style="font-size:0.8em; margin-bottom:10px;">Per Equation 3-14 &mdash; piecewise reward function:</p>
-  <div class="eq-block">
-    \[ r_t = \begin{cases} 0, & \text{if } v = 0 \\ \max\!\left(0,\, \min\!\left(1,\, f_{\text{child}}\right)\right), & \text{if } v = 1 \end{cases} \quad \text{(Eq 3-14)} \]
+  <p style="font-size:0.8em; margin-bottom:6px;">Per Equation 3-14 &mdash; piecewise reward function:</p>
+  <div class="eq-block" style="font-size:0.92em;">
+    \[ r_t = \begin{cases} 0, & v = 0 \\ \max\!\bigl(0,\, \min(1,\, f_{\text{child}})\bigr), & v = 1 \end{cases} \quad \text{(Eq 3-14)} \]
   </div>
-  <p style="font-size:0.72em; color:var(--text-secondary); text-align:center; margin-bottom:10px;">v = validity flag (1 if algorithm runs + evaluates, 0 if crash). Absolute fitness clipped to [0,1] &mdash; prevents reward inflation near the fitness ceiling.</p>
-  <div class="eq-block" style="font-size:0.9em;">
+  <p style="font-size:0.72em; color:var(--text-secondary); text-align:center; margin-bottom:6px;">v = validity flag (1 if algorithm runs + evaluates, 0 if crash). Absolute fitness clipped to [0,1] &mdash; prevents reward inflation near the fitness ceiling.</p>
+  <div class="eq-block" style="font-size:0.88em;">
     \[ \hat{\mu}_t(i) \approx \mathbb{E}[f_{\text{child}} \mid \text{operator } i] \quad \text{(Eq 3-15)} \]
   </div>
   <p style="font-size:0.65em; text-align:center; color:var(--text-secondary);">What the posterior mean learns &mdash; expected offspring quality for each operator arm.</p>
@@ -1178,11 +1162,11 @@ Result: semantically coherent</div>
   <span class="tag amber">Methodology</span>
   <h2>Experimental Setup</h2>
   <hr class="divider">
-  <div class="eq-block" style="font-size:0.9em;">
+  <div class="eq-block" style="font-size:0.85em; margin:0.3em 0;">
     \[ \text{AOCC} = \frac{1}{B}\sum_{i=1}^{B} \frac{\log_{10}(\text{ub}) - \min\!\left(\max(y_i,\, \log_{10}(\text{lb})),\, \log_{10}(\text{ub})\right)}{\log_{10}(\text{ub}) - \log_{10}(\text{lb})} \quad \text{(Eq 3-16)} \]
   </div>
-  <p style="font-size:0.65em; text-align:center; color:var(--text-secondary); margin-bottom:8px;">
-    y<sub>i</sub> = best log<sub>10</sub>|f(x) &minus; f*| at step i. lb = 10<sup>&minus;8</sup>, ub = 10<sup>2</sup>. Result in [0,1]: higher = faster, more consistent convergence.
+  <p style="font-size:0.6em; text-align:center; color:var(--text-secondary); margin-bottom:4px;">
+    y<sub>i</sub> = best log<sub>10</sub>|f(x) &minus; f*| at step i. lb = 10<sup>&minus;8</sup>, ub = 10<sup>2</sup>. Result in [0,1]: higher = faster convergence.
   </p>
   <table>
     <thead><tr><th style="width:180px;">Parameter</th><th>Value</th></tr></thead>
@@ -1241,11 +1225,11 @@ Result: semantically coherent</div>
       </tr>
     </tbody>
   </table>
-  <img src="4.2-Boxplot.png" alt="Fitness Distribution Box Plot" class="figure-img" style="max-width:70%; margin-top:8px;">
-  <div class="highlight-box">
-    <strong>Key takeaway:</strong> GA-LLaMEA leads across all primary metrics. These numbers are explained by three behavioural mechanisms we examine after convergence analysis.
+  <img src="4.2-Boxplot.png" alt="Fitness Distribution Box Plot" class="figure-img" style="max-width:40%; max-height:28vh; margin:2px auto;">
+  <div class="highlight-box" style="padding:6px 14px; font-size:0.62em;">
+    <strong>Key takeaway:</strong> GA-LLaMEA leads across all metrics. Explained by three behavioural mechanisms examined next.
   </div>
-  <span class="cite">Baselines: Baseline LLaMEA (van Stein &amp; B&auml;ck, 2024), EoH (Liu et al., 2024). Benchmark: MA-BBOB 5D (Vermetten et al., 2023). Evaluation: BLADE (van Stein et al., 2025).</span>
+  <span class="cite">Baselines: LLaMEA (van Stein &amp; B&auml;ck, 2024), EoH (Liu et al., 2024). MA-BBOB (Vermetten et al., 2023).</span>
   <aside class="notes">Table 1 trimmed to 5 key columns. GA-LLaMEA leads across all metrics. The box plot shows the tightest IQR with highest median.</aside>
 </section>
 
@@ -1256,23 +1240,23 @@ Result: semantically coherent</div>
   <span class="tag green">Results</span>
   <h2>Elo Tournament Rankings</h2>
   <hr class="divider">
-  <img src="4.1-Elo.png" alt="Elo Rating Point Plot" class="figure-img" style="max-width:75%;">
-  <div class="stats">
+  <img src="4.1-Elo.png" alt="Elo Rating Point Plot" class="figure-img" style="max-width:50%; max-height:28vh; margin:2px auto;">
+  <div class="stats" style="margin:8px 0;">
     <div class="stat">
-      <span class="number">~1575</span>
+      <span class="number" style="font-size:1.5em;">~1575</span>
       <span class="label">GA-LLaMEA Elo</span>
     </div>
     <div class="stat">
-      <span class="number">+85</span>
+      <span class="number" style="font-size:1.5em;">+85</span>
       <span class="label">vs EoH (&asymp;62% win)</span>
     </div>
     <div class="stat">
-      <span class="number">+140</span>
+      <span class="number" style="font-size:1.5em;">+140</span>
       <span class="label">vs Baseline LLaMEA</span>
     </div>
   </div>
-  <div class="note-box" style="font-size:0.68em;">
-    <strong>What is Elo?</strong> Pairwise tournament across MA-BBOB instances; each method's best algorithms compete head-to-head across seeds. +85 Elo translates to approximately 62% expected win rate <span class="cite-inline">(Albers &amp; de Vries, 2001)</span>. <strong>Elo vs AOCC:</strong> Elo captures quality of the <em style="color:inherit;">best</em> algorithms; AOCC aggregates over <em style="color:inherit;">all</em> generated algorithms.
+  <div class="note-box" style="font-size:0.6em; padding:8px 14px;">
+    <strong>What is Elo?</strong> Pairwise tournament; +85 Elo &asymp; 62% win rate <span class="cite-inline">(Albers &amp; de Vries, 2001)</span>. Elo = quality of <em style="color:inherit;">best</em> algorithms; AOCC = aggregate over <em style="color:inherit;">all</em>.
   </div>
   <aside class="notes">Elo rankings with interpretation. Pairwise tournament, +85 Elo means 62% expected win rate.</aside>
 </section>
@@ -1284,19 +1268,19 @@ Result: semantically coherent</div>
   <span class="tag green">Results</span>
   <h2>Convergence Analysis</h2>
   <hr class="divider">
-  <img src="4.3-CT_a.png" alt="Convergence Trajectories" class="figure-img" style="max-width:78%;">
-  <div class="card-grid cols-3" style="margin-top:10px;">
-    <div class="card active">
-      <h3>GA-LLaMEA</h3>
-      <p>Steepest climb, highest plateau. Sustained improvement throughout.</p>
+  <img src="4.3-CT_a.png" alt="Convergence Trajectories" class="figure-img" style="max-width:60%; max-height:32vh; margin:2px auto;">
+  <div class="card-grid cols-3" style="margin-top:4px; gap:8px;">
+    <div class="card active" style="padding:8px 12px;">
+      <h3 style="font-size:0.78em;">GA-LLaMEA</h3>
+      <p style="font-size:0.68em;">Steepest climb, highest plateau.</p>
     </div>
-    <div class="card">
-      <h3>EoH</h3>
-      <p>Fast early gains, flattens after eval ~40. Limited late-stage refinement.</p>
+    <div class="card" style="padding:8px 12px;">
+      <h3 style="font-size:0.78em;">EoH</h3>
+      <p style="font-size:0.68em;">Fast early, flattens after eval ~40.</p>
     </div>
-    <div class="card">
-      <h3>Baseline LLaMEA</h3>
-      <p>Slowest convergence. Mutation-only search limitation.</p>
+    <div class="card" style="padding:8px 12px;">
+      <h3 style="font-size:0.78em;">Baseline</h3>
+      <p style="font-size:0.68em;">Slowest. Mutation-only limitation.</p>
     </div>
   </div>
   <aside class="notes">Convergence trajectories. GA-LLaMEA has the steepest climb and highest plateau. EoH plateaus around evaluation 40. Baseline converges most slowly due to mutation-only refinement.</aside>
@@ -1309,8 +1293,8 @@ Result: semantically coherent</div>
   <span class="tag green">Results</span>
   <h2>Behavioural Profile Analysis</h2>
   <hr class="divider">
-  <p style="font-size:0.72em; color:var(--text-secondary); margin-bottom:8px;">Every algorithm generated during evolution &mdash; not just the final best &mdash; is profiled. 1,442 algorithms total: 472 (Baseline LLaMEA), 482 (EoH), 488 (GA-LLaMEA).</p>
-  <table class="compact">
+  <p style="font-size:0.62em; color:var(--text-secondary); margin-bottom:4px;">Every algorithm generated during evolution is profiled. 1,442 total: 472 (Baseline), 482 (EoH), 488 (GA-LLaMEA).</p>
+  <table class="compact" style="margin:4px 0;">
     <thead><tr><th>Metric</th><th>GA-LLaMEA</th><th>Baseline</th><th>EoH</th><th>Q4 Gold Std</th></tr></thead>
     <tbody>
       <tr><td>Expl %</td><td><strong>6.66%</strong></td><td>9.70%</td><td>10.95%</td><td>4.03%</td></tr>
@@ -1319,11 +1303,11 @@ Result: semantically coherent</div>
       <tr><td>Last-imp frac</td><td><strong>0.3501</strong></td><td>0.2677</td><td>0.1436</td><td>0.5252</td></tr>
     </tbody>
   </table>
-  <div class="card-grid cols-2" style="margin-top:8px;">
-    <img src="4.5-BehaviourAll.png" alt="Behaviour Profile of All 1,442 Algorithms" class="figure-img" style="max-width:100%; margin:0;">
-    <img src="4.6-Top100Profiles.png" alt="Top-100 Profiles per Method" class="figure-img" style="max-width:100%; margin:0;">
+  <div class="card-grid cols-2" style="margin-top:4px; gap:8px;">
+    <img src="4.5-BehaviourAll.png" alt="Behaviour Profile of All 1,442 Algorithms" class="figure-img" style="max-width:100%; max-height:30vh; margin:0;">
+    <img src="4.6-Top100Profiles.png" alt="Top-100 Profiles per Method" class="figure-img" style="max-width:100%; max-height:30vh; margin:0;">
   </div>
-  <span class="cite">Behavioural profiling methodology and metrics: van Stein et al. (2025). Exploration/exploitation framework: Berger-Tal et al. (2014).</span>
+  <span class="cite">Profiling: van Stein et al. (2025). Exploration/exploitation: Berger-Tal et al. (2014).</span>
   <aside class="notes">Behavioural profiles of all 1,442 generated algorithms, not just the best. GA-LLaMEA aligns most closely with the Q4 gold standard: lowest exploration, highest intensification ratio, lowest distance-to-best, highest late improvement fraction.</aside>
 </section>
 
@@ -1368,22 +1352,22 @@ Result: semantically coherent</div>
   <span class="tag green">Results</span>
   <h2>Code Evolution Graphs</h2>
   <hr class="divider">
-  <img src="4.7-CEG.png" alt="Code Evolution Graphs — 3 methods x 5 runs" class="figure-img full">
-  <div class="card-grid cols-3" style="margin-top:10px;">
-    <div class="card">
+  <img src="4.7-CEG.png" alt="Code Evolution Graphs — 3 methods x 5 runs" class="figure-img" style="max-width:90%; max-height:36vh; margin:2px auto;">
+  <div class="card-grid cols-3" style="margin-top:6px; gap:10px;">
+    <div class="card" style="padding:10px 14px;">
       <h3>EoH</h3>
-      <p>Disconnected point clouds. No lineage tracking, obscures evolutionary pathways.</p>
+      <p>Disconnected point clouds. No lineage tracking.</p>
     </div>
-    <div class="card">
+    <div class="card" style="padding:10px 14px;">
       <h3>Baseline LLaMEA</h3>
-      <p>Branching with high variability. Abrupt complexity increases (code bloat).</p>
+      <p>Branching with high variability. Code bloat.</p>
     </div>
-    <div class="card active">
+    <div class="card active" style="padding:10px 14px;">
       <h3>GA-LLaMEA</h3>
-      <p>Coherent, directed trajectories. Connected lineages, smoother transitions, constructive growth.</p>
+      <p>Coherent, directed trajectories. Constructive growth.</p>
     </div>
   </div>
-  <span class="cite">Code Evolution Graphs: van Stein et al. (2025). Building block recombination theory: McPhee et al. (2008); Angeline (1997).</span>
+  <span class="cite">CEGs: van Stein et al. (2025). Building blocks: McPhee et al. (2008); Angeline (1997).</span>
   <aside class="notes">Code Evolution Graphs show the structural impact of crossover. EoH: disconnected. Baseline: branching with bloat. GA-LLaMEA: coherent directed trajectories.</aside>
 </section>
 
@@ -1439,12 +1423,12 @@ Result: semantically coherent</div>
       <tr class="highlight"><td>Crossover3-NoRefine (3 inspirations)</td><td>0.8364</td><td style="color:#059669; font-weight:600;">+2.7%</td></tr>
     </tbody>
   </table>
-  <div class="card-grid cols-2" style="margin-top:10px;">
-    <img src="4.10-CrossoverBoxplot.png" alt="Crossover Ablation Box Plot" class="figure-img" style="max-width:100%; margin:0;">
-    <img src="4.11-CrossoverConv_a.png" alt="Crossover Ablation Convergence" class="figure-img" style="max-width:100%; margin:0;">
+  <div class="card-grid cols-2" style="margin-top:6px; gap:8px;">
+    <img src="4.10-CrossoverBoxplot.png" alt="Crossover Ablation Box Plot" class="figure-img" style="max-width:100%; max-height:26vh; margin:0;">
+    <img src="4.11-CrossoverConv_a.png" alt="Crossover Ablation Convergence" class="figure-img" style="max-width:100%; max-height:26vh; margin:0;">
   </div>
-  <div class="highlight-box" style="font-size:0.7em;">
-    Single-inspiration crossover <em>hurts</em> (-1.0%) &mdash; insufficient building-block diversity <span class="cite-inline">(Goldberg, 1989)</span>. Multi-inspiration (+2.7%) unlocks meaningful recombination <span class="cite-inline">(Sudholt, 2014)</span>. Full GA-LLaMEA vs Crossover3-NoRefine: D-TS slightly reduces mean but substantially reduces variance &rarr; <strong>D-TS is primarily a variance-reduction mechanism.</strong>
+  <div class="highlight-box" style="font-size:0.6em; padding:6px 12px;">
+    Single-inspiration <em>hurts</em> (-1.0%) &mdash; insufficient building-block diversity <span class="cite-inline">(Goldberg, 1989)</span>. Multi-inspiration (+2.7%) unlocks recombination <span class="cite-inline">(Sudholt, 2014)</span>. D-TS reduces variance &rarr; <strong>variance-reduction mechanism.</strong>
   </div>
   <aside class="notes">Crossover ablation. Single-inspiration hurts — insufficient diversity. Multi-inspiration with 3 sources improves by 2.7%. D-TS primarily reduces variance from 0.0432 to 0.0255.</aside>
 </section>
@@ -1463,25 +1447,25 @@ Result: semantically coherent</div>
       <tr class="highlight"><td><strong>GA-LLaMEA-8 (8 init parents)</strong></td><td><strong>0.8348</strong></td><td><strong>0.0255</strong></td><td>0.8050</td><td>0.8640</td></tr>
     </tbody>
   </table>
-  <div class="stats" style="margin-top:18px;">
+  <div class="stats" style="margin:8px 0;">
     <div class="stat">
-      <span class="number">+7.9%</span>
+      <span class="number" style="font-size:1.5em;">+7.9%</span>
       <span class="label">Mean AOCC improvement</span>
     </div>
     <div class="stat">
-      <span class="number">~3&times;</span>
+      <span class="number" style="font-size:1.5em;">~3&times;</span>
       <span class="label">Lower variance</span>
     </div>
     <div class="stat">
-      <span class="number">100%</span>
+      <span class="number" style="font-size:1.5em;">100%</span>
       <span class="label">8-init runs &gt; 0.80</span>
     </div>
   </div>
-  <div class="card-grid cols-2" style="margin-top:10px;">
-    <img src="4.12-PopConv_a.png" alt="Population Size Convergence" class="figure-img" style="max-width:100%; margin:0;">
-    <img src="4.13-PopBoxplot.png" alt="Population Size Box Plot" class="figure-img" style="max-width:100%; margin:0;">
+  <div class="card-grid cols-2" style="margin-top:4px; gap:8px;">
+    <img src="4.12-PopConv_a.png" alt="Population Size Convergence" class="figure-img" style="max-width:100%; max-height:30vh; margin:0;">
+    <img src="4.13-PopBoxplot.png" alt="Population Size Box Plot" class="figure-img" style="max-width:100%; max-height:30vh; margin:0;">
   </div>
-  <span class="cite">Population sizing in evolutionary computation: Goldberg et al. (2001). Evaluation: COCO/BBOB framework (Hansen et al., 2021).</span>
+  <span class="cite">Population sizing: Goldberg et al. (2001). COCO/BBOB: Hansen et al. (2021).</span>
   <aside class="notes">Population size ablation. 8-parent initialization is strictly better: 7.9% higher mean, 3 times lower variance, all runs above 0.80. The 4-parent config includes a lower outlier around 0.65.</aside>
 </section>
 
