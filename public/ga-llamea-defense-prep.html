@@ -1,0 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GA-LLaMEA Defense Preparation — Q&A Guide</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --accent: #6c8cff;
+    --accent2: #4ecdc4;
+    --accent3: #ff6b9d;
+    --text: #e8eaf0;
+    --text2: #9da3b4;
+    --border: #2a2e3a;
+    --critical: #ff4757;
+    --high: #ffa502;
+    --med: #2ed573;
+    --low: #70a1ff;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .container { max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  h1 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.3rem;
+  }
+  .subtitle { color: var(--text2); font-size: 1rem; margin-bottom: 2rem; }
+
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2.5rem;
+  }
+  .toc h2 { font-size: 1.1rem; color: var(--accent); margin-bottom: 0.8rem; }
+  .toc ol { padding-left: 1.2rem; }
+  .toc li { margin-bottom: 0.3rem; }
+  .toc a { color: var(--accent2); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+
+  .section {
+    margin-bottom: 2.5rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .section-icon {
+    font-size: 1.4rem;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface2);
+    border-radius: 8px;
+  }
+
+  .qa-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .qa-card:hover { border-color: var(--accent); }
+
+  .qa-question {
+    padding: 1rem 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    user-select: none;
+  }
+  .qa-question::before {
+    content: 'Q';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.6rem;
+    height: 1.6rem;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 0.1rem;
+  }
+  .qa-question .toggle {
+    margin-left: auto;
+    color: var(--text2);
+    font-size: 1.2rem;
+    transition: transform 0.2s;
+  }
+
+  .qa-answer {
+    display: none;
+    padding: 0 1.2rem 1.2rem 3.6rem;
+    color: var(--text2);
+    font-size: 0.92rem;
+    line-height: 1.8;
+  }
+  .qa-answer strong { color: var(--text); }
+  .qa-answer .ref {
+    color: var(--accent2);
+    font-size: 0.82rem;
+    font-style: italic;
+  }
+  .qa-answer ul { padding-left: 1.2rem; margin: 0.4rem 0; }
+  .qa-answer li { margin-bottom: 0.3rem; }
+  .qa-answer .key-point {
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    padding: 0.6rem 1rem;
+    margin: 0.6rem 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.88rem;
+  }
+  .qa-answer table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.6rem 0;
+    font-size: 0.85rem;
+  }
+  .qa-answer th, .qa-answer td {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  .qa-answer th { background: var(--surface2); color: var(--text); font-weight: 600; }
+
+  .qa-card.open .qa-answer { display: block; }
+  .qa-card.open .toggle { transform: rotate(180deg); }
+
+  .priority-tag {
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+  }
+  .priority-tag.critical { background: var(--critical); color: #fff; }
+  .priority-tag.high { background: var(--high); color: #000; }
+  .priority-tag.med { background: var(--med); color: #000; }
+
+  .expand-all {
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    float: right;
+    margin-bottom: 1rem;
+  }
+  .expand-all:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  @media print {
+    body { background: #fff; color: #000; font-size: 11px; }
+    .qa-answer { display: block !important; color: #333; }
+    .qa-card { border: 1px solid #ccc; page-break-inside: avoid; }
+    .section-header { border-color: #ccc; }
+    .toc, .expand-all { display: none; }
+    h1 { -webkit-text-fill-color: #333; background: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>GA-LLaMEA Defense Preparation</h1>
+<p class="subtitle">Comprehensive Q&A Guide — Final Thesis Defense</p>
+
+<button class="expand-all" onclick="toggleAll()">Expand / Collapse All</button>
+<div style="clear:both"></div>
+
+<nav class="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+    <li><a href="#sec1">Who Said What — Reference Attribution (18 Q)</a></li>
+    <li><a href="#sec2">Why This Approach — Methodology Justifications (15 Q)</a></li>
+    <li><a href="#sec3">Results Interpretation & Numbers (14 Q)</a></li>
+    <li><a href="#sec4">Technical Deep-Dive — Equations & Parameters (10 Q)</a></li>
+    <li><a href="#sec5">Limitations, Threats & Future Work (10 Q)</a></li>
+    <li><a href="#sec6">Conceptual / Theoretical Foundations (8 Q)</a></li>
+    <li><a href="#sec7">General Defense Questions (8 Q)</a></li>
+  </ol>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 1: WHO SAID WHAT -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec1">
+  <div class="section-header">
+    <div class="section-icon">1</div>
+    <h2>Who Said What — Reference Attribution</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced the original LLaMEA framework?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>van Stein and Back (2024)</strong> introduced LLaMEA (Large Language Model Evolutionary Algorithm), which established a feedback-driven cycle where an LLM iteratively refines algorithms based on runtime error logs and performance metrics. It originally used a (1+1) Evolution Strategy to keep computational costs low.
+      <br><span class="ref">van Stein, N. & Back, T. (2024). LLaMEA: A Large Language Model Evolutionary Algorithm for Automatically Generating Metaheuristics.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who proposed Evolution of Heuristics (EoH)?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Liu et al. (2024)</strong> introduced EoH, a dual-population strategy that evolves both the Python code and the natural-language "thought" associated with it. It creates a semantic bridge ensuring that code changes are driven by conceptual reasoning rather than random token flipping. EoH includes exploration prompt strategies (e1, e2) that combine multiple parent heuristics at the conceptual level.
+      <br><span class="ref">Liu, F., Tong, X., Yuan, M., & Zhang, Q. (2024). Evolution of Heuristics: Towards Efficient Automatic Algorithm Design Using Large Language Model.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who developed LLaMEA-BO and what was its key contribution?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Li et al. (2025)</strong> developed LLaMEA-BO for automatically generating Bayesian Optimization algorithms. Their key contribution was demonstrating that transitioning from mutation-only (1+1) to population-based evolution with explicit crossover operators significantly improved performance. They showed BO algorithms are particularly suited for semantic recombination because their components (surrogate models, acquisition functions, initializers) are highly modular and composable. Their TREvol solver, which emerged from a crossover operation, outperformed state-of-the-art baselines.
+      <br><span class="ref">Li, X., van Stein, N., & Back, T. (2025). LLaMEA-BO: Evolving BO with LLMs.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who proposed Discounted Thompson Sampling (D-TS)?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Raj and Kalyani (2017)</strong> originally proposed Discounted Thompson Sampling, a variant that applies an exponential decay factor (gamma) to posterior parameters, reducing the influence of outdated observations while maintaining stable mean estimates. <strong>Qi et al. (2023)</strong> then demonstrated its effectiveness in evolutionary algorithm operator selection, showing that properly tuning the discount factor governs the effective memory length of the system, condensing the complex problem of adaptive control into a single hyperparameter.
+      <br><span class="ref">Raj, V. & Kalyani, S. (2017). Taming Non-stationary Bandits: A Bayesian Approach.</span>
+      <br><span class="ref">Qi, Y., Li, K., & Gong, W. (2023). D-TS for Adaptive Operator Selection.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced CodeEvolve (CODEEVOLVE)?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Assumpcao et al. (2026)</strong> introduced CodeEvolve, which operationalizes inspiration-based crossover where the LLM explicitly integrates patterns, logic, and functional components from multiple parent solutions during generation. Their ablation showed that configurations using inspiration-based crossover (with 2 or more parent solutions) outperform strong baselines in general algorithmic discovery, while depth-only configurations without crossover do not.
+      <br><span class="ref">Assumpcao, G., et al. (2026). CodeEvolve: LLM-driven Evolutionary Framework.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced LMX (Language Model Crossover)?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Meyerson et al. (2024)</strong> introduced LMX, the first LLM crossover operator not designed for a specific domain. Rather than prompting the LLM to combine solutions explicitly, LMX concatenates parent solutions as few-shot examples and generates offspring through pattern completion: the LLM infers the shared structure and continues it. Using a 6B-parameter CodeGen model in the Sodaracer robot domain, it produced roughly 30% valid offspring. However, for optimization metaheuristics where correctness requires consistent logic across the whole program, this pattern-matching approach may fall short.
+      <br><span class="ref">Meyerson, E., et al. (2024). Language Model Crossover: Variation through Few-Shot Prompting.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who established the Building Block Hypothesis?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Goldberg (1989)</strong> articulated the Building Block Hypothesis, extending Holland's Schema Theorem (1975). The hypothesis argues that complex optimal solutions emerge through the hierarchical combination of shorter, low-order, highly fit subsets of the genome ("schemata" or "building blocks"). This is the theoretical foundation for why crossover is essential — it enables the direct recombination of these semantic components, whereas mutation alone would require a precise sequence of random modifications to reconstruct one feature within another.
+      <br><span class="ref">Goldberg, D. E. (1989). Genetic Algorithms in Search, Optimization, and Machine Learning. Addison-Wesley.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who provided runtime analysis proving crossover superiority over mutation?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Opris et al. (2025)</strong> conducted rigorous runtime analysis demonstrating that on many objective landscapes, crossover-enabled algorithms achieve polynomial-time convergence, whereas mutation-only baselines require exponential time. This theoretical gap highlights a critical deficiency in current LLM-based optimizers, which remain predominantly mutation-centric.
+      <br><span class="ref">Opris, A., et al. (2025). Runtime Analysis of Crossover vs Mutation-Only EAs.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced the No Free Lunch theorems and why are they relevant?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Wolpert and Macready (1997)</strong> formulated the NFL theorems, stating that averaged over all possible problem classes, no single optimization algorithm outperforms any other. This justifies the entire field of Automated Algorithm Design — the goal is not to find a "universal" heuristic but to develop generative frameworks that can adapt to the problem at hand. <strong>Zhang et al. (2025)</strong> frame this in their new taxonomy of "Meta-Black-Box-Optimization" (MetaBBO), arguing the future is not in better static algorithms but in systems that generate algorithms on the fly.
+      <br><span class="ref">Wolpert, D. & Macready, W. (1997). No Free Lunch Theorems for Optimization.</span>
+      <br><span class="ref">Zhang, Z., et al. (2025). MetaBBO Taxonomy.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who proposed the MA-BBOB benchmark?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Vermetten et al. (2023)</strong> proposed MA-BBOB (Many-Affine Black-Box Optimization Benchmark), which extends the classical BBOB suite by generating optimization landscapes as affine combinations of existing benchmark functions. This creates more realistic and diverse test scenarios. The study used the <strong>BLADE</strong> evaluation framework by <strong>van Stein et al. (2025)</strong> for standardized evaluation protocols.
+      <br><span class="ref">Vermetten, D., et al. (2023). MA-BBOB: A Benchmark Suite with Known Optima.</span>
+      <br><span class="ref">van Stein, N., et al. (2025). BLADE: Benchmarking LLM-driven Algorithm Discovery and Evolution.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced the Elo rating system used in evaluation?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Albers and de Vries (2001)</strong> developed the Elo rating system adapted for algorithm comparison. Algorithms are compared in tournament-style one-against-one matches across benchmark instances and random seeds, providing a single scalar measure of competitive strength. This approach is well-established in competitive learning systems; notably, <strong>Silver et al. (2018)</strong> used Elo-based evaluation in AlphaZero.
+      <br><span class="ref">Albers, S. & de Vries, S. (2001). Elo Rating System for Algorithm Comparison.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who proposed the Exploration-Exploitation Dilemma that underpins this work?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>March (1991)</strong> originally formulated the Exploration-Exploitation Dilemma, later adapted to evolutionary systems by <strong>Holland (1992)</strong>. An effective optimizer must balance exploration (acquiring new information about the search space) and exploitation (refining known high-quality solutions). Static algorithms typically fail to manage this trade-off effectively. <strong>Yin et al. (2024)</strong> further reinforced this with empirical evidence showing static parameter configurations are insufficient in LLM-driven systems.
+      <br><span class="ref">March, J. G. (1991). Exploration and Exploitation in Organizational Learning.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced FunSearch?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Romera-Paredes et al. (2024)</strong>, published in Nature. FunSearch (Function Search) pairs an LLM with a systematic evaluator to solve hard combinatorial problems like the Cap Set problem. It uses a "best-so-far" prompting strategy, effectively performing local hill-climbing search in the space of Python programs.
+      <br><span class="ref">Romera-Paredes, B., et al. (2024). Mathematical Discoveries from Program Search with Large Language Models. Nature.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced Eureka?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Ma et al. (2024)</strong> introduced Eureka in the domain of Reinforcement Learning. It uses GPT-4 to write reward functions for robotic control and introduces an "evolutionary reflection" mechanism where the LLM analyzes failure logs to generate improved code. Eureka outperforms expert human-designed rewards on 83% of benchmark tasks.
+      <br><span class="ref">Ma, Y., et al. (2024). Eureka: Human-Level Reward Design via Coding Large Language Models.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who proposed Adaptive Operator Selection (AOS) with extreme value methods?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Fialho et al. (2008)</strong> proposed Extreme Value Based Adaptive Operator Selection, establishing AOS as a standard approach in evolutionary computation for dynamically allocating variation operators during search. Their work is foundational to the bandit-based operator selection mechanism used in GA-LLaMEA.
+      <br><span class="ref">Fialho, A., Da Costa, L., Schoenauer, M., & Sebag, M. (2008). Extreme Value Based Adaptive Operator Selection. PPSN X.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced MCTS-AHD?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Zheng et al. (2025)</strong> proposed MCTS-AHD, which applies Upper Confidence Bound for Trees (UCT) to select between six LLM-based operators: two crossover actions (e1, e2), two mutation actions (m1, m2), one initialization action (i1), and one tree-path reasoning action (s1). The exploration coefficient in UCT decays linearly, making it a time-scheduled policy — unlike D-TS which responds to actual observed rewards.
+      <br><span class="ref">Zheng, S., et al. (2025). MCTS-AHD: Monte Carlo Tree Search for Automated Heuristic Design.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who developed the behaviour-space analysis methodology?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>van Stein et al. (2025)</strong> developed the behaviour-space analysis methodology used in this study, including the 11 behavioural metrics, the gold-standard performance profile concept, and the feature-selection protocol using Pearson correlation with a redundancy threshold of |r| >= 0.7. The same study established the BLADE benchmarking framework.
+      <br><span class="ref">van Stein, N., et al. (2025). BLADE: Benchmarking LLM-driven Algorithm Discovery and Evolution.</span>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Who introduced Code Evolution Graphs (CEGs)?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>van Stein et al. (2025a/2026)</strong> introduced Code Evolution Graphs, which are constructed based on static code features extracted from generated heuristics. CEGs enable direct analysis of how algorithms evolve over successive generations, linking structural properties of code with performance outcomes. They also introduced the SAGE paradigm, which uses CEG-derived structural features in the reward signal.
+      <br><span class="ref">van Stein, N., et al. (2025a). Code Evolution Graphs for LLM-driven AAD.</span>
+      <br><span class="ref">van Stein, N., et al. (2026). SAGE: Structure-Aware Graph Evolution.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 2: WHY THIS APPROACH -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec2">
+  <div class="section-header">
+    <div class="section-icon">2</div>
+    <h2>Why This Approach — Methodology Justifications</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use Discounted Thompson Sampling instead of UCB or standard Thompson Sampling?
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Three reasons:
+      <ul>
+        <li><strong>Non-stationarity:</strong> Optimization is inherently non-stationary — the effectiveness of operators changes over time as the search progresses from exploration to exploitation. Classical MAB algorithms like UCB and standard TS assume stationary rewards, an assumption critically violated under concept drift (Cavenaghi et al., 2021).</li>
+        <li><strong>Reward-responsive vs. time-scheduled:</strong> UCT in MCTS-AHD (Zheng et al., 2025) uses a linearly decaying exploration coefficient — allocation follows elapsed time, not observed rewards. D-TS maintains per-operator Beta distributions updated after every evaluation, so selection responds to actual reward history.</li>
+        <li><strong>Single hyperparameter:</strong> D-TS condenses the complex problem of adaptive control into a single hyperparameter: the discount factor gamma (Qi et al., 2023). This governs effective memory length — high gamma = long memory, low gamma = rapid adaptation.</li>
+      </ul>
+      <div class="key-point">Key defense point: "D-TS was chosen because optimization is non-stationary. UCB assumes stationarity. MCTS-AHD's UCT follows a time schedule, not observed rewards. D-TS adapts to the actual reward landscape."</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why introduce crossover into LLM-driven algorithm design?
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ul>
+        <li><strong>Theoretical justification (Building Block Hypothesis):</strong> Goldberg (1989) argues that complex solutions emerge through hierarchical combination of building blocks. Mutation alone cannot efficiently recombine building blocks from different parents — it would require a precise sequence of random modifications (exponential time per Opris et al., 2025).</li>
+        <li><strong>Empirical evidence from adjacent domains:</strong> LLaMEA-BO (Li et al., 2025) showed crossover outperforms mutation-only for Bayesian Optimization. CodeEvolve (Assumpcao et al., 2026) showed inspiration-based crossover with >= 2 parents outperforms depth-only configurations.</li>
+        <li><strong>The gap:</strong> No framework had introduced and ablated a general-purpose crossover operator within the LLaMEA paradigm for continuous black-box optimization heuristics. LLaMEA-BO requires BO pipeline modularity. ReEvo's crossover is entangled with its reflective memory. EoH's exploration prompts sit inside a broader five-strategy GA.</li>
+      </ul>
+      <div class="key-point">Key defense point: "Crossover is theoretically necessary (Building Block Hypothesis), empirically validated in adjacent domains (LLaMEA-BO, CodeEvolve), and specifically absent in the continuous BBO heuristic generation paradigm that we target."</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use "inspiration-based" crossover rather than syntactic splicing (like LMX)?
+      <span class="priority-tag high">High</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      LMX (Meyerson et al., 2024) generates offspring through pattern completion — it concatenates parents as few-shot examples and the LLM infers shared structure. This works for simple programs but for optimization metaheuristics, where correctness requires consistent logic across the whole program, pattern-matching may fall short (only ~30% valid offspring with CodeGen 6B).
+      <br><br>
+      <strong>Inspiration-based crossover</strong> instead prompts the LLM to conceptually analyze multiple parent solutions, extract their strengths (e.g., "selection strategy from Parent A, update rule from Parent B"), and synthesize a new coherent solution. This operates at a semantic level rather than syntactic, producing functionally correct offspring.
+      <br><br>
+      Bouras et al. (2025) found that giving the LLM explicit context about parent fitness and code structure consistently outperforms random edit selection in genetic improvement of software.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use 3 inspiration sources for crossover instead of 1 or 2?
+      <span class="priority-tag high">High</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The ablation study (Section 4.6.1) directly answers this:
+      <ul>
+        <li><strong>1 inspiration:</strong> LLaMEA-Crossover1-NoRefine achieved mean AOCC 0.7994 — a 1.0% <em>decrease</em> below mutation-only baseline (0.8098). With one source, the LLM cannot perform meaningful recombination; it lacks building-block diversity and introduces variability without compensating gains.</li>
+        <li><strong>3 inspirations:</strong> LLaMEA-Crossover3-NoRefine achieved mean AOCC 0.8364 — a 2.7% <em>improvement</em>. Multiple sources provide the diversity needed for the LLM to synthesize richer and more complementary strategies.</li>
+      </ul>
+      <div class="key-point">Goldberg (1989) establishes that crossover produces benefit only when sufficient building-block diversity exists across parents. Three inspiration sources provide that diversity; one does not.</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use absolute fitness for reward rather than relative-to-parent?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The reward system uses absolute fitness: r_t = max(0, min(1, f_child)) if valid, 0 if crashed. This differs from relative-to-parent approaches because:
+      <ul>
+        <li>Absolute reward prevents the system from rewarding marginal improvements from a weak parent while penalizing strong offspring that don't beat an already-good parent</li>
+        <li>It provides a consistent signal across different operator types (crossover offspring may come from multiple parents, making relative comparison ambiguous)</li>
+        <li>The AOCC fitness is already normalized to [0, 1], making it suitable for direct use as a reward signal</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why add a Stagnation Detection and Forced Override mechanism?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The D-TS controller can lock onto a suboptimal operator preference if one operator accumulates strong early rewards. The stagnation detection mechanism (with threshold s_max = 10 consecutive non-improving evaluations) forces operator group switching — from the best of {refine, simplify} to {crossover, random_new} or vice versa. This prevents the controller from persisting with an exploitation-heavy strategy when the search has plateaued.
+      <br><br>
+      This is supported by <strong>Rajabi and Witt (2023)</strong> and <strong>Doerr and Rajabi (2024)</strong> who analyzed stagnation detection in evolutionary algorithms.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use Gemini-2.5-Flash instead of GPT-4 or Claude?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The study used Gemini-2.5-Flash accessed via the Vertex AI API. The choice was based on:
+      <ul>
+        <li><strong>Cost efficiency:</strong> With 100 LLM evaluations per run across 5 seeds, plus 3 methods and ablation variants, the total API cost was a significant consideration</li>
+        <li><strong>Speed:</strong> Flash variants offer lower latency, important when running hundreds of evaluations</li>
+        <li><strong>Advanced reasoning:</strong> Despite being a "flash" variant, Gemini-2.5-Flash provides advanced reasoning capabilities suitable for code generation tasks</li>
+      </ul>
+      <strong>Limitation acknowledged:</strong> Results were obtained with a single model; broader testing across alternative LLM architectures is recommended (Recommendation 1).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use MA-BBOB instead of standard BBOB or real-world benchmarks?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      MA-BBOB (Vermetten et al., 2023) extends the classical 24-function BBOB suite by generating affine combinations of benchmark functions, creating more diverse and realistic optimization landscapes. Standard BBOB has been extensively studied and many algorithms may overfit to its specific characteristics. MA-BBOB provides a more challenging test while maintaining the standardized evaluation infrastructure of COCO (Hansen et al., 2021). The 5-dimensional setting was chosen to maintain feasible computational budgets.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why maintain only 4 parents (mu=4) but initialize with 8?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ul>
+        <li><strong>Initialization with 8:</strong> The ablation study (Section 4.6.2) showed that GA-LLaMEA-8 (8-parent init) achieved 0.8348 mean AOCC vs. GA-LLaMEA-4's 0.7737 — a 7.9% improvement. Larger initialization enhances early-stage diversity, allowing exploration of a broader space of candidate algorithms.</li>
+        <li><strong>Maintain only 4 (mu=4):</strong> After initialization, the top-4 are selected as the maintained population. This (mu+lambda) selection pressure ensures only the best solutions survive while keeping the population small enough for the LLM to receive meaningful context about each parent.</li>
+        <li><strong>Lambda=8 offspring per generation:</strong> Each generation produces 8 new candidates, providing sufficient sampling of the operator space while staying within computational budget.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why 4 operators specifically (Refine, Simplify, Crossover, Random New)?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Each operator serves a distinct role in the exploration-exploitation spectrum:
+      <table>
+        <tr><th>Operator</th><th>Role</th><th>E-E Balance</th></tr>
+        <tr><td><strong>Refine</strong></td><td>Targeted refinement that increases algorithmic complexity, adding new strategies or mechanisms</td><td>Exploitation</td></tr>
+        <tr><td><strong>Simplify</strong></td><td>Reduces complexity while preserving or improving fitness — structural regularization</td><td>Exploitation</td></tr>
+        <tr><td><strong>Crossover</strong></td><td>Combines complementary building blocks from multiple parents into a new coherent solution</td><td>Balanced</td></tr>
+        <tr><td><strong>Random New</strong></td><td>Generates entirely new algorithms from scratch — maximum diversity injection</td><td>Exploration</td></tr>
+      </table>
+      This set covers the full spectrum from pure exploitation (Simplify) to pure exploration (Random New), with Refine and Crossover providing intermediate positions.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use In-Context Learning (ICL) rather than fine-tuning the LLM?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The methodology is strictly delimited to ICL and prompt engineering to <strong>isolate the efficacy of the evolutionary architecture</strong> rather than the model's learning capacity. This is a deliberate scope decision:
+      <ul>
+        <li>Fine-tuning would confound the evaluation — improvements could be attributed to the model's learned weights rather than the framework's architectural innovations</li>
+        <li>ICL makes the framework model-agnostic and immediately applicable to any LLM</li>
+        <li>It aligns with the principle that LLMs possess emergent reasoning capabilities that resemble an evolutionary search process (Brown et al., 2020; Wei et al., 2022)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why was LLaMEA-BO excluded from the baselines?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      LLaMEA-BO (Li et al., 2025) was excluded because it is domain-specific — designed for Bayesian Optimization pipeline generation, not general continuous black-box optimization. BO algorithms have modular components (surrogate models, acquisition functions, initializers) that make crossover easier. The study focuses on general metaheuristic generation where algorithms are monolithic code, making crossover fundamentally harder.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use gamma = 0.99 for the discount factor?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Gamma = 0.99 provides a relatively long memory, meaning the controller adapts gradually rather than reactively. With ~100 evaluations across ~12 generations, the effective memory spans approximately the last 70-80 observations (as old observations decay to <50% weight after ~70 steps). This allows the controller to track genuine performance trends while not overreacting to noisy individual evaluations. Qi et al. (2023) demonstrated that properly tuning this single hyperparameter governs the trade-off between adaptation speed and estimation stability.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why profile ALL generated algorithms (1,442 total) rather than just the best?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Profiling every algorithm generated during evolution (472 from Baseline LLaMEA, 482 from EoH, 488 from GA-LLaMEA) provides insight into the <strong>search dynamics</strong> of each method, not just the endpoint. This reveals:
+      <ul>
+        <li>How efficiently each method explores vs. exploits</li>
+        <li>The consistency of generated algorithms (Q4 proportions: GA-LLaMEA 36.3% vs. EoH 17.6%)</li>
+        <li>Whether high performance comes from a few lucky draws or systematic search improvement</li>
+      </ul>
+      This follows the methodology of van Stein et al. (2025), who established that characterizing the full population is necessary to distinguish between methods that find good solutions by chance vs. by design.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why use both AOCC and Elo for evaluation? Don't they measure the same thing?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      No — they measure complementary properties:
+      <table>
+        <tr><th>Metric</th><th>What it measures</th><th>Scope</th></tr>
+        <tr><td><strong>Elo</strong></td><td>Pairwise win rates among the <em>best</em> algorithms produced at evaluation time</td><td>Peak competitive quality</td></tr>
+        <tr><td><strong>Mean AOCC</strong></td><td>Aggregates over <em>all</em> generated algorithms throughout the full evolutionary search</td><td>Overall search efficiency</td></tr>
+      </table>
+      This explains the Elo vs. AOCC ordering discrepancy: Elo ranks GA-LLaMEA > EoH > Baseline, while AOCC ranks GA-LLaMEA > Baseline > EoH. EoH's best algorithms are tournament-competitive (high Elo), but its many low-quality exploratory candidates depress its aggregate mean AOCC.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 3: RESULTS INTERPRETATION -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec3">
+  <div class="section-header">
+    <div class="section-icon">3</div>
+    <h2>Results Interpretation & Numbers</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What are GA-LLaMEA's key performance numbers vs. baselines?
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <table>
+        <tr><th>Metric</th><th>GA-LLaMEA</th><th>EoH</th><th>Baseline LLaMEA</th></tr>
+        <tr><td>Elo Rating</td><td><strong>~1575</strong></td><td>~1490</td><td>~1435</td></tr>
+        <tr><td>Mean Fitness</td><td><strong>0.8348 +/- 0.0255</strong></td><td>0.8197 +/- 0.0119</td><td>0.8098 +/- 0.0432</td></tr>
+        <tr><td>Mean AOCC</td><td><strong>0.6028</strong></td><td>0.5081</td><td>0.5315</td></tr>
+        <tr><td>Median AOCC</td><td><strong>0.7376</strong></td><td>0.4936</td><td>0.5646</td></tr>
+        <tr><td>Q4 Algorithms</td><td><strong>177/488 (36.3%)</strong></td><td>85/482 (17.6%)</td><td>99/472 (21.0%)</td></tr>
+        <tr><td>Expl %</td><td><strong>6.66%</strong> (lowest)</td><td>10.95%</td><td>9.70%</td></tr>
+        <tr><td>Inten-Ratio</td><td><strong>0.8927</strong> (highest)</td><td>0.7761</td><td>0.8362</td></tr>
+      </table>
+      <div class="key-point">
+        The Elo gap: +85 over EoH, +140 over Baseline LLaMEA. Given the logarithmic nature of Elo, these are significant differences (Albers & de Vries, 2001).
+      </div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why does EoH rank 2nd in Elo but 3rd (last) in mean AOCC?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Elo captures pairwise win rates among the <strong>best</strong> algorithms produced — EoH's best algorithms are tournament-competitive. But mean AOCC aggregates over <strong>all</strong> generated algorithms, including EoH's many early exploratory candidates produced by its e1/e2 operators that prioritize diversity over targeted refinement (Liu et al., 2024). These low-quality exploratory algorithms substantially depress EoH's aggregate mean.
+      <br><br>
+      The difference is sharpest in Q4 proportions: GA-LLaMEA places 36.3% of its algorithms in the top quartile vs. only 17.6% for EoH, quantifying this reliability gap.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the "gold standard" behaviour profile and which method matches it best?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The gold standard is the Q4 threshold profile (AOCC >= 0.8802):
+      <ul>
+        <li>Low NN-dist (0.1018) — tight spatial clustering</li>
+        <li>Low Exploration % (4.03%) — minimal wasteful exploration</li>
+        <li>High Intensification Ratio (0.9395) — focused near best-found</li>
+        <li>High Exploitation % (95.97%)</li>
+        <li>Near-maximal Convergence Rate (0.9962)</li>
+        <li>High No-Improvement Streak (4,482) — well-converged</li>
+        <li>High Last Improvement Fraction (0.5252) — sustains improvement late</li>
+      </ul>
+      <strong>GA-LLaMEA achieves the closest alignment</strong> with this profile across most metrics, with the lowest Exploration % (6.66%), highest Intensification Ratio (0.8927), and highest Last Improvement Fraction (0.3501) among the three methods.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What do the three behavioural mechanisms explain?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Three mechanisms explain GA-LLaMEA's superior AOCC performance:
+      <ol>
+        <li><strong>Generative crossover</strong> enables combining complementary algorithmic strategies from multiple parents (Sudholt, 2014), producing offspring that inherit effective exploitation behaviours. Reflected in high Intensification Ratio (0.8927) and low Distance-to-Best (0.4241).</li>
+        <li><strong>D-TS controller</strong> adaptively balances exploration and exploitation at the operator level. It progressively shifts selection toward Simplify and Crossover operators, which produce algorithms with stronger exploitation profiles. This steers the meta-level search toward the gold standard region.</li>
+        <li><strong>Late-stage refinement capability:</strong> GA-LLaMEA's algorithms sustain improvement later into the evaluation budget (Last Improvement Fraction 0.3501 vs. 0.2677 for LLaMEA and 0.1436 for EoH), indicating more effective late-stage exploitation.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What do the Code Evolution Graphs (CEGs) reveal?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      CEGs reveal fundamentally different evolutionary dynamics:
+      <ul>
+        <li><strong>EoH:</strong> Appears as disconnected point clouds without explicit lineage tracking — no genealogical relationships between generated algorithms. This limits interpretability.</li>
+        <li><strong>Baseline LLaMEA:</strong> Shows branching structures but with high variability in token count and irregular structural transitions. Mutation-driven changes in isolation lead to inconsistent refinement and abrupt complexity increases.</li>
+        <li><strong>GA-LLaMEA:</strong> Demonstrates more coherent and directed evolutionary trajectories. Connected lineages show smoother transitions across generations, with complexity growth accompanied by performance improvements (constructive, not uncontrolled expansion).</li>
+      </ul>
+      <div class="key-point">The CEGs provide visual evidence that GA-LLaMEA's recombination and adaptive selection mechanisms promote more stable and interpretable evolution (van Stein et al., 2026).</div>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What do the operator selection dynamics show?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Figure 4.8 shows a clear adaptive pattern transitioning from exploration to exploitation:
+      <ul>
+        <li><strong>Early generations:</strong> More evenly distributed, with higher Random New selection — reflecting the need for structural diversity and broad exploration</li>
+        <li><strong>Later generations:</strong> Simplify and Crossover emerge as dominant strategies, indicating a shift toward intensification and refinement</li>
+        <li><strong>Crossover achieves the highest mean reward</strong> (Figure 4.9), validating it as a productive search mechanism</li>
+        <li><strong>Random New consistently has the lowest reward</strong> (~0.3-0.4), but is necessary early on for diversity</li>
+      </ul>
+      This transition demonstrates that D-TS successfully adapts to non-stationary reward distributions (Qi et al., 2023).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What did the crossover ablation study reveal?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <table>
+        <tr><th>Configuration</th><th>Mean AOCC</th><th>Change vs. Baseline</th></tr>
+        <tr><td>Baseline LLaMEA (no crossover)</td><td>0.8098</td><td>—</td></tr>
+        <tr><td>LLaMEA-Crossover1-NoRefine (1 inspiration)</td><td>0.7994</td><td>-1.0%</td></tr>
+        <tr><td>LLaMEA-Crossover3-NoRefine (3 inspirations)</td><td><strong>0.8364</strong></td><td><strong>+2.7%</strong></td></tr>
+        <tr><td>Full GA-LLaMEA (3 insp + D-TS)</td><td>0.8348</td><td>+2.5%</td></tr>
+      </table>
+      <br>Key findings:
+      <ul>
+        <li>Single-inspiration crossover <em>hurts</em> performance — insufficient building-block diversity</li>
+        <li>Multi-inspiration crossover significantly helps — provides the diversity needed for productive recombination</li>
+        <li>Adding D-TS to multi-crossover slightly reduces mean but substantially reduces variance (sigma: 0.0255 vs. higher), functioning primarily as a variance-reduction mechanism</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What did the population initialization ablation reveal?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <table>
+        <tr><th>Configuration</th><th>Mean AOCC</th><th>Sigma</th></tr>
+        <tr><td>GA-LLaMEA-4 (4-parent init)</td><td>0.7737</td><td>0.0850</td></tr>
+        <tr><td>GA-LLaMEA-8 (8-parent init)</td><td><strong>0.8348</strong></td><td><strong>0.0255</strong></td></tr>
+      </table>
+      <br>A 7.9% improvement with 8-parent initialization. The 8-parent config also shows dramatically lower variance (all runs > 0.80). Larger initialization enhances early-stage diversity, allowing broader exploration of the algorithm search space (van Stein et al., 2025).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How do you interpret the high No-Improvement Streak in Q4 algorithms?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The high No-Improvement Streak (median 4,482 for Q4 vs. 2,795 for GA-LLaMEA overall) may appear counterintuitive but reflects the behaviour of <strong>well-converged algorithms</strong> that have already reached near-optimal solutions and make only marginal improvements in the later stages of the search budget. It indicates exploitation depth, not stagnation failure.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What does the Elo rating of ~1575 actually mean in practical terms?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The Elo scale is logarithmic. A +140 Elo gap (GA-LLaMEA vs. Baseline LLaMEA) translates to a significant and reliable competitive advantage in pairwise comparisons across diverse MA-BBOB instances. For context, in chess an 85-point gap (GA-LLaMEA vs. EoH) corresponds to an expected win rate of approximately 62%. The lower confidence bound of GA-LLaMEA remains substantially above the mean performance of Baseline LLaMEA.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why does GA-LLaMEA have the highest Intensification Ratio?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      GA-LLaMEA's median Intensification Ratio (0.8927) — tracking the proportion of offspring generated near the current best — is highest because:
+      <ol>
+        <li>Crossover inherits exploitation behaviours from multiple strong parents, producing offspring that search near the best-found solutions</li>
+        <li>The D-TS controller progressively favours Simplify and Crossover — both exploitation-oriented operators</li>
+        <li>The per-method correlation between Intensification Ratio and fitness is strongest for GA-LLaMEA (r = 0.667 vs. 0.453 for Baseline, 0.509 for EoH)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the significance of the Q4 proportion (36.3%)?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      GA-LLaMEA places 177 of its 488 generated algorithms (36.3%) in the top performance quartile (AOCC >= 0.8802), compared to 99/472 (21.0%) for Baseline LLaMEA and 85/482 (17.6%) for EoH. This indicates GA-LLaMEA not only produces the best individual algorithms but generates a substantially higher proportion of high-performing candidates throughout its evolutionary search — demonstrating systematic quality improvement, not just lucky draws.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why is D-TS described as a "variance-reduction mechanism" rather than a "mean-improvement mechanism"?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Comparing full GA-LLaMEA (mean AOCC 0.8348, sigma 0.0255) against LLaMEA-Crossover3-NoRefine (mean AOCC 0.8364, slightly higher), adding D-TS slightly reduces mean fitness but substantially reduces variance. All 5 runs of GA-LLaMEA exceed 0.80, whereas the fixed three-inspiration variant shows greater variability. This makes D-TS primarily a <strong>stabilizer</strong> that ensures consistent performance, a distinction consistent with adaptive operator selection theory (Qi et al., 2023).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How many total LLM evaluations were used across all experiments?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Each run uses 100 LLM evaluations, run 5 times per configuration:
+      <ul>
+        <li>Main comparison: 3 methods x 5 seeds x 100 evals = 1,500 evals</li>
+        <li>Crossover ablation: 3 configs x 5 seeds x 100 evals = 1,500 evals</li>
+        <li>Population ablation: 2 configs x 5 seeds x 100 evals = 1,000 evals</li>
+        <li><strong>Total: ~4,000 LLM evaluations</strong></li>
+      </ul>
+      Plus initialization evaluations (8 per run = 200 more for main comparison). Each evaluation includes benchmark execution across all 24 MA-BBOB functions in 5D.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 4: TECHNICAL DEEP-DIVE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec4">
+  <div class="section-header">
+    <div class="section-icon">4</div>
+    <h2>Technical Deep-Dive — Equations & Parameters</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Walk me through the D-TS update process step by step.
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      After each offspring evaluation:
+      <ol>
+        <li><strong>Discount ALL arms:</strong> For each arm i, multiply both counters by gamma: N_i = gamma * N_i, mu_hat_i = gamma * mu_hat_i. This exponentially decays old observations.</li>
+        <li><strong>Update the used arm k:</strong> N_k = N_k + 1, mu_hat_k = mu_hat_k + r (where r is the absolute reward)</li>
+        <li><strong>Compute posterior parameters:</strong> alpha_k = mu_hat_k + 1, beta_k = N_k - mu_hat_k + 1 (Beta distribution parameters)</li>
+        <li><strong>Sample:</strong> For each arm i, draw theta_i ~ Beta(alpha_i, beta_i)</li>
+        <li><strong>Select:</strong> Choose arm k = argmax_i(theta_i) for the next evaluation</li>
+        <li><strong>Epsilon-greedy override:</strong> With probability epsilon = 0.15, select uniformly at random instead</li>
+      </ol>
+      The discount factor gamma = 0.99 ensures recent observations carry more weight, adapting to the non-stationary reward landscape of evolutionary search.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the AOCC formula and how is it computed?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      AOCC (Area Over the Convergence Curve) measures anytime performance:
+      <div class="key-point">
+        AOCC = (1/n) * sum_{i=1}^{n} [ (log10(y_i) - log10(f*)) / (log10(ub) - log10(lb)) ]
+        <br><br>
+        Where: y_i = best fitness at evaluation i, f* = known global optimum, lb/ub = bounds for normalization.
+        <br>Clipping: min(max(y_i, log10(lb)), log10(ub)) constrains extreme values.
+        <br>Result: AOCC lies in [0, 1]; higher = faster and more consistent convergence.
+      </div>
+      The final scalar fitness used for evolutionary selection is obtained by averaging AOCC scores across all benchmark instances and independent runs.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What are all the hyperparameters and their values?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <table>
+        <tr><th>Parameter</th><th>Value</th><th>Purpose</th></tr>
+        <tr><td>mu (maintained parents)</td><td>4</td><td>Population size after selection</td></tr>
+        <tr><td>lambda (offspring per gen)</td><td>8</td><td>Number of new candidates per generation</td></tr>
+        <tr><td>Initialization size</td><td>8</td><td>Initial random population</td></tr>
+        <tr><td>gamma (discount factor)</td><td>0.99</td><td>D-TS memory decay rate</td></tr>
+        <tr><td>epsilon (exploration rate)</td><td>0.15</td><td>Probability of random operator selection</td></tr>
+        <tr><td>tau_max (stagnation ceiling)</td><td>0.2</td><td>Max fraction of budget before forced override (unused in practice, s_max used instead)</td></tr>
+        <tr><td>s_max (stagnation threshold)</td><td>10</td><td>Consecutive non-improving evals before forced group switch</td></tr>
+        <tr><td>Total LLM evaluations</td><td>100</td><td>Budget per run</td></tr>
+        <tr><td>Seeds</td><td>5</td><td>Independent repetitions</td></tr>
+        <tr><td>Benchmark</td><td>MA-BBOB 5D</td><td>24 functions, 5 dimensions</td></tr>
+        <tr><td>LLM</td><td>Gemini-2.5-Flash</td><td>Via Vertex AI API</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How does parent selection work differently for crossover vs. mutation operators?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ul>
+        <li><strong>For Crossover:</strong> p1 = argmax fitness from population (best individual), p2 = diverse inspirations from the population (selected for diversity, not just fitness). Three inspiration sources are provided to the LLM.</li>
+        <li><strong>For Refine/Simplify (mutation):</strong> p1 = fitness-proportional selection from the population. The parent is provided to the LLM along with the mutation instruction.</li>
+        <li><strong>For Random New:</strong> No parent needed — the LLM generates from scratch using only the task prompt.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How does the stagnation detection work in Algorithm 3.1?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      In the pseudocode (Algorithm 3.1, lines 15-18):
+      <ol>
+        <li>A counter s tracks consecutive evaluations without improvement to the best-so-far</li>
+        <li>If y' > y_b (new best found): reset s = 0, update best</li>
+        <li>Otherwise: s = s + 1</li>
+        <li>When s >= s_max (10): force operator selection from the <em>opposite group</em> — if currently using {refine, simplify}, switch to {crossover, random_new} and vice versa. Then reset s = 0.</li>
+      </ol>
+      This prevents the D-TS controller from locking onto a suboptimal operator preference during stagnation periods.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What are the 11 behavioural metrics used in behaviour-space analysis?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Grouped into four categories:
+      <br><br><strong>Exploration & Diversity:</strong>
+      <ul>
+        <li>NN-dist (Nearest-Neighbour Distance) — spatial exploration</li>
+        <li>Disp (Coverage Dispersion) — search space coverage</li>
+        <li>Expl % (Exploration Percentage) — fraction of exploratory evaluations</li>
+      </ul>
+      <strong>Exploitation & Intensification:</strong>
+      <ul>
+        <li>Dist-to-Best (Distance to Best Found) — proximity to optimum</li>
+        <li>Inten-ratio (Intensification Ratio) — fraction of offspring near best</li>
+        <li>Explt % (Exploitation Percentage) — complement of Expl %</li>
+      </ul>
+      <strong>Convergence Progress:</strong>
+      <ul>
+        <li>Conv-rate (Convergence Rate)</li>
+        <li>Delta fitness (Average Improvement)</li>
+        <li>Success % (Success Rate)</li>
+      </ul>
+      <strong>Stagnation & Reliability:</strong>
+      <ul>
+        <li>No-imp streak (Longest No-Improvement Streak)</li>
+        <li>Last-imp frac (Last Improvement Fraction)</li>
+      </ul>
+      After Pearson correlation analysis, 5 non-redundant features were retained (|r| < 0.7): Expl %, Conv-rate, Delta fitness, Success %, No-imp streak.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What does the reward function look like mathematically?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <div class="key-point">
+        r_t = 0 &nbsp;&nbsp;&nbsp;&nbsp; if v = 0 (invalid/crashed code)
+        <br>r_t = max(0, min(1, f_child)) &nbsp;&nbsp;&nbsp;&nbsp; if v = 1 (valid code)
+        <br><br>
+        Where f_child is the AOCC score of the offspring algorithm, and v is a binary validity flag from the execution sandbox. The clipping to [0,1] is natural since AOCC already lies in this range.
+      </div>
+      This is an absolute reward (not relative-to-parent), ensuring consistent reward signals across all operator types.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the (mu + lambda) selection strategy?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      After each generation, the combined pool of mu parents + lambda offspring is ranked by fitness, and the top mu individuals are retained as the new parent population (Algorithm 3.1, line 48: P = top-mu(P)). With mu=4 and lambda=8, this means 12 candidates compete for 4 survival slots. This creates strong selection pressure while ensuring the best individuals are never lost (elitist strategy).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How are the prompt templates structured for each operator?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Each operator uses a distinct prompt template:
+      <ul>
+        <li><strong>Refine:</strong> "Given this algorithm [parent code], improve it by adding or modifying strategies to increase performance. Focus on targeted refinement that increases algorithmic complexity."</li>
+        <li><strong>Simplify:</strong> "Given this algorithm [parent code], simplify it by removing unnecessary complexity while preserving or improving performance."</li>
+        <li><strong>Crossover:</strong> "Given these parent algorithms [p1 code, p2 code, p3 code as inspiration], create a new algorithm that combines the best strategies from all parents into a coherent solution."</li>
+        <li><strong>Random New:</strong> "Generate a new optimization algorithm from scratch for [task description]."</li>
+      </ul>
+      All templates include the task prompt (S), feedback from previous evaluations (F_0), and relevant parent code. Generated algorithms must be implemented in Python compatible with the COCO platform.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the Beta distribution and why is it used for D-TS?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The Beta distribution Beta(alpha, beta) is a conjugate prior for Bernoulli/binomial observations, making Bayesian updates computationally trivial. In D-TS:
+      <ul>
+        <li>alpha_i = discounted sum of rewards + 1 (pseudo-successes)</li>
+        <li>beta_i = discounted count - discounted rewards + 1 (pseudo-failures)</li>
+        <li>The posterior mean is alpha/(alpha+beta), representing the estimated success probability of each operator</li>
+        <li>Sampling theta_i ~ Beta(alpha_i, beta_i) naturally balances exploitation (high mean operators sampled more often) with exploration (high variance operators occasionally sampled)</li>
+      </ul>
+      The discount factor gamma exponentially decays old alpha and beta values, increasing posterior variance over time and making the controller more willing to explore operators whose recent performance may differ from their historical average.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 5: LIMITATIONS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec5">
+  <div class="section-header">
+    <div class="section-icon">5</div>
+    <h2>Limitations, Threats & Future Work</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What are the main limitations of this study?
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ol>
+        <li><strong>Single model, single benchmark:</strong> Evaluated exclusively on 5D MA-BBOB with Gemini-2.5-Flash. No evidence of generalization to higher dimensions, different LLMs, or different problem domains.</li>
+        <li><strong>Binary reward signal:</strong> D-TS uses a binary valid/invalid reward. More nuanced feedback (multi-objective, structural quality) could improve controller decisions.</li>
+        <li><strong>Fixed discount factor:</strong> gamma = 0.99 is static throughout the run. A self-adaptive schedule could improve late-stage responsiveness.</li>
+        <li><strong>Late-stage exploitation gap:</strong> Last Improvement Fraction (0.3501) remains below the Q4 gold standard (0.5252), marking late-stage exploitation as the primary remaining weakness.</li>
+        <li><strong>Prompt sensitivity:</strong> Performance profiles shifted across template versions during development. New application domains will require domain-specific prompt adaptation.</li>
+        <li><strong>No D-TS isolation condition:</strong> The ablation design compares crossover variants but does not include a condition with multi-inspiration crossover + uniform operator selection (no D-TS). The independent contribution of D-TS beyond crossover cannot be directly isolated.</li>
+        <li><strong>No fine-tuning:</strong> Limited to ICL — fine-tuned models might perform differently.</li>
+        <li><strong>Computational cost:</strong> 100 LLM API calls per run is non-trivial.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What are the 5 recommendations for future work?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ol>
+        <li><strong>Scalability, Model Architecture, and Prompt Robustness:</strong> Test across higher-dimensional spaces, alternative LLMs, and measure prompt sensitivity systematically.</li>
+        <li><strong>Generative Crossover Design and Inspiration Diversity:</strong> Characterize the minimum diversity threshold below which recombination hurts. Systematic study across problem domains and LLM architectures.</li>
+        <li><strong>Adaptive Controller Refinement:</strong> Test multi-objective rewards, self-adaptive discount schedules, and alternative bandit algorithms (UCB variants, EXP3, reinforcement-learning-based controllers).</li>
+        <li><strong>Structurally-Informed Operator Selection:</strong> Feed CEG-derived structural features (lineage connectivity, complexity growth, genealogical stability) into the reward signal, following the SAGE paradigm (van Stein et al., 2026).</li>
+        <li><strong>Domain Generalization:</strong> Extend to combinatorial scheduling, data mining, multi-objective problems, and real-world robotics applications (particularly deformable object manipulation).</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How would you address the D-TS isolation limitation if you had more time?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Add a dedicated ablation condition: <strong>LLaMEA-Crossover3-Uniform</strong> — multi-inspiration crossover with uniform (random) operator selection instead of D-TS. Comparing this against:
+      <ul>
+        <li>LLaMEA-Crossover3-NoRefine (crossover only, no D-TS) — already done</li>
+        <li>Full GA-LLaMEA (crossover + D-TS) — already done</li>
+      </ul>
+      This would formally separate the contributions of D-TS from crossover. The current comparison (0.8364 without D-TS vs. 0.8348 with D-TS) suggests D-TS functions as a variance-reduction mechanism, but a dedicated uniform condition would confirm this.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why only 5-dimensional optimization? Can this scale to higher dimensions?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      5D was chosen to maintain a feasible computational budget regarding API costs and latency. The generated algorithms are Python functions that are evaluated on COCO benchmark instances — scaling to higher dimensions is architecturally straightforward (no framework changes needed) but would require more computational budget per evaluation. The concern is whether the generated algorithms themselves would scale, which is an open question requiring further investigation (Recommendation 1).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What about reproducibility given LLM non-determinism?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      LLMs are inherently stochastic — same prompt may produce different outputs across calls. This is addressed through:
+      <ul>
+        <li><strong>5 independent runs</strong> per configuration to capture variance</li>
+        <li>Reporting mean +/- standard deviation for all metrics</li>
+        <li>Confidence intervals on Elo ratings</li>
+        <li>Box plots showing full distributions, not just means</li>
+      </ul>
+      GA-LLaMEA's consistently lower variance (sigma = 0.0255) compared to Baseline LLaMEA (0.0432) and EoH (0.0119) across 5 seeds provides evidence of robust performance despite LLM non-determinism.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Is crossover always beneficial? When does it hurt?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      No — crossover is NOT unconditionally beneficial. The ablation study shows single-inspiration crossover (1 parent) actually hurts performance (-1.0%). <strong>LHNS</strong> (Xie et al., 2025) is worth noting as counter-evidence: single-solution Ruin-and-Recreate heuristic design without crossover can match population-based approaches.
+      <br><br>
+      Crossover requires sufficient building-block diversity to be productive (Goldberg, 1989). Below a minimum diversity threshold, recombination replaces focused mutation-based refinement with noisier combinations that degrade solution quality. Three inspiration sources provide that diversity; one does not.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What are the ethical implications of automated algorithm design?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      While this study focuses on optimization benchmarks, broader implications include:
+      <ul>
+        <li><strong>Interpretability:</strong> LLM-generated algorithms produce readable Python code, addressing the "interpretability crisis" of Genetic Programming era. Researchers can understand <em>why</em> generated algorithms work.</li>
+        <li><strong>Computational cost:</strong> Each run requires ~100 LLM API calls — environmental and financial cost should be considered for large-scale deployment.</li>
+        <li><strong>Model dependency:</strong> Results depend on the training data and biases of the LLM used. Different models may produce different algorithmic strategies.</li>
+        <li><strong>Displacement concerns:</strong> Automated algorithm design could reduce the need for human algorithm engineers, though it also empowers non-experts to access high-quality optimization solutions.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Why not compare against ReEvo or MCTS-AHD directly?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      ReEvo (Ye et al., 2024) targets combinatorial optimization, not continuous BBO. Its crossover is entangled with its reflective memory mechanism and cannot be separated. MCTS-AHD (Zheng et al., 2025) also targets combinatorial domains and its crossover is not isolated from the MCTS navigation mechanism. Direct comparison would require porting these frameworks to continuous BBO, which is beyond the scope of this study. The chosen baselines (Baseline LLaMEA and EoH) are the most relevant existing frameworks for continuous BBO heuristic generation.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Could the framework work with open-source LLMs?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Architecturally, yes — the framework is model-agnostic since it uses only ICL (no fine-tuning). However, LMX (Meyerson et al., 2024) showed that crossover validity is sensitive to model scale — a 6B CodeGen model produced only 30% valid offspring. Open-source models of sufficient scale (e.g., CodeLlama 70B, DeepSeek Coder) might work, but this has not been empirically validated for optimization metaheuristic generation. This is part of Recommendation 1 (test across alternative LLM architectures).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What if the panelists ask about statistical significance?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      With 5 seeds per configuration, traditional statistical tests (t-tests, Mann-Whitney) have low power. The study addresses this through:
+      <ul>
+        <li><strong>Effect sizes:</strong> Large Elo gaps (+85, +140), clear AOCC differences</li>
+        <li><strong>Confidence intervals:</strong> Non-overlapping CIs on Elo ratings</li>
+        <li><strong>Distribution analysis:</strong> Box plots showing full distributions — GA-LLaMEA's IQR is entirely above baselines' median values</li>
+        <li><strong>Consistency:</strong> All 5 GA-LLaMEA runs exceed 0.80 AOCC; baseline shows runs as low as 0.65</li>
+        <li><strong>Behavioural evidence:</strong> 11 metrics consistently show GA-LLaMEA aligns most closely with the gold standard profile</li>
+      </ul>
+      The multi-instrument evaluation (Elo, AOCC, behavioural metrics, CEGs) provides converging evidence from independent measurement perspectives.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 6: CONCEPTUAL FOUNDATIONS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec6">
+  <div class="section-header">
+    <div class="section-icon">6</div>
+    <h2>Conceptual / Theoretical Foundations</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What are the three structural gaps in current LLM-driven AAD that GA-LLaMEA addresses?
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ol>
+        <li><strong>Mutation-centric evolution:</strong> Most frameworks (Baseline LLaMEA, FunSearch) rely solely on mutation. Without crossover, candidates evolve in parallel disconnected refinement streams, restricted to local basins of attraction. Opris et al. (2025) prove this leads to exponential convergence time.</li>
+        <li><strong>Static operator scheduling:</strong> EoH applies operators at fixed uniform probability throughout evolution. Without adaptive control, the system cannot shift from exploration to exploitation as the search matures. This creates a persistent exploration bias.</li>
+        <li><strong>Syntactic crossover (pattern-completion):</strong> LMX (Meyerson et al., 2024) generates offspring by continuing a few-shot pattern rather than reasoning about algorithmic structure, with no guarantee the resulting code will be functionally correct.</li>
+      </ol>
+      GA-LLaMEA bridges all three gaps through inspiration-based generative crossover + D-TS adaptive operator control + per-operator normalized reward baselines.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the difference between Algorithm Selection and Algorithm Generation?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>Zhang et al. (2025)</strong> frame this distinction in their MetaBBO taxonomy:
+      <ul>
+        <li><strong>Algorithm Selection:</strong> Choose the best algorithm from a pre-existing portfolio for a given problem. Limited by the quality and diversity of the portfolio.</li>
+        <li><strong>Algorithm Generation:</strong> Create entirely new algorithms on-the-fly, tailored to the problem. No predefined pool — the search space is the space of all possible programs.</li>
+      </ul>
+      GA-LLaMEA operates in the Algorithm Generation paradigm, leveraging LLMs to explore an open-ended program space. The NFL theorems (Wolpert & Macready, 1997) justify this shift — since no universal algorithm exists, the future lies in generating problem-specific solutions.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What are the three eras of Automated Algorithm Design?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Following Tan et al. (2025):
+      <ol>
+        <li><strong>Genetic Programming (Era 1):</strong> Koza (1992) — evolves programs as syntax trees. Suffered from code bloat, limited function sets, and poor interpretability.</li>
+        <li><strong>Hyper-heuristics (Era 2):</strong> Burke et al. (2013), Drake et al. (2020) — "heuristics to choose/generate heuristics." Selection hyper-heuristics manage pre-existing operator pools; generation hyper-heuristics use GP to construct new ones. Still suffered from the "Interpretability Gap."</li>
+        <li><strong>LLM-based Evolution (Era 3):</strong> Current era — LLMs bridge automated synthesis and human readability. FunSearch, EoH, LLaMEA represent this paradigm. LLMs can explain the logic behind modifications, solving the interpretability crisis.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is In-Context Learning and why is it relevant to this work?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      In-Context Learning (ICL), introduced by <strong>Brown et al. (2020)</strong>, is the ability of LLMs to learn to perform a task simply by observing examples in the prompt, without weight updates. This is critical because:
+      <ul>
+        <li>GA-LLaMEA leverages ICL by providing parent algorithms and performance feedback in the prompt — the LLM learns what works and what doesn't from these examples</li>
+        <li>Chain of Thought prompting (Wei et al., 2022) enables LLMs to decompose complex problems into intermediate steps, solving the interpretability crisis of the GP era</li>
+        <li>The framework explicitly avoids fine-tuning to isolate the evolutionary architecture's contribution</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How does GA-LLaMEA relate to the Holland Schema Theorem?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Holland's Schema Theorem (1975) and Goldberg's Building Block Hypothesis (1989) provide the theoretical justification for crossover in GA-LLaMEA:
+      <ul>
+        <li>Short, low-order, highly fit subsets ("schemata" or "building blocks") grow exponentially in frequency over generations</li>
+        <li>Crossover enables the <em>direct recombination</em> of building blocks from different parents — e.g., one parent's selection strategy combined with another's update rule</li>
+        <li>Mutation alone is unlikely to merge two distinct features, as it requires a precise sequence of random modifications</li>
+        <li>In the LLM context, this extends to semantic building blocks — the LLM understands algorithmic logic and can combine high-level strategies coherently</li>
+      </ul>
+      LLaMEA-BO (Li et al., 2025) and CodeEvolve (Assumpcao et al., 2026) provide empirical validation of the Building Block Hypothesis in the context of LLM code evolution.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is a "non-stationary reward distribution" and why does it matter?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      In evolutionary search, operator effectiveness changes over time: Random New is useful early (diversity injection) but wasteful late; Simplify/Crossover become more productive as good solutions emerge. This means reward distributions drift — an operator's average reward at generation 1 differs from generation 12.
+      <br><br>
+      Classical bandits (UCB, standard TS) assume stationary rewards (Cavenaghi et al., 2021). They accumulate historical rewards without decay, potentially overcommitting to operators that were good early but are suboptimal now. D-TS addresses this by exponentially decaying old observations, enabling faster adaptation to the shifting reward landscape.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is COCO and how was it used?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>COCO</strong> (Comparing Continuous Optimizers) is a standardized platform for benchmarking continuous optimization algorithms, developed by <strong>Hansen et al. (2021)</strong>. It provides:
+      <ul>
+        <li>24 BBOB benchmark functions with known optima</li>
+        <li>Standardized evaluation protocols and data logging</li>
+        <li>Automated performance metric computation</li>
+      </ul>
+      In this study, generated Python algorithms must be compatible with the COCO platform. Each algorithm is evaluated across all 24 MA-BBOB function instances in 5D, with AOCC computed from the optimization traces.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is "deception" in optimization and how does crossover help?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Optimization landscapes often contain deceptive regions that mislead search algorithms toward suboptimal solutions. Mutation-centric approaches are particularly vulnerable as they rely on incremental improvements that reinforce local optima.
+      <br><br>
+      Recombination provides a mechanism for escaping deceptive regions by enabling <strong>discontinuous jumps</strong> in the search space. By combining distinct algorithmic components, crossover facilitates exploration beyond local basins of attraction. This is why GA-LLaMEA's crossover operator specifically selects <em>diverse</em> inspirations from the population — ensuring the combined solution can break free from a single exploitation trajectory.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 7: GENERAL DEFENSE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec7">
+  <div class="section-header">
+    <div class="section-icon">7</div>
+    <h2>General Defense Questions</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Summarize your thesis in 2-3 sentences.
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      This study presents GA-LLaMEA, a generative-adaptive framework that addresses three structural limitations in current LLM-driven Automated Algorithm Design: mutation-centric evolution, static operator scheduling, and semantically weak recombination. It combines Inspiration-Based Generative Crossover with a Discounted Thompson Sampling controller for adaptive operator selection, and a Stagnation Detection mechanism. Evaluation on 5-dimensional MA-BBOB showed consistent improvement across competitive performance (Elo +140 over baseline), convergence efficiency (mean AOCC 0.6028 vs. 0.5315), and structural integrity (coherent Code Evolution Graphs), with ablation studies confirming both multi-inspiration crossover and larger initialization are necessary contributors.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the single most important contribution of this work?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The study demonstrates that <strong>generative crossover combined with adaptive operator selection</strong> produces algorithms that more closely match the behavioural profile associated with high optimization performance — explaining not only <em>that</em> GA-LLaMEA outperforms the baselines, but <em>why</em> it does so. The three behavioural mechanisms (crossover-inherited exploitation, D-TS adaptive scheduling toward exploitation operators, and sustained late-stage improvement) provide an interpretable causal account of the performance gap.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What were the biggest challenges you faced during this research?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ul>
+        <li><strong>Prompt sensitivity:</strong> Performance profiles shifted noticeably across prompt template versions during development. Finding the right prompt design required extensive iteration.</li>
+        <li><strong>Computational cost:</strong> Each complete experiment (3 methods x 5 seeds x 100 evals) requires hundreds of LLM API calls plus benchmark evaluations, making debugging expensive.</li>
+        <li><strong>Balancing crossover diversity:</strong> The ablation revealed that single-inspiration crossover actually hurts performance — discovering that 3 inspirations was the sweet spot required systematic experimentation.</li>
+        <li><strong>Experimental design trade-offs:</strong> The ideal ablation would include a D-TS isolation condition, but computational budget constraints required prioritization.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How does your work advance the field of Automated Algorithm Design?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ol>
+        <li><strong>First general-purpose crossover operator for LLaMEA-paradigm continuous BBO:</strong> Previous crossover work was domain-specific (LLaMEA-BO for Bayesian Optimization) or architecturally entangled (ReEvo, EoH). GA-LLaMEA introduces and ablates a standalone crossover operator.</li>
+        <li><strong>First application of D-TS for operator selection in LLM-driven AAD:</strong> Previous work used either fixed scheduling (EoH) or time-based decay (MCTS-AHD). D-TS is the first reward-responsive adaptive controller in this context.</li>
+        <li><strong>Multi-instrument evaluation methodology:</strong> The combination of Elo + AOCC + Behaviour-Space Analysis + CEGs provides a comprehensive evaluation framework that captures performance, efficiency, dynamics, and structural evolution.</li>
+        <li><strong>Interpretable performance explanation:</strong> The three behavioural mechanisms provide a causal account, moving beyond "A outperforms B" to "A outperforms B because of these specific mechanistic differences."</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What practical applications could benefit from this framework?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ul>
+        <li><strong>Engineering optimization:</strong> Automatically generating optimization algorithms tailored to specific engineering problems (structural design, parameter tuning, circuit optimization)</li>
+        <li><strong>Robotics:</strong> Deformable object manipulation optimization, as noted in Recommendation 5</li>
+        <li><strong>AutoML:</strong> Generating hyperparameter optimization strategies customized for specific ML model architectures</li>
+        <li><strong>Scientific computing:</strong> Creating problem-specific numerical optimization algorithms</li>
+        <li><strong>Operations research:</strong> Extension to combinatorial scheduling and logistics optimization</li>
+      </ul>
+      The framework's model-agnostic design means it can leverage any LLM with sufficient code generation capabilities.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      If you could redo this study with unlimited resources, what would you change?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <ul>
+        <li>Test across 3-4 different LLMs (GPT-4, Claude, DeepSeek, Gemini) to assess model sensitivity</li>
+        <li>Scale to higher dimensions (10D, 20D, 50D) to test scalability</li>
+        <li>Add the D-TS isolation ablation condition (multi-crossover + uniform selection)</li>
+        <li>Include real-world optimization problems alongside benchmarks</li>
+        <li>Run more seeds (20+) for stronger statistical claims</li>
+        <li>Implement structurally-informed reward (CEG features in the reward signal, following SAGE)</li>
+        <li>Systematic prompt sensitivity analysis across multiple template designs</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the relationship between GA-LLaMEA and the SAGE paradigm?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <strong>SAGE</strong> (Structure-Aware Graph Evolution, van Stein et al., 2026) is a more recent paradigm that incorporates structural feedback from Code Evolution Graphs into the evolution process. GA-LLaMEA uses CEGs only for post-hoc analysis, not in the loop. Recommendation 4 proposes feeding CEG-derived structural features (lineage connectivity, complexity growth, genealogical stability) into the D-TS reward signal, which would move GA-LLaMEA toward the SAGE paradigm. This could help the controller distinguish operators that build coherent code from those that happen to perform well on a single evaluation.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Where does GA-LLaMEA sit in the LLaMEA lineage?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <div class="key-point">
+        <strong>LLaMEA</strong> (van Stein & Back, 2024) — Original (1+1) ES, mutation-only
+        <br>&darr;
+        <br><strong>Photonic LLaMEA</strong> — Domain-specific application
+        <br>&darr;
+        <br><strong>LLaMEA-BO</strong> (Li et al., 2025) — Population-based with crossover for Bayesian Optimization
+        <br>&darr;
+        <br><strong>SAGE</strong> (van Stein et al., 2026) — Structure-aware evolution with CEG feedback
+        <br>&darr;
+        <br><strong>GA-LLaMEA</strong> (This study) — Generative crossover + D-TS adaptive control for continuous BBO
+      </div>
+      GA-LLaMEA builds on the LLaMEA foundation but addresses its mutation-centric limitation by introducing crossover and adaptive operator selection.
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function toggle(el) {
+  el.closest('.qa-card').classList.toggle('open');
+}
+function toggleAll() {
+  const cards = document.querySelectorAll('.qa-card');
+  const allOpen = [...cards].every(c => c.classList.contains('open'));
+  cards.forEach(c => {
+    if (allOpen) c.classList.remove('open');
+    else c.classList.add('open');
+  });
+}
+</script>
+</body>
+</html>
