@@ -343,9 +343,9 @@ body {
 
 <div class="header">
   <div class="tag">Defense Script</div>
-  <h1>Member 1 — Julius Baliling</h1>
-  <p>Slides 1–13: Title &rarr; Framework Architecture</p>
-  <div class="meta">GA-LLaMEA Final Thesis Defense &middot; April 2026</div>
+  <h1>Member 1 &mdash; Julius Baliling</h1>
+  <p>Slides 1&ndash;13: Title &rarr; Framework Architecture</p>
+  <div class="meta">GA-LLaMEA Final Thesis Defense &middot; April 2026 &middot; ~5 min</div>
 </div>
 
 <div class="timing-bar">
@@ -366,7 +366,7 @@ body {
     <span><div class="legend-dot" style="background:var(--blue)"></div> Intro</span>
     <span><div class="legend-dot" style="background:var(--amber)"></div> Literature</span>
     <span><div class="legend-dot" style="background:var(--green)"></div> Methodology</span>
-    <span style="font-family:'DM Mono',monospace; color:var(--accent); font-weight:600;">~15:00</span>
+    <span style="font-family:'DM Mono',monospace; color:var(--accent); font-weight:600;">~5:00</span>
   </div>
 </div>
 
@@ -380,11 +380,11 @@ body {
       <span class="section-label intro">Introduction</span>
       <div class="slide-title">Title Slide</div>
     </div>
-    <span class="slide-time">0:30</span>
+    <span class="slide-time">0:20</span>
   </div>
   <div class="script-card">
-    <p>Good morning, panel members. My name is Julius Baliling, and together with my groupmates Rigel Ray Cabaya and Keycee Rhaye Rivas, under the supervision of our adviser, Ms. Cheryll Pagal, we present our thesis entitled:</p>
-    <div class="quote">"GA-LLaMEA: A Generative-Adaptive Large Language Model Evolutionary Algorithm &mdash; A Framework using Discounted Thompson Sampling for Adaptive Operator Selection in Automated Algorithm Design."</div>
+    <p>Good morning, panel members. I&rsquo;m Julius Baliling, together with Rigel Ray Cabaya and Keycee Rhaye Rivas, under our adviser Ms. Cheryll Pagal. We present:</p>
+    <div class="quote">&ldquo;GA-LLaMEA: A Generative-Adaptive Large Language Model Evolutionary Algorithm &mdash; A Framework using Discounted Thompson Sampling for Adaptive Operator Selection in Automated Algorithm Design.&rdquo;</div>
   </div>
 </div>
 
@@ -396,11 +396,10 @@ body {
       <span class="section-label intro">Introduction</span>
       <div class="slide-title">Presentation Outline</div>
     </div>
-    <span class="slide-time">0:30</span>
+    <span class="slide-time">0:15</span>
   </div>
   <div class="script-card">
-    <p>To give you an overview of our presentation, we will cover seven sections. We begin with the Introduction and Problem Statement, followed by our Research Objectives. We then proceed to the Review of Related Literature, our Methodology, Results and Discussion, Ablation Studies, and finally our Conclusion and Recommendations.</p>
-    <p>I will be covering the Introduction, Literature Review, and Methodology sections &mdash; specifically slides one through thirteen. My groupmates will take over from the Results onward.</p>
+    <p>We will cover seven sections: Introduction, Objectives, Literature Review, Methodology, Results, Ablation Studies, and Conclusion. I will handle slides one through thirteen &mdash; Introduction through Framework Architecture. My groupmates will cover the Results onward.</p>
   </div>
 </div>
 
@@ -412,15 +411,11 @@ body {
       <span class="section-label intro">Introduction</span>
       <div class="slide-title">Background of the Study</div>
     </div>
-    <span class="slide-time">1:30</span>
+    <span class="slide-time">0:35</span>
   </div>
   <div class="script-card">
-    <p>Before we discuss the specific problems, let us first establish the context of our study.</p>
-    <p><strong>The fundamental challenge in optimization</strong> is designing metaheuristic algorithms &mdash; search strategies that solve complex mathematical problems. Traditionally, this has been done manually by domain experts, requiring extensive trial-and-error, deep mathematical intuition, and significant time investment. As Wolpert and Macready showed in their No Free Lunch theorem, no single algorithm dominates across all problem types &mdash; which means we constantly need new, specialized algorithms.</p>
-    <p><strong>Large Language Models have changed this.</strong> LLMs can now generate executable optimization code directly from natural-language prompts, enabling a new paradigm called LLM-driven Automated Algorithm Design, or AAD. Frameworks like LLaMEA by van Stein and B&auml;ck, and Evolution of Heuristics by Liu et al., treat the LLM as an evolutionary operator &mdash; the system iteratively prompts the model to refine and improve candidate algorithms, evaluates them on benchmarks, and selects the best performers.</p>
-    <p><strong>However, despite these advances, current LLM-driven frameworks still have fundamental architectural limitations</strong> that restrict the quality and diversity of generated algorithms. These limitations are what motivated us to develop GA-LLaMEA &mdash; and they form the core of our problem statement.</p>
-    <div class="stage-direction">The highlight box on screen summarizes the core insight &mdash; you can gesture toward it.</div>
-    <p>Our core insight is that by combining generative crossover &mdash; multi-parent recombination via LLM reasoning &mdash; with Discounted Thompson Sampling for adaptive operator selection, we can address these fundamental limitations.</p>
+    <p>Designing optimization algorithms has traditionally been a manual, expert-driven process. As the No Free Lunch Theorems establish, no single algorithm works best everywhere &mdash; so new algorithms must constantly be designed.</p>
+    <p><strong>LLMs have changed this</strong> by enabling Automated Algorithm Design &mdash; frameworks like LLaMEA and Evolution of Heuristics use LLMs to iteratively generate and refine executable optimization code. However, these frameworks still have fundamental architectural limitations that motivated our work.</p>
   </div>
 </div>
 
@@ -432,14 +427,10 @@ body {
       <span class="section-label intro">Introduction</span>
       <div class="slide-title">Problem Statement</div>
     </div>
-    <span class="slide-time">1:30</span>
+    <span class="slide-time">0:35</span>
   </div>
   <div class="script-card">
-    <p>Building on those limitations, we formalize three specific problems in LLM-driven Automated Algorithm Design.</p>
-    <p><strong>First, underutilized populations.</strong> Current frameworks like LLaMEA rely on mutation-based refinement &mdash; each candidate is improved in isolation. There is no mechanism for recombining complementary strategies across the population, which leads to premature convergence.</p>
-    <p><strong>Second, ineffective recombination.</strong> No general-purpose crossover operator exists within LLaMEA for continuous optimization. Existing syntactic crossover approaches &mdash; which simply concatenate code from two parents &mdash; produce logically inconsistent or structurally invalid offspring.</p>
-    <p><strong>Third, the absence of adaptive operator selection.</strong> When you have multiple genetic operators, you need a way to decide which one to apply at each step. Static probabilities cannot respond to the shifting exploration-exploitation needs throughout an evolutionary run.</p>
-    <p>These problems are supported by the findings of Bouras et al., Hemberg and O'Reilly, and Aydin et al.</p>
+    <p>Building on those limitations, we identify three problems. <strong>First, underutilized populations</strong> &mdash; current frameworks rely on mutation only, with no recombination across candidates. <strong>Second, ineffective recombination</strong> &mdash; existing syntactic crossover simply concatenates code and produces invalid offspring. <strong>Third, no adaptive operator selection</strong> &mdash; static probabilities cannot respond to shifting exploration-exploitation needs during a run.</p>
   </div>
 </div>
 
@@ -451,14 +442,11 @@ body {
       <span class="section-label intro">Introduction</span>
       <div class="slide-title">Research Objectives</div>
     </div>
-    <span class="slide-time">1:30</span>
+    <span class="slide-time">0:30</span>
   </div>
   <div class="script-card">
-    <p>To address these problems, we defined three research objectives.</p>
-    <p><strong>Objective one</strong> is to develop the GA-LLaMEA framework &mdash; a generative-adaptive evolutionary framework that integrates a modified bandit-based operator selection policy derived from Discounted Thompson Sampling, as proposed by Qi et al. in 2023.</p>
-    <p><strong>Objective two</strong> is to implement Generative Crossover mechanisms &mdash; specifically, to upgrade the baseline LLaMEA architecture with a crossover operator that leverages LLM reasoning to synthesize coherent offspring from multiple parent strategies.</p>
-    <p><strong>Objective three</strong> is to validate our framework using MA-BBOB benchmarking &mdash; evaluating performance through Elo ratings, AOCC or Area Over the Convergence Curve, behavioural profiling, Code Evolution Graphs, and operator selection dynamics.</p>
-    <p>For context, AOCC is scored in the range of zero to one, where higher values indicate faster and more consistent convergence across the evaluation budget.</p>
+    <p>To address these, we defined three objectives. <strong>One</strong>, develop GA-LLaMEA with Discounted Thompson Sampling for adaptive operator selection. <strong>Two</strong>, implement Generative Crossover &mdash; multi-parent recombination via LLM reasoning. <strong>Three</strong>, validate on MA-BBOB using Elo ratings, A-O-C-C, behavioural profiling, and Code Evolution Graphs.</p>
+    <p><em>A-O-C-C ranges from zero to one, where higher means faster and more consistent convergence.</em></p>
   </div>
 </div>
 
@@ -470,13 +458,10 @@ body {
       <span class="section-label intro">Introduction</span>
       <div class="slide-title">Significance of the Study</div>
     </div>
-    <span class="slide-time">1:00</span>
+    <span class="slide-time">0:25</span>
   </div>
   <div class="script-card">
-    <p>The significance of this study lies in three contributions.</p>
-    <p><strong>First</strong>, it modernizes the LLaMEA framework by introducing Inspiration-Based Generative Crossover, which advances the framework's explorative capabilities in line with state-of-the-art population-based frameworks such as those by Meyerson et al. and Elsken et al.</p>
-    <p><strong>Second</strong>, it pioneers the integration of bandit-based adaptive control into LLM-driven evolutionary optimization through Discounted Thompson Sampling, eliminating the need for fragile static operator schedules.</p>
-    <p><strong>Third</strong>, it establishes rigorous empirical standards by validating generated algorithms using the MA-BBOB benchmark suite and standardized evaluation metrics including AOCC, as formalized by van Stein et al. in 2025.</p>
+    <p>Three contributions: <strong>First</strong>, we introduce Inspiration-Based Generative Crossover to the LLaMEA lineage. <strong>Second</strong>, we pioneer bandit-based adaptive control in LLM-driven evolutionary optimization via D-T-S. <strong>Third</strong>, we establish rigorous evaluation standards using MA-BBOB and A-O-C-C metrics as formalized by van Stein et al.</p>
   </div>
 </div>
 
@@ -488,11 +473,11 @@ body {
       <span class="section-label intro">Introduction</span>
       <div class="slide-title">Scope &amp; Limitations</div>
     </div>
-    <span class="slide-time">1:00</span>
+    <span class="slide-time">0:25</span>
   </div>
   <div class="script-card">
-    <p>In terms of scope &mdash; our study focuses on single-objective continuous black-box optimization using the BBOB suite of 24 noiseless functions. The generative component uses Gemini-2.5-flash via API with in-context learning only &mdash; no fine-tuning or weight retraining. All generated heuristics are written in Python and are COCO-compatible. The Discounted Thompson Sampling controller manages operator trade-offs using a discount factor gamma.</p>
-    <p>As for limitations &mdash; this study excludes combinatorial, large-scale global optimization problems beyond 100 dimensions, and multi-objective optimization. There are also computational budget constraints due to API costs and latency. Finally, while the framework is architecturally model-agnostic, it has been validated on Gemini-2.5-Flash only. Multi-model generalization remains a future direction.</p>
+    <p><strong>Scope:</strong> Single-objective continuous optimization on 24 BBOB functions, using Gemini-2.5-Flash via API with in-context learning only. All heuristics are Python and COCO-compatible.</p>
+    <p><strong>Limitations:</strong> Excludes combinatorial and multi-objective optimization, constrained by API costs, and validated on one LLM model only.</p>
   </div>
 </div>
 
@@ -504,10 +489,10 @@ body {
       <span class="section-label lit">Literature</span>
       <div class="slide-title">Section Divider: Review of Literature</div>
     </div>
-    <span class="slide-time">0:15</span>
+    <span class="slide-time">0:10</span>
   </div>
   <div class="divider-card">
-    <p>We now move to Section Two &mdash; the Review of Related Literature, where we discuss the theoretical foundations and identify the specific research gaps that GA-LLaMEA addresses.</p>
+    <p>We now move to the Review of Related Literature.</p>
   </div>
 </div>
 
@@ -519,15 +504,10 @@ body {
       <span class="section-label lit">Literature</span>
       <div class="slide-title">Theoretical Foundations</div>
     </div>
-    <span class="slide-time">2:00</span>
+    <span class="slide-time">0:35</span>
   </div>
   <div class="script-card">
-    <p>Our theoretical foundation is built around four targeted questions.</p>
-    <p><strong>First &mdash; what does current Automated Algorithm Design already do?</strong> Frameworks like LLaMEA and EoH generate metaheuristics via iterative LLM prompting with mu-plus-lambda selection. However, they remain mutation-centric &mdash; candidates evolve in isolation without cross-population information sharing. This is documented by van Stein and B&auml;ck in 2024, and Liu et al. in 2024.</p>
-    <p><strong>Second &mdash; why add an adaptive operator selector?</strong> With four operators in our framework, static probabilities cannot respond to shifting operator effectiveness. A bandit controller learns which operator is productive at each stage, eliminating fragile manual scheduling. This is supported by Aydin et al. and Fialho et al.</p>
-    <p><strong>Third &mdash; why specifically D-TS over UCB or sliding-window approaches?</strong> UCB uses time-scheduled decay &mdash; exploration decreases based on elapsed evaluations. D-TS, on the other hand, uses exponential discounting with gamma equal to 0.99, responding to actual reward history rather than a clock. This makes it better suited for non-stationary environments, as shown by Qi et al. in 2023.</p>
-    <p><strong>Fourth &mdash; why introduce crossover at all?</strong> Mutation alone restricts search to local basins, as Opris et al. demonstrate. While crossover exists in LLaMEA-BO and ReEvo, no prior work introduces a general-purpose crossover within LLaMEA for continuous black-box heuristic generation.</p>
-    <div class="stage-direction">Pause briefly between each question &mdash; let the panel absorb each point.</div>
+    <p>Our literature review addresses four questions. <strong>What does current AAD do?</strong> LLaMEA and EoH generate algorithms via LLM prompting, but remain mutation-centric. <strong>Why add adaptive selection?</strong> Static probabilities cannot track shifting operator effectiveness. <strong>Why D-T-S over UCB?</strong> D-T-S uses exponential discounting responsive to actual reward history, not a time-based clock. <strong>Why crossover?</strong> Mutation alone restricts search to local basins &mdash; no prior work introduces general-purpose crossover within LLaMEA for continuous optimization.</p>
   </div>
 </div>
 
@@ -539,15 +519,11 @@ body {
       <span class="section-label lit">Literature</span>
       <div class="slide-title">LLM-Driven Automated Algorithm Design</div>
     </div>
-    <span class="slide-time">1:30</span>
+    <span class="slide-time">0:20</span>
   </div>
   <div class="script-card">
-    <p>This table traces the evolution of Automated Algorithm Design &mdash; from Koza's foundational genetic programming in 1992, through hyper-heuristics in the 2000s, to modern LLM-driven frameworks.</p>
-    <p>Key milestones include FunSearch, published in Nature 2024, which combined LLMs with systematic evaluators; EoH by Liu et al. at ICML 2024, which co-evolves Python code and natural-language thought; and LLaMEA by van Stein and B&auml;ck, which introduced LLM evolutionary algorithms for metaheuristic synthesis with feedback-driven refinement.</p>
-    <p>More recently, Zhang et al. in 2025 formalized the Algorithm Selection versus Generation taxonomy, positioning LLM-driven AAD at the research frontier. And CodeEvolve by Assump&ccedil;&atilde;o et al. in 2026 introduced multi-model code evolution with inspiration-based crossover.</p>
-    <p><strong>Our work, GA-LLaMEA, is the first to combine general-purpose generative crossover with D-TS adaptive operator selection within the LLaMEA lineage.</strong></p>
-    <p>You can see the research lineage at the bottom &mdash; from the original LLaMEA, through domain extensions like Photonic-LLaMEA, population-based extensions like LLaMEA-BO, structural feedback via LLaMEA-SAGE, and finally our contribution: GA-LLaMEA with generative crossover and D-TS.</p>
-    <div class="stage-direction">Point to the highlighted GA-LLaMEA row, then the lineage timeline at the bottom.</div>
+    <p>This table traces AAD from Koza&rsquo;s genetic programming in 1992 through FunSearch, EoH, and LLaMEA to our work. <strong>GA-LLaMEA is the first to combine generative crossover with D-T-S adaptive selection within the LLaMEA lineage.</strong> The research lineage at the bottom shows the progression: LLaMEA &rarr; Photonic &rarr; LLaMEA-BO &rarr; SAGE &rarr; GA-LLaMEA.</p>
+    <div class="stage-direction">Point to the highlighted row and lineage timeline.</div>
   </div>
 </div>
 
@@ -559,13 +535,10 @@ body {
       <span class="section-label lit">Literature</span>
       <div class="slide-title">Research Gap &mdash; The Three Deficits</div>
     </div>
-    <span class="slide-time">1:30</span>
+    <span class="slide-time">0:25</span>
   </div>
   <div class="script-card">
-    <p>We identified three specific research gaps that our framework addresses.</p>
-    <p><strong>Gap one &mdash; mutation-centric evolution.</strong> Current frameworks rely on single-parent refinement only. There is no mechanism to recombine complementary strategies across the population. Our solution is Inspiration-Based Generative Crossover, which enables multi-parent recombination at the strategy level.</p>
-    <p><strong>Gap two &mdash; invalid recombination.</strong> Syntactic crossover, as used in existing approaches, produces structurally erroneous offspring because it operates without semantic constraints. Our solution is strategy-level semantic synthesis via LLM reasoning &mdash; the LLM reasons about algorithmic concepts, not raw code text.</p>
-    <p><strong>Gap three &mdash; static operator scheduling.</strong> Fixed operator probabilities cannot adapt to non-stationary dynamics throughout an evolutionary run. Our solution is D-TS adaptive control with discounted posteriors, which learns in real-time which operator is most effective.</p>
+    <p>Three gaps: <strong>Gap one</strong> &mdash; mutation-centric evolution with no population recombination; solved by Generative Crossover. <strong>Gap two</strong> &mdash; syntactic crossover produces invalid offspring; solved by strategy-level semantic synthesis via LLM reasoning. <strong>Gap three</strong> &mdash; static operator scheduling; solved by D-T-S adaptive control with discounted posteriors.</p>
   </div>
 </div>
 
@@ -577,10 +550,10 @@ body {
       <span class="section-label method">Methodology</span>
       <div class="slide-title">Section Divider: Methodology</div>
     </div>
-    <span class="slide-time">0:15</span>
+    <span class="slide-time">0:10</span>
   </div>
   <div class="divider-card">
-    <p>We now move to Section Three &mdash; the Methodology, where we present the framework architecture and experimental design.</p>
+    <p>We now move to the Methodology.</p>
   </div>
 </div>
 
@@ -592,17 +565,14 @@ body {
       <span class="section-label method">Methodology</span>
       <div class="slide-title">Framework Architecture</div>
     </div>
-    <span class="slide-time">2:00</span>
+    <span class="slide-time">0:35</span>
   </div>
   <div class="script-card">
-    <p>This slide shows a side-by-side comparison between the Baseline LLaMEA and our GA-LLaMEA framework.</p>
-    <p><strong>On the left</strong>, we have the Baseline LLaMEA architecture by van Stein and B&auml;ck. It follows a straightforward pipeline: initialization, population management, then random prompt selection &mdash; meaning the system randomly chooses between Refine, Random New, or Refine-Simplify operators. The selected operator prompts the LLM to generate code, which is then evaluated, and the population is updated. The key limitation here is that these are parallel but isolated refinement paths &mdash; there is no recombination across candidates, and operator selection is purely random.</p>
-    <div class="stage-direction">Gesture toward the left card on screen.</div>
-    <p><strong>On the right</strong>, we have our GA-LLaMEA framework. Two critical additions differentiate it from the baseline. <strong>First</strong>, we introduce Generative Crossover as a fourth operator &mdash; this enables multi-parent recombination, where the LLM synthesizes a new candidate by reasoning over strategy descriptions from multiple parents, not just refining a single one. <strong>Second</strong>, we replace random operator selection with Discounted Thompson Sampling &mdash; a bandit-based adaptive controller that learns from reward history which operator is most productive at each stage of the evolutionary run.</p>
-    <div class="stage-direction">Gesture toward the right card on screen.</div>
-    <p>These two additions &mdash; generative crossover and D-TS &mdash; are the core architectural contributions of our framework.</p>
+    <p><strong>On the left</strong>, Baseline LLaMEA: initialization, population management, then random selection among Refine, Random New, or Simplify. No recombination, purely random operator choice.</p>
+    <p><strong>On the right</strong>, GA-LLaMEA adds two things: <strong>Generative Crossover</strong> as a fourth operator &mdash; multi-parent recombination via LLM reasoning &mdash; and <strong>Discounted Thompson Sampling</strong> replacing random selection with adaptive, reward-driven operator choice. These are our core contributions.</p>
+    <div class="stage-direction">Gesture left (baseline) vs right (ours).</div>
     <div class="transition">&mdash; Hand off to next presenter &mdash;</div>
-    <p>That concludes the Introduction, Literature Review, and Framework Architecture sections. I will now hand over to my groupmate who will continue with the remaining methodology slides and results.</p>
+    <p>I now hand over to my groupmate for the remaining methodology and results.</p>
   </div>
 </div>
 
@@ -614,20 +584,20 @@ body {
       <tr><th>Slide</th><th>Topic</th><th style="text-align:right;">Est. Time</th></tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>Title</td><td style="text-align:right;">0:30</td></tr>
-      <tr><td>2</td><td>Outline</td><td style="text-align:right;">0:30</td></tr>
-      <tr><td>3</td><td>Background of the Study</td><td style="text-align:right;">1:30</td></tr>
-      <tr><td>4</td><td>Problem Statement</td><td style="text-align:right;">1:30</td></tr>
-      <tr><td>5</td><td>Research Objectives</td><td style="text-align:right;">1:30</td></tr>
-      <tr><td>6</td><td>Significance</td><td style="text-align:right;">1:00</td></tr>
-      <tr><td>7</td><td>Scope &amp; Limitations</td><td style="text-align:right;">1:00</td></tr>
-      <tr><td>8</td><td>Literature divider</td><td style="text-align:right;">0:15</td></tr>
-      <tr><td>9</td><td>Theoretical Foundations</td><td style="text-align:right;">2:00</td></tr>
-      <tr><td>10</td><td>LLM-Driven AAD</td><td style="text-align:right;">1:30</td></tr>
-      <tr><td>11</td><td>Research Gap</td><td style="text-align:right;">1:30</td></tr>
-      <tr><td>12</td><td>Methodology divider</td><td style="text-align:right;">0:15</td></tr>
-      <tr><td>13</td><td>Framework Architecture</td><td style="text-align:right;">2:00</td></tr>
-      <tr><td></td><td><strong>Total</strong></td><td style="text-align:right;"><strong>~15:00</strong></td></tr>
+      <tr><td>1</td><td>Title</td><td style="text-align:right;">0:20</td></tr>
+      <tr><td>2</td><td>Outline</td><td style="text-align:right;">0:15</td></tr>
+      <tr><td>3</td><td>Background of the Study</td><td style="text-align:right;">0:35</td></tr>
+      <tr><td>4</td><td>Problem Statement</td><td style="text-align:right;">0:35</td></tr>
+      <tr><td>5</td><td>Research Objectives</td><td style="text-align:right;">0:30</td></tr>
+      <tr><td>6</td><td>Significance</td><td style="text-align:right;">0:25</td></tr>
+      <tr><td>7</td><td>Scope &amp; Limitations</td><td style="text-align:right;">0:25</td></tr>
+      <tr><td>8</td><td>Literature divider</td><td style="text-align:right;">0:10</td></tr>
+      <tr><td>9</td><td>Theoretical Foundations</td><td style="text-align:right;">0:35</td></tr>
+      <tr><td>10</td><td>LLM-Driven AAD</td><td style="text-align:right;">0:20</td></tr>
+      <tr><td>11</td><td>Research Gap</td><td style="text-align:right;">0:25</td></tr>
+      <tr><td>12</td><td>Methodology divider</td><td style="text-align:right;">0:10</td></tr>
+      <tr><td>13</td><td>Framework Architecture</td><td style="text-align:right;">0:35</td></tr>
+      <tr><td></td><td><strong>Total</strong></td><td style="text-align:right;"><strong>~5:00</strong></td></tr>
     </tbody>
   </table>
 </div>
@@ -636,13 +606,11 @@ body {
 <div class="tips">
   <h3>Delivery Tips</h3>
   <ul>
-    <li>On Slide 3 (Background), build the narrative: manual design &rarr; LLMs change everything &rarr; but limitations remain &rarr; our solution</li>
-    <li>On Slide 9, pause briefly between each of the four questions &mdash; let each point land before moving on</li>
-    <li>On Slide 10, point to the highlighted GA-LLaMEA row and the lineage timeline at the bottom</li>
-    <li>On Slide 13, use hand gestures to contrast left (baseline) vs right (ours)</li>
-    <li>Keep "D-TS" pronunciation consistent: spell it out as "D-T-S", not "dee-tis"</li>
-    <li>AOCC: spell it out as "A-O-C-C"</li>
-    <li>Speak slowly on the three research gaps &mdash; these map directly to your contributions</li>
+    <li>Keep each slide to 2&ndash;3 sentences &mdash; let the slides do the visual work</li>
+    <li>On Slide 9, rapid-fire the four questions &mdash; don&rsquo;t elaborate, the answers are on screen</li>
+    <li>On Slide 13, gesture left vs right to contrast the two architectures</li>
+    <li>Pronounce "D-T-S" (spell it out) and "A-O-C-C" (spell it out)</li>
+    <li>Speak at a steady pace &mdash; you have ~20&ndash;35 seconds per slide</li>
   </ul>
 </div>
 
