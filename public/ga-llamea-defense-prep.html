@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GA-LLaMEA Defense Preparation — Q&A Guide</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$'], ['\\(','\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <style>
   :root {
     --bg: #0f1117;
@@ -184,6 +191,67 @@
   }
   .expand-all:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
+  /* Code blocks */
+  pre.code-block {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+    margin: 0.8rem 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    tab-size: 4;
+  }
+  pre.code-block code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    color: #e6edf3;
+  }
+  .code-label {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.68rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px 4px 0 0;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: -1px;
+    position: relative;
+    top: 1px;
+  }
+  /* Syntax highlighting */
+  .kw { color: #ff7b72; }     /* keywords */
+  .fn { color: #d2a8ff; }     /* functions */
+  .str { color: #a5d6ff; }    /* strings */
+  .cmt { color: #8b949e; font-style: italic; }  /* comments */
+  .num { color: #79c0ff; }    /* numbers */
+  .cls { color: #ffa657; }    /* class names */
+  .op { color: #ff7b72; }     /* operators */
+  .dec { color: #ffa657; }    /* decorators */
+  .par { color: #c9d1d9; }    /* parameters */
+  .typ { color: #79c0ff; }    /* type hints */
+
+  /* Math formulas */
+  .formula-block {
+    background: #111827;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.5rem;
+    margin: 0.8rem 0;
+    font-size: 0.95rem;
+    overflow-x: auto;
+  }
+  .formula-label {
+    color: var(--accent2);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+
   @media print {
     body { background: #fff; color: #000; font-size: 11px; }
     .qa-answer { display: block !important; color: #333; }
@@ -213,6 +281,8 @@
     <li><a href="#sec5">Limitations, Threats & Future Work (10 Q)</a></li>
     <li><a href="#sec6">Conceptual / Theoretical Foundations (8 Q)</a></li>
     <li><a href="#sec7">General Defense Questions (8 Q)</a></li>
+    <li><a href="#sec8">Codebase Deep-Dive — Actual Implementation (16 Q)</a></li>
+    <li><a href="#sec9">Key Formulas & Equations Reference (6 Q)</a></li>
   </ol>
 </nav>
 
@@ -892,16 +962,29 @@
       <span class="toggle">&#9660;</span>
     </div>
     <div class="qa-answer">
-      After each offspring evaluation:
+      After each offspring evaluation, following <strong>Qi et al. (2023) Algorithm 1</strong> with Gaussian posteriors:
       <ol>
-        <li><strong>Discount ALL arms:</strong> For each arm i, multiply both counters by gamma: N_i = gamma * N_i, mu_hat_i = gamma * mu_hat_i. This exponentially decays old observations.</li>
-        <li><strong>Update the used arm k:</strong> N_k = N_k + 1, mu_hat_k = mu_hat_k + r (where r is the absolute reward)</li>
-        <li><strong>Compute posterior parameters:</strong> alpha_k = mu_hat_k + 1, beta_k = N_k - mu_hat_k + 1 (Beta distribution parameters)</li>
-        <li><strong>Sample:</strong> For each arm i, draw theta_i ~ Beta(alpha_i, beta_i)</li>
-        <li><strong>Select:</strong> Choose arm k = argmax_i(theta_i) for the next evaluation</li>
-        <li><strong>Epsilon-greedy override:</strong> With probability epsilon = 0.15, select uniformly at random instead</li>
+        <li><strong>Discount ALL arms:</strong> For each arm $i$: $N_i \leftarrow \gamma \cdot N_i$, $\tilde{\mu}_i \leftarrow \gamma \cdot \tilde{\mu}_i$. This exponentially decays old observations.</li>
+        <li><strong>Update selected arm $k$:</strong> $N_k \leftarrow N_k + 1$, $\tilde{\mu}_k \leftarrow \tilde{\mu}_k + r_t$ (where $r_t$ is the absolute AOCC reward)</li>
+        <li><strong>Compute posterior:</strong> $\hat{\mu}_k = \tilde{\mu}_k / N_k$ (discounted empirical mean), $\tau_k = \min(1/\sqrt{N_k},\;\tau_{\max})$ (capped std dev)</li>
+        <li><strong>Sample:</strong> For each arm $i$, draw $\theta_i \sim \mathcal{N}(\hat{\mu}_i, \tau_i^2)$ — Gaussian posterior, NOT Beta</li>
+        <li><strong>Select:</strong> Choose arm $k = \arg\max_i \theta_i$ (Thompson Sampling)</li>
+        <li><strong>Epsilon-greedy floor:</strong> With probability $\varepsilon = 0.4$, select uniformly at random instead (prevents arm extinction)</li>
       </ol>
-      The discount factor gamma = 0.99 ensures recent observations carry more weight, adapting to the non-stationary reward landscape of evolutionary search.
+      <div class="formula-block">
+        <div class="formula-label">D-TS Posterior Update (Qi et al., Algorithm 1)</div>
+        $$\hat{\mu}_i = \frac{\tilde{\mu}_t(\gamma, i)}{N_t(\gamma, i)}, \quad \tau_i = \min\!\left(\frac{1}{\sqrt{N_t(\gamma, i)}},\; \tau_{\max}\right)$$
+        $$\theta_i \sim \mathcal{N}(\hat{\mu}_i,\; \tau_i^2) \quad \text{for each arm } i$$
+      </div>
+      The discount factor $\gamma = 0.99$ ensures recent observations carry more weight (effective window $\approx 100$ observations), adapting to the non-stationary reward landscape of evolutionary search.
+      <br><br>
+      <span class="code-label">bandit.py — _update_posterior()</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">_update_posterior</span>(<span class="par">self</span>, <span class="par">arm_state</span>: <span class="typ">ArmState</span>) -> <span class="typ">None</span>:
+    count = <span class="fn">max</span>(<span class="par">self</span>.epsilon, arm_state.discounted_count)
+    <span class="cmt"># Paper Algorithm 1, line 11: mu_hat = mu~/N</span>
+    arm_state.posterior_mean = arm_state.discounted_sum / count
+    <span class="cmt"># Paper Algorithm 1, line 12: tau = min(1/sqrt(N), tau_max)</span>
+    arm_state.posterior_var = <span class="fn">min</span>(<span class="num">1.0</span> / count, <span class="par">self</span>.tau_max ** <span class="num">2</span>)</code></pre>
     </div>
   </div>
 
@@ -935,8 +1018,8 @@
         <tr><td>lambda (offspring per gen)</td><td>8</td><td>Number of new candidates per generation</td></tr>
         <tr><td>Initialization size</td><td>8</td><td>Initial random population</td></tr>
         <tr><td>gamma (discount factor)</td><td>0.99</td><td>D-TS memory decay rate</td></tr>
-        <tr><td>epsilon (exploration rate)</td><td>0.15</td><td>Probability of random operator selection</td></tr>
-        <tr><td>tau_max (stagnation ceiling)</td><td>0.2</td><td>Max fraction of budget before forced override (unused in practice, s_max used instead)</td></tr>
+        <tr><td>epsilon (exploration rate)</td><td>0.4</td><td>Probability of random operator selection (epsilon-greedy floor)</td></tr>
+        <tr><td>tau_max (variance cap)</td><td>0.2</td><td>Maximum sampling std dev for D-TS posterior (caps exploration noise)</td></tr>
         <tr><td>s_max (stagnation threshold)</td><td>10</td><td>Consecutive non-improving evals before forced group switch</td></tr>
         <tr><td>Total LLM evaluations</td><td>100</td><td>Budget per run</td></tr>
         <tr><td>Seeds</td><td>5</td><td>Independent repetitions</td></tr>
@@ -968,11 +1051,30 @@
     <div class="qa-answer">
       In the pseudocode (Algorithm 3.1, lines 15-18):
       <ol>
-        <li>A counter s tracks consecutive evaluations without improvement to the best-so-far</li>
-        <li>If y' > y_b (new best found): reset s = 0, update best</li>
-        <li>Otherwise: s = s + 1</li>
-        <li>When s >= s_max (10): force operator selection from the <em>opposite group</em> — if currently using {refine, simplify}, switch to {crossover, random_new} and vice versa. Then reset s = 0.</li>
+        <li>A counter $s$ tracks consecutive evaluations without improvement to the best-so-far</li>
+        <li>If $f_{\text{child}} > f_{\text{best}}$ (new best found): reset $s = 0$, update best</li>
+        <li>Otherwise: $s = s + 1$</li>
+        <li>When $s \geq s_{\max}$ (10): force operator selection from the <em>opposite group</em> — if the bandit's best arm is in {refine, simplify}, switch to {crossover, random_new} and vice versa. Reset $s = 0$.</li>
       </ol>
+      <span class="code-label">core.py — _generate_offspring() stagnation logic</span>
+      <pre class="code-block"><code><span class="cmt"># Stagnation detection: force operator group switch</span>
+<span class="kw">if</span> <span class="par">self</span>._stagnation_counter >= <span class="par">self</span>._stagnation_threshold:
+    <span class="cmt"># Determine which group the bandit currently prefers</span>
+    snapshot = <span class="par">self</span>.bandit.<span class="fn">get_state_snapshot</span>()
+    refine_arms = [<span class="str">"refine"</span>, <span class="str">"simplify"</span>, <span class="str">"refine_weakness"</span>]
+    explore_arms = [<span class="str">"crossover"</span>, <span class="str">"random_new"</span>]
+
+    refine_mean = <span class="fn">max</span>(snapshot[a][<span class="str">"mean"</span>] <span class="kw">for</span> a <span class="kw">in</span> refine_arms <span class="kw">if</span> a <span class="kw">in</span> snapshot)
+    explore_mean = <span class="fn">max</span>(snapshot[a][<span class="str">"mean"</span>] <span class="kw">for</span> a <span class="kw">in</span> explore_arms <span class="kw">if</span> a <span class="kw">in</span> snapshot)
+
+    <span class="cmt"># Force switch to opposite group</span>
+    <span class="kw">if</span> refine_mean >= explore_mean:
+        forced_group = explore_arms   <span class="cmt"># switch to exploration</span>
+    <span class="kw">else</span>:
+        forced_group = refine_arms    <span class="cmt"># switch to refinement</span>
+
+    operator_name = random.<span class="fn">choice</span>(forced_group)
+    <span class="par">self</span>._stagnation_counter = <span class="num">0</span></code></pre>
       This prevents the D-TS controller from locking onto a suboptimal operator preference during stagnation periods.
     </div>
   </div>
@@ -1017,13 +1119,20 @@
       <span class="toggle">&#9660;</span>
     </div>
     <div class="qa-answer">
-      <div class="key-point">
-        r_t = 0 &nbsp;&nbsp;&nbsp;&nbsp; if v = 0 (invalid/crashed code)
-        <br>r_t = max(0, min(1, f_child)) &nbsp;&nbsp;&nbsp;&nbsp; if v = 1 (valid code)
-        <br><br>
-        Where f_child is the AOCC score of the offspring algorithm, and v is a binary validity flag from the execution sandbox. The clipping to [0,1] is natural since AOCC already lies in this range.
+      <div class="formula-block">
+        <div class="formula-label">Reward Function (Equation 3.2)</div>
+        $$r_t = \begin{cases} 0 & \text{if } v = 0 \text{ (invalid/crashed code)} \\ \max(0, \min(1, f_{\text{child}})) & \text{if } v = 1 \text{ (valid code)} \end{cases}$$
+        Where $f_{\text{child}}$ is the AOCC score and $v$ is a binary validity flag from the sandbox.
       </div>
-      This is an absolute reward (not relative-to-parent), ensuring consistent reward signals across all operator types.
+      This is an <strong>absolute reward</strong> (not relative-to-parent), ensuring consistent reward signals across all operator types. The clipping to $[0,1]$ is natural since AOCC already lies in this range.
+      <br><br>
+      <span class="code-label">utils.py — calculate_reward()</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">calculate_reward</span>(<span class="par">child_score</span>: <span class="typ">float</span>, <span class="par">is_valid</span>: <span class="typ">bool</span>) -> <span class="typ">float</span>:
+    <span class="str">"""Calculate absolute fitness reward for bandit update.
+    AOCC fitness is already in [0, 1], so child_score maps directly."""</span>
+    <span class="kw">if not</span> is_valid:
+        <span class="kw">return</span> <span class="num">0.0</span>
+    <span class="kw">return</span> <span class="fn">max</span>(<span class="num">0.0</span>, <span class="fn">min</span>(<span class="num">1.0</span>, child_score))</code></pre>
     </div>
   </div>
 
@@ -1043,31 +1152,64 @@
       <span class="toggle">&#9660;</span>
     </div>
     <div class="qa-answer">
-      Each operator uses a distinct prompt template:
+      Each operator uses a distinct prompt template. Here are the <strong>actual instructions</strong> from the codebase:
       <ul>
-        <li><strong>Refine:</strong> "Given this algorithm [parent code], improve it by adding or modifying strategies to increase performance. Focus on targeted refinement that increases algorithmic complexity."</li>
-        <li><strong>Simplify:</strong> "Given this algorithm [parent code], simplify it by removing unnecessary complexity while preserving or improving performance."</li>
-        <li><strong>Crossover:</strong> "Given these parent algorithms [p1 code, p2 code, p3 code as inspiration], create a new algorithm that combines the best strategies from all parents into a coherent solution."</li>
-        <li><strong>Random New:</strong> "Generate a new optimization algorithm from scratch for [task description]."</li>
+        <li><strong>Refine:</strong> <code>"Refine the strategy of the selected solution to improve it."</code></li>
+        <li><strong>Simplify:</strong> <code>"Refine and simplify the selected algorithm to improve it."</code></li>
+        <li><strong>Crossover (Guided Concept Transfer):</strong> <code>"Create an improved algorithm by redesigning the working algorithm above. Draw inspiration from the alternative approach(es) [names] — think about what strategic concepts they might use that could address weaknesses in the working algorithm. Write a clean implementation from scratch."</code></li>
+        <li><strong>Random New:</strong> <code>"Generate a new algorithm that is different from the algorithms you have tried before."</code> (with structural skeleton reference for correct code formatting)</li>
       </ul>
-      All templates include the task prompt (S), feedback from previous evaluations (F_0), and relevant parent code. Generated algorithms must be implemented in Python compatible with the COCO platform.
+      All templates follow this structure: <strong>Role prompt → Task prompt → Example prompt → Population history → Parent code → Operator instruction → Format prompt</strong>.
+      <br><br>
+      <span class="code-label">operators.py — CrossoverOperator.build_prompt() (Guided Concept Transfer)</span>
+      <pre class="code-block"><code><span class="cmt"># Only show the better parent's full code</span>
+<span class="cmt"># The weaker parents are described abstractly to prevent code-merging</span>
+insp_texts = []
+<span class="kw">for</span> i, insp <span class="kw">in</span> <span class="fn">enumerate</span>(inspirations):
+    desc = <span class="str">f"\nStrategy: {insp.description}"</span> <span class="kw">if</span> insp.description <span class="kw">else</span> <span class="str">""</span>
+    insp_texts.append(
+        <span class="str">f'Alternative approach {i+1} for inspiration: "{insp.name}"'</span>
+        <span class="str">f' (fitness: {insp.fitness:.4f}){desc}'</span>
+    )
+
+instruction = <span class="str">f"""Create an improved algorithm by redesigning the working
+algorithm above. Draw inspiration from {insp_names} — think about
+{concept_text} in the working algorithm.
+Write a clean implementation from scratch."""</span></code></pre>
+      <strong>Key insight:</strong> Crossover shows the better parent's <em>full code</em> but the weaker parent's <em>name and description only</em> (no code). This forces the LLM to understand the concept abstractly and implement it fresh, preventing Frankenstein code-merging.
     </div>
   </div>
 
   <div class="qa-card">
     <div class="qa-question" onclick="toggle(this)">
-      What is the Beta distribution and why is it used for D-TS?
+      Why Gaussian posteriors instead of Beta? How does D-TS sampling work?
       <span class="toggle">&#9660;</span>
     </div>
     <div class="qa-answer">
-      The Beta distribution Beta(alpha, beta) is a conjugate prior for Bernoulli/binomial observations, making Bayesian updates computationally trivial. In D-TS:
+      <strong>Important clarification:</strong> The implementation uses <strong>Gaussian (Normal) posteriors</strong>, not Beta distributions. This follows <strong>Qi et al. (2023) Algorithm 1</strong> exactly:
       <ul>
-        <li>alpha_i = discounted sum of rewards + 1 (pseudo-successes)</li>
-        <li>beta_i = discounted count - discounted rewards + 1 (pseudo-failures)</li>
-        <li>The posterior mean is alpha/(alpha+beta), representing the estimated success probability of each operator</li>
-        <li>Sampling theta_i ~ Beta(alpha_i, beta_i) naturally balances exploitation (high mean operators sampled more often) with exploration (high variance operators occasionally sampled)</li>
+        <li>The posterior mean $\hat{\mu}_i$ is the discounted empirical average of observed rewards</li>
+        <li>The posterior variance $\tau_i^2 = \min(1/N_i, \tau_{\max}^2)$ — simple $1/n$ variance, capped by $\tau_{\max}$</li>
+        <li>$\theta_i \sim \mathcal{N}(\hat{\mu}_i, \tau_i^2)$ — sample from a Gaussian to balance exploration vs exploitation</li>
+        <li>Arms with fewer observations have higher variance → naturally explored more often</li>
+        <li>Arms with many observations converge toward their empirical mean → exploited when good</li>
       </ul>
-      The discount factor gamma exponentially decays old alpha and beta values, increasing posterior variance over time and making the controller more willing to explore operators whose recent performance may differ from their historical average.
+      <strong>Why not Beta?</strong> Beta is conjugate for binary rewards. Our rewards are continuous AOCC values in $[0,1]$, making Gaussian a better fit. The variance cap $\tau_{\max} = 0.2$ prevents over-exploration of arms with very few observations.
+      <br><br>
+      <span class="code-label">bandit.py — select_arm() Thompson Sampling</span>
+      <pre class="code-block"><code><span class="cmt"># Thompson Sampling: sample theta for each arm, pick highest</span>
+best_arm = <span class="par">self</span>.arm_names[<span class="num">0</span>]
+best_theta = <span class="fn">float</span>(<span class="str">"-inf"</span>)
+
+<span class="kw">for</span> arm_name, arm_state <span class="kw">in</span> <span class="par">self</span>.arms.items():
+    <span class="par">self</span>.<span class="fn">_update_posterior</span>(arm_state)
+    <span class="cmt"># Sample theta ~ N(mu_hat, tau^2) per Algorithm 1 line 5</span>
+    std_dev = math.<span class="fn">sqrt</span>(<span class="fn">max</span>(<span class="par">self</span>.epsilon, arm_state.posterior_var))
+    theta = random.<span class="fn">gauss</span>(arm_state.posterior_mean, std_dev)
+    arm_state.last_theta = theta
+    <span class="kw">if</span> theta > best_theta:
+        best_theta = theta
+        best_arm = arm_name</code></pre>
     </div>
   </div>
 </div>
@@ -1477,6 +1619,695 @@
         <br><strong>GA-LLaMEA</strong> (This study) — Generative crossover + D-TS adaptive control for continuous BBO
       </div>
       GA-LLaMEA builds on the LLaMEA foundation but addresses its mutation-centric limitation by introducing crossover and adaptive operator selection.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 8: CODEBASE DEEP-DIVE -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec8">
+  <div class="section-header">
+    <div class="section-icon">8</div>
+    <h2>Codebase Deep-Dive — Actual Implementation</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Show me the complete D-TS bandit architecture. What data structure tracks each arm?
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Each arm maintains an <code>ArmState</code> dataclass with sufficient statistics for the Gaussian posterior:
+      <br><br>
+      <span class="code-label">bandit.py — ArmState dataclass</span>
+      <pre class="code-block"><code><span class="dec">@dataclass</span>
+<span class="kw">class</span> <span class="cls">ArmState</span>:
+    <span class="str">"""Holds the sufficient statistics for a single arm."""</span>
+    discounted_count: <span class="typ">float</span> = <span class="num">0.0</span>   <span class="cmt"># Effective sample size N_t(gamma, i)</span>
+    discounted_sum: <span class="typ">float</span> = <span class="num">0.0</span>     <span class="cmt"># Weighted sum mu~_t(gamma, i)</span>
+    discounted_sum_sq: <span class="typ">float</span> = <span class="num">0.0</span>  <span class="cmt"># For variance tracking</span>
+    posterior_mean: <span class="typ">float</span> = <span class="num">0.0</span>     <span class="cmt"># Current mu_hat</span>
+    posterior_var: <span class="typ">float</span> = <span class="num">1.0</span>      <span class="cmt"># Current tau^2</span>
+    last_theta: <span class="typ">float</span> = <span class="num">0.0</span>        <span class="cmt"># Most recent sampled theta</span>
+    pulls: <span class="typ">int</span> = <span class="num">0</span>                  <span class="cmt"># Total selections (not discounted)</span></code></pre>
+      <br>
+      <span class="code-label">bandit.py — DiscountedThompsonSampler constructor</span>
+      <pre class="code-block"><code><span class="kw">class</span> <span class="cls">DiscountedThompsonSampler</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="par">self</span>,
+        <span class="par">arm_names</span>: <span class="typ">List[str]</span>,
+        <span class="par">discount</span>: <span class="typ">float</span> = <span class="num">0.99</span>,        <span class="cmt"># gamma</span>
+        <span class="par">tau_max</span>: <span class="typ">float</span> = <span class="num">0.20</span>,         <span class="cmt"># max sampling std dev</span>
+        <span class="par">epsilon_exploration</span>: <span class="typ">float</span> = <span class="num">0.4</span>, <span class="cmt"># random selection prob</span>
+        <span class="par">min_pulls</span>: <span class="typ">int</span> = <span class="num">0</span>,            <span class="cmt"># burn-in per arm</span>
+        <span class="par">epsilon</span>: <span class="typ">float</span> = <span class="num">1e-6</span>,        <span class="cmt"># numerical stability</span>
+    ):
+        <span class="par">self</span>.arms: <span class="typ">Dict[str, ArmState]</span> = {
+            name: <span class="cls">ArmState</span>() <span class="kw">for</span> name <span class="kw">in</span> arm_names
+        }</code></pre>
+      <strong>Key design:</strong> The bandit is initialized with zero statistics for all arms. The epsilon-greedy floor (40%) ensures extensive exploration in early generations, while D-TS gradually learns operator quality as data accumulates.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Show me the discount mechanism. How does exponential forgetting work in code?
+      <span class="priority-tag high">High</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Before each reward update, ALL arms' statistics are multiplied by $\gamma$:
+      <br><br>
+      <span class="code-label">bandit.py — _apply_discount() + update()</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">_apply_discount</span>(<span class="par">self</span>) -> <span class="typ">None</span>:
+    <span class="str">"""Apply exponential discount to all arm statistics."""</span>
+    <span class="kw">if</span> <span class="par">self</span>.discount == <span class="num">1.0</span>:
+        <span class="kw">return</span>  <span class="cmt"># No discounting</span>
+    <span class="kw">for</span> arm_state <span class="kw">in</span> <span class="par">self</span>.arms.<span class="fn">values</span>():
+        arm_state.discounted_count *= <span class="par">self</span>.discount
+        arm_state.discounted_sum *= <span class="par">self</span>.discount
+        arm_state.discounted_sum_sq *= <span class="par">self</span>.discount
+
+<span class="kw">def</span> <span class="fn">update</span>(<span class="par">self</span>, <span class="par">arm_name</span>: <span class="typ">str</span>, <span class="par">reward</span>: <span class="typ">float</span>) -> <span class="typ">None</span>:
+    <span class="cmt"># Apply discount to ALL arms (exponential forgetting)</span>
+    <span class="par">self</span>.<span class="fn">_apply_discount</span>()
+    <span class="cmt"># Update selected arm with new observation</span>
+    arm_state = <span class="par">self</span>.arms[arm_name]
+    arm_state.discounted_count += <span class="num">1.0</span>
+    arm_state.discounted_sum += reward
+    arm_state.discounted_sum_sq += reward ** <span class="num">2</span>
+    arm_state.pulls += <span class="num">1</span>
+    <span class="par">self</span>.<span class="fn">_update_posterior</span>(arm_state)</code></pre>
+      <strong>Effect:</strong> With $\gamma = 0.99$, an observation from 100 steps ago has weight $0.99^{100} \approx 0.37$ — it contributes about a third of its original influence. This "effective window" of ~100 observations allows the controller to adapt within roughly one full evolutionary run.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How does crossover parent selection actually work in the code?
+      <span class="priority-tag high">High</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The <code>_select_crossover_parents()</code> method selects a primary parent (best fitness) and diverse inspirations:
+      <br><br>
+      <span class="code-label">core.py — _select_crossover_parents()</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">_select_crossover_parents</span>(<span class="par">self</span>, <span class="par">population</span>):
+    <span class="str">"""Select parent1 (best) + diverse inspirations for crossover."""</span>
+    <span class="kw">if</span> <span class="fn">len</span>(population) < <span class="num">2</span>:
+        <span class="kw">return</span> population[<span class="num">0</span>], [population[<span class="num">0</span>]]
+
+    <span class="cmt"># Sort by fitness descending</span>
+    sorted_pop = <span class="fn">sorted</span>(population, key=<span class="kw">lambda</span> s: s.fitness, reverse=<span class="kw">True</span>)
+    parent1 = sorted_pop[<span class="num">0</span>]  <span class="cmt"># Best individual</span>
+
+    <span class="cmt"># Select diverse inspirations from remaining population</span>
+    candidates = sorted_pop[<span class="num">1</span>:]
+    num_insp = <span class="fn">min</span>(<span class="par">self</span>.num_crossover_inspirations, <span class="fn">len</span>(candidates))
+    inspirations = random.<span class="fn">sample</span>(candidates, num_insp)
+
+    <span class="kw">return</span> parent1, inspirations</code></pre>
+      <strong>Design rationale:</strong> Parent 1 is always the fittest (provides working code). Inspirations are randomly sampled from the rest (provides diversity). This ensures crossover combines the best working solution with diverse strategic concepts.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Show me the main evolutionary loop. What does one generation look like?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The core loop in <code>GA_LLaMEA.__call__()</code> runs until the LLM call budget is exhausted:
+      <br><br>
+      <span class="code-label">core.py — Main evolutionary loop (simplified)</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">__call__</span>(<span class="par">self</span>, <span class="par">problem</span>):
+    <span class="cmt"># Phase 1: Initialize population (8 random algorithms)</span>
+    population = <span class="par">self</span>.<span class="fn">_initialize_population</span>(problem)
+    llm_calls = <span class="fn">len</span>(population)
+
+    <span class="cmt"># Phase 2: Evolutionary loop</span>
+    generation = <span class="num">0</span>
+    <span class="kw">while</span> llm_calls < <span class="par">self</span>.budget:
+        generation += <span class="num">1</span>
+        offspring = <span class="par">self</span>.<span class="fn">_generate_offspring</span>(problem, population, generation)
+        llm_calls += <span class="fn">len</span>(offspring)
+
+        <span class="cmt"># (mu + lambda) selection: keep top-mu from combined pool</span>
+        population = <span class="par">self</span>.<span class="fn">_select</span>(population + offspring)
+
+    <span class="cmt"># Return best solution found</span>
+    <span class="kw">return</span> <span class="fn">max</span>(population, key=<span class="kw">lambda</span> s: s.fitness)</code></pre>
+      <br>
+      <span class="code-label">core.py — _generate_offspring() (per offspring)</span>
+      <pre class="code-block"><code><span class="cmt"># 1. Select operator via D-TS bandit</span>
+operator_name, theta = <span class="par">self</span>.bandit.<span class="fn">select_arm</span>()
+
+<span class="cmt"># 2. Build prompt using the selected operator</span>
+operator = <span class="par">self</span>.operators[operator_name]
+prompt = operator.<span class="fn">build_prompt</span>(problem, population, parent, ...)
+
+<span class="cmt"># 3. Query LLM</span>
+response = <span class="par">self</span>.llm.<span class="fn">query</span>(prompt)
+
+<span class="cmt"># 4. Extract code, validate, evaluate</span>
+code = <span class="fn">extract_code</span>(response)
+is_valid, error = <span class="fn">validate_code</span>(code)
+<span class="kw">if</span> is_valid:
+    problem.<span class="fn">evaluate</span>(child)
+
+<span class="cmt"># 5. Compute reward and update bandit</span>
+reward = <span class="fn">calculate_reward</span>(child.fitness, is_valid)
+<span class="par">self</span>.bandit.<span class="fn">update</span>(operator_name, reward)</code></pre>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How does code validation work before evaluation? What gets rejected?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      A lightweight static validation catches common issues before expensive benchmark evaluation:
+      <br><br>
+      <span class="code-label">utils.py — validate_code()</span>
+      <pre class="code-block"><code>FORBIDDEN_IMPORTS = [
+    <span class="str">"scipy.optimize"</span>, <span class="str">"cma"</span>, <span class="str">"torch"</span>, <span class="str">"tensorflow"</span>,
+    <span class="str">"sklearn"</span>, <span class="str">"deap"</span>, <span class="str">"optuna"</span>, <span class="str">"nevergrad"</span>, ...
+]
+
+<span class="kw">def</span> <span class="fn">validate_code</span>(<span class="par">code</span>: <span class="typ">str</span>) -> <span class="typ">Tuple[bool, str]</span>:
+    <span class="cmt"># 1. Check for forbidden imports (not in sandbox)</span>
+    <span class="kw">for</span> forbidden <span class="kw">in</span> FORBIDDEN_IMPORTS:
+        <span class="kw">if</span> re.<span class="fn">search</span>(<span class="str">rf"^\s*import\s+{forbidden}\b"</span>, code):
+            <span class="kw">return</span> <span class="kw">False</span>, <span class="str">f"Forbidden import: '{forbidden}'"</span>
+
+    <span class="cmt"># 2. Check for class definition</span>
+    <span class="kw">if not</span> re.<span class="fn">search</span>(<span class="str">r"class\s+\w+"</span>, code):
+        <span class="kw">return</span> <span class="kw">False</span>, <span class="str">"No class definition found."</span>
+
+    <span class="cmt"># 3. Check for __call__ method</span>
+    <span class="kw">if</span> <span class="str">"__call__"</span> <span class="kw">not in</span> code:
+        <span class="kw">return</span> <span class="kw">False</span>, <span class="str">"No __call__ method found."</span>
+
+    <span class="cmt"># 4. Syntax check via compile()</span>
+    <span class="kw">try</span>:
+        <span class="fn">compile</span>(code, <span class="str">"&lt;generated&gt;"</span>, <span class="str">"exec"</span>)
+    <span class="kw">except</span> <span class="cls">SyntaxError</span> <span class="kw">as</span> e:
+        <span class="kw">return</span> <span class="kw">False</span>, <span class="str">f"Syntax error: {e.msg}"</span>
+
+    <span class="kw">return</span> <span class="kw">True</span>, <span class="str">""</span></code></pre>
+      <strong>Rejected patterns:</strong> Missing class, missing <code>__call__</code>, using forbidden libraries (scipy.optimize, CMA-ES, PyTorch, etc.), and syntax errors. This saves budget by catching failures before running the expensive COCO benchmark evaluation.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      How does the (mu + lambda) selection preserve diversity?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Selection keeps the top-$\mu$ individuals from the combined parent+offspring pool, but with a diversity check:
+      <br><br>
+      <span class="code-label">core.py — _select() method</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">_select</span>(<span class="par">self</span>, <span class="par">combined</span>: <span class="typ">List</span>) -> <span class="typ">List</span>:
+    <span class="str">"""(mu+lambda) selection with diversity preservation."""</span>
+    <span class="cmt"># Sort by fitness descending</span>
+    sorted_pool = <span class="fn">sorted</span>(combined, key=<span class="kw">lambda</span> s: s.fitness, reverse=<span class="kw">True</span>)
+    selected = []
+
+    <span class="kw">for</span> candidate <span class="kw">in</span> sorted_pool:
+        <span class="kw">if</span> <span class="fn">len</span>(selected) >= <span class="par">self</span>.n_parents:
+            <span class="kw">break</span>
+        <span class="cmt"># Diversity check: skip if code is identical to already selected</span>
+        <span class="kw">if</span> <span class="fn">any</span>(candidate.code == s.code <span class="kw">for</span> s <span class="kw">in</span> selected):
+            <span class="kw">continue</span>
+        selected.<span class="fn">append</span>(candidate)
+
+    <span class="kw">return</span> selected</code></pre>
+      <strong>Diversity mechanism:</strong> If two individuals have identical code, only the higher-fitness one is kept. This prevents the population from collapsing into clones of the best solution, maintaining material for crossover to combine.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the BLADE integration architecture? How does GA-LLaMEA connect to the benchmark?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      GA-LLaMEA uses Python <strong>Protocol classes</strong> (PEP 544, structural subtyping) for zero-change BLADE integration:
+      <br><br>
+      <span class="code-label">interfaces.py — Protocol definitions</span>
+      <pre class="code-block"><code><span class="dec">@runtime_checkable</span>
+<span class="kw">class</span> <span class="cls">ProblemProtocol</span>(<span class="cls">Protocol</span>):
+    <span class="str">"""BLADE's Problem class satisfies this automatically."""</span>
+    llm_call_counter: <span class="typ">int</span>
+    task_prompt: <span class="typ">str</span>
+    format_prompt: <span class="typ">str</span>
+
+    <span class="kw">def</span> <span class="fn">evaluate</span>(<span class="par">self</span>, <span class="par">solution</span>) -> <span class="typ">None</span>:
+        <span class="str">"""Runs solution in subprocess, computes AOCC."""</span>
+        ...
+
+<span class="dec">@runtime_checkable</span>
+<span class="kw">class</span> <span class="cls">LLMProtocol</span>(<span class="cls">Protocol</span>):
+    <span class="kw">def</span> <span class="fn">query</span>(<span class="par">self</span>, <span class="par">prompt</span>: <span class="typ">str</span>) -> <span class="typ">str</span>: ...</code></pre>
+      <strong>Architecture:</strong> BLADE provides the LLM interface (routes to Gemini-2.5-Flash via Vertex AI), the Problem (MA-BBOB with COCO evaluation), and the Solution class. GA-LLaMEA only implements the evolutionary logic — it never touches the evaluation pipeline directly. This clean separation means GA-LLaMEA can work with any BLADE-compatible problem without modification.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the operator factory pattern? How are operators registered?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Operators follow the <strong>Strategy Pattern</strong> with a factory dictionary for easy instantiation:
+      <br><br>
+      <span class="code-label">operators.py — Operator hierarchy and factory</span>
+      <pre class="code-block"><code><span class="kw">class</span> <span class="cls">BaseOperator</span>(<span class="cls">ABC</span>):
+    <span class="str">"""Abstract base class for genetic operators."""</span>
+    <span class="dec">@property</span>
+    <span class="dec">@abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">name</span>(<span class="par">self</span>) -> <span class="typ">str</span>: ...
+
+    <span class="dec">@abstractmethod</span>
+    <span class="kw">def</span> <span class="fn">build_prompt</span>(<span class="par">self</span>, problem, population, parent=<span class="kw">None</span>, ...) -> <span class="typ">str</span>: ...
+
+<span class="cmt"># Concrete operators</span>
+<span class="kw">class</span> <span class="cls">SimplifyOperator</span>(<span class="cls">BaseOperator</span>): ...   <span class="cmt"># name = "simplify"</span>
+<span class="kw">class</span> <span class="cls">RefineOperator</span>(<span class="cls">BaseOperator</span>): ...     <span class="cmt"># name = "refine"</span>
+<span class="kw">class</span> <span class="cls">CrossoverOperator</span>(<span class="cls">BaseOperator</span>): ...  <span class="cmt"># name = "crossover"</span>
+<span class="kw">class</span> <span class="cls">RandomNewOperator</span>(<span class="cls">BaseOperator</span>): ...  <span class="cmt"># name = "random_new"</span>
+<span class="kw">class</span> <span class="cls">WeaknessRefinementOperator</span>(<span class="cls">BaseOperator</span>): ...
+
+<span class="cmt"># Factory registry</span>
+OPERATORS = {
+    <span class="str">"simplify"</span>: <span class="cls">SimplifyOperator</span>,
+    <span class="str">"refine"</span>: <span class="cls">RefineOperator</span>,
+    <span class="str">"crossover"</span>: <span class="cls">CrossoverOperator</span>,
+    <span class="str">"random_new"</span>: <span class="cls">RandomNewOperator</span>,
+    <span class="str">"refine_weakness"</span>: <span class="cls">WeaknessRefinementOperator</span>,
+}</code></pre>
+      <strong>Extensibility:</strong> Adding a new operator requires only: (1) subclass <code>BaseOperator</code>, (2) implement <code>name</code> and <code>build_prompt()</code>, (3) add to the <code>OPERATORS</code> dictionary. The bandit automatically gets a new arm.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      "Show me the part in your code where you actually select which operator to use."
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Operator selection happens in <strong>two places</strong>:
+      <br><br>
+      <strong>1. Normal selection via D-TS</strong> — in <code>core.py:_generate_offspring()</code>, the bandit's <code>select_arm()</code> is called:
+      <br>
+      <span class="code-label">core.py — operator selection (line ~340)</span>
+      <pre class="code-block"><code><span class="cmt"># Select operator via D-TS bandit</span>
+operator_name, theta = <span class="par">self</span>.bandit.<span class="fn">select_arm</span>()
+<span class="cmt"># theta is the sampled value — logged for post-hoc analysis</span></code></pre>
+      <strong>2. Override during stagnation</strong> — when $s \geq s_{\max}$, the bandit is bypassed and the operator is forced from the opposite group:
+      <br>
+      <span class="code-label">core.py — stagnation override (line ~355)</span>
+      <pre class="code-block"><code><span class="kw">if</span> <span class="par">self</span>._stagnation_counter >= <span class="par">self</span>._stagnation_threshold:
+    <span class="cmt"># Force switch to opposite group</span>
+    snapshot = <span class="par">self</span>.bandit.<span class="fn">get_state_snapshot</span>()
+    <span class="cmt"># ... determine which group bandit prefers ...</span>
+    operator_name = random.<span class="fn">choice</span>(forced_group)
+    <span class="par">self</span>._stagnation_counter = <span class="num">0</span></code></pre>
+      Then in <code>bandit.py:select_arm()</code>, the actual Thompson Sampling logic runs — <strong>epsilon-greedy check first</strong>, then TS if not random:
+      <br>
+      <span class="code-label">bandit.py — select_arm() decision flow</span>
+      <pre class="code-block"><code><span class="cmt"># Step 1: Burn-in — force undersampled arms</span>
+<span class="kw">if</span> <span class="par">self</span>.min_pulls > <span class="num">0</span>:
+    undersampled = [n <span class="kw">for</span> n, s <span class="kw">in</span> <span class="par">self</span>.arms.items() <span class="kw">if</span> s.pulls < <span class="par">self</span>.min_pulls]
+    <span class="kw">if</span> undersampled:
+        <span class="kw">return</span> random.<span class="fn">choice</span>(undersampled), theta
+
+<span class="cmt"># Step 2: Epsilon-greedy — 40% random selection</span>
+<span class="kw">if</span> random.<span class="fn">random</span>() < <span class="par">self</span>.epsilon_exploration:
+    <span class="kw">return</span> random.<span class="fn">choice</span>(<span class="par">self</span>.arm_names), theta
+
+<span class="cmt"># Step 3: Thompson Sampling — sample and pick max</span>
+<span class="kw">for</span> arm_name, arm_state <span class="kw">in</span> <span class="par">self</span>.arms.items():
+    theta = random.<span class="fn">gauss</span>(arm_state.posterior_mean, std_dev)
+    <span class="kw">if</span> theta > best_theta: best_arm = arm_name</code></pre>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      "Show me where in the code the crossover only shares concept descriptions, not code, with the LLM."
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      This is the core of <strong>Guided Concept Transfer</strong>. In <code>operators.py:CrossoverOperator.build_prompt()</code>:
+      <br><br>
+      <span class="code-label">operators.py — CrossoverOperator (lines 311-327)</span>
+      <pre class="code-block"><code><span class="cmt"># Only show the better parent's full code</span>
+<span class="cmt"># The weaker parents are described abstractly to prevent code-merging</span>
+insp_texts = []
+<span class="kw">for</span> i, insp <span class="kw">in</span> <span class="fn">enumerate</span>(inspirations):
+    desc = <span class="str">f"\nStrategy: {insp.description}"</span> <span class="kw">if</span> ... <span class="kw">else</span> <span class="str">""</span>
+    insp_texts.append(
+        <span class="str">f'Alternative approach {i+1} for inspiration: "{insp.name}"'</span>
+        <span class="str">f' (fitness: {insp.fitness:.4f}){desc}'</span>
+    )
+
+algo_details = <span class="str">f"""
+Working Algorithm (fitness: {parent.fitness:.4f}):
+```python
+{parent.code}          </span><span class="cmt"># &lt;-- FULL CODE of better parent</span><span class="str">
+```
+
+{inspirations_str}     </span><span class="cmt"># &lt;-- NAME + FITNESS only, NO code</span><span class="str">
+"""</span></code></pre>
+      <strong>Notice:</strong> <code>parent.code</code> is embedded in full for the primary parent, but for inspirations only <code>insp.name</code>, <code>insp.fitness</code>, and optionally <code>insp.description</code> are shown. The LLM <em>never sees the inspiration parents' code</em>. This forces it to reason about the concept abstractly rather than copy-paste.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      "Where in the code do you ensure population diversity and prevent clone collapse?"
+      <span class="priority-tag high">High</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      In the <code>_select()</code> method in <code>core.py</code>, there's a code-level deduplication check:
+      <br><br>
+      <span class="code-label">core.py — _select() diversity enforcement</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">_select</span>(<span class="par">self</span>, <span class="par">combined</span>, <span class="par">n</span>):
+    sorted_pool = <span class="fn">sorted</span>(combined, key=<span class="kw">lambda</span> s: s.fitness, reverse=<span class="kw">True</span>)
+    selected = []
+    <span class="kw">for</span> candidate <span class="kw">in</span> sorted_pool:
+        <span class="kw">if</span> <span class="fn">len</span>(selected) >= n:
+            <span class="kw">break</span>
+        <span class="cmt"># KEY: Skip candidates with identical code</span>
+        <span class="kw">if</span> <span class="fn">any</span>(candidate.code == s.code <span class="kw">for</span> s <span class="kw">in</span> selected):
+            <span class="kw">continue</span>   <span class="cmt"># ← This line prevents clone collapse</span>
+        selected.<span class="fn">append</span>(candidate)
+    <span class="kw">return</span> selected</code></pre>
+      <strong>How it works:</strong> Even if the same code appears multiple times in the parent+offspring pool (e.g., because the LLM regenerated a popular algorithm), only the highest-fitness copy survives. This ensures all $\mu = 4$ parents have <em>distinct code</em>, providing diverse material for crossover.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      "Show me where the reward is computed and fed back to the bandit."
+      <span class="priority-tag high">High</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The reward computation and bandit update happen in <code>core.py:_generate_offspring()</code>, after each offspring is evaluated:
+      <br><br>
+      <span class="code-label">core.py — reward computation and bandit update (lines ~390-400)</span>
+      <pre class="code-block"><code><span class="cmt"># After evaluation:</span>
+is_valid = child.error == <span class="str">""</span>  <span class="cmt"># No error = valid</span>
+reward = <span class="fn">calculate_reward</span>(child.fitness, is_valid)
+
+<span class="cmt"># Feed reward to bandit</span>
+<span class="par">self</span>.bandit.<span class="fn">update</span>(operator_name, reward)
+
+<span class="cmt"># Track stagnation</span>
+<span class="kw">if</span> child.fitness > <span class="par">self</span>._best_fitness_at_last_improvement:
+    <span class="par">self</span>._stagnation_counter = <span class="num">0</span>
+    <span class="par">self</span>._best_fitness_at_last_improvement = child.fitness
+<span class="kw">else</span>:
+    <span class="par">self</span>._stagnation_counter += <span class="num">1</span></code></pre>
+      And in <code>utils.py</code>, the reward is computed as:
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">calculate_reward</span>(child_score, is_valid):
+    <span class="kw">if not</span> is_valid: <span class="kw">return</span> <span class="num">0.0</span>     <span class="cmt"># Crashed → zero</span>
+    <span class="kw">return</span> <span class="fn">max</span>(<span class="num">0.0</span>, <span class="fn">min</span>(<span class="num">1.0</span>, child_score))  <span class="cmt"># Clip AOCC to [0,1]</span></code></pre>
+      <strong>Flow:</strong> LLM generates code → validate → evaluate on COCO → compute AOCC → clip to [0,1] → <code>bandit.update()</code> → discount all arms → add new observation → recompute posterior.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      "Where is the burn-in phase implemented? Show me how you ensure each operator gets tried."
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The burn-in is implemented in <code>bandit.py:select_arm()</code> as the very first priority check:
+      <br><br>
+      <span class="code-label">bandit.py — Burn-in phase (lines 162-183)</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">select_arm</span>(<span class="par">self</span>) -> <span class="typ">Tuple[str, float]</span>:
+    <span class="cmt"># 1. Burn-in Phase: Force exploration of arms with insufficient data</span>
+    <span class="kw">if</span> <span class="par">self</span>.min_pulls > <span class="num">0</span>:
+        undersampled_arms = [
+            name <span class="kw">for</span> name, state <span class="kw">in</span> <span class="par">self</span>.arms.items()
+            <span class="kw">if</span> state.pulls < <span class="par">self</span>.min_pulls  <span class="cmt"># default min_pulls = 5</span>
+        ]
+        <span class="kw">if</span> undersampled_arms:
+            chosen_arm = random.<span class="fn">choice</span>(undersampled_arms)
+            <span class="cmt"># ... sample theta for logging ...</span>
+            <span class="kw">return</span> chosen_arm, arm_state.last_theta
+
+    <span class="cmt"># 2. Only after burn-in: epsilon-greedy + Thompson Sampling</span>
+    ...</code></pre>
+      With <code>min_pulls_per_arm = 5</code> and 3 operators, the first <strong>15 evaluations</strong> are guaranteed to distribute evenly across all operators (5 each for simplify, crossover, random_new). This ensures the bandit's initial posterior estimates are based on real data, not priors.
+      <br><br>
+      <strong>Configuration:</strong> Set in <code>core.py:__init__()</code> as <code>min_pulls_per_arm=5</code>, passed to the bandit constructor.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      "Show me how the population is initialized. What prompt do you use for the first algorithms?"
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Initialization uses <code>RandomNewOperator</code> with a special <code>is_init=True</code> flag that strips the population history (since there's nothing to reference yet):
+      <br><br>
+      <span class="code-label">core.py — _initialize_population() (lines 274-298)</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">_initialize_population</span>(<span class="par">self</span>, problem):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="par">self</span>.n_parents):  <span class="cmt"># n_parents = 4 (but init_size can be 8)</span>
+        prompt = <span class="par">self</span>._random_new.<span class="fn">build_prompt</span>(
+            problem, [],             <span class="cmt"># empty population</span>
+            is_init=<span class="kw">True</span>            <span class="cmt"># special flag</span>
+        )
+        child = <span class="par">self</span>.<span class="fn">_generate_solution</span>(prompt, problem, ...)</code></pre>
+      And in <code>operators.py:RandomNewOperator.build_prompt()</code>:
+      <pre class="code-block"><code><span class="kw">if</span> is_init <span class="kw">or</span> <span class="par">self</span>.use_init_prompt:
+    <span class="cmt"># No history, no instruction — just task + format</span>
+    <span class="kw">return</span> <span class="str">f"{task_prompt}\n\n{problem.format_prompt}"</span></code></pre>
+      <strong>The init prompt contains:</strong> Role prompt ("You are a highly skilled computer scientist...") + BLADE's task prompt (describes the optimization problem) + example prompt (shows expected code structure) + format prompt (output format instructions). <strong>No population history</strong> since there are no previous algorithms yet.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      "Where exactly does the code extract the algorithm from the LLM's response?"
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      Code extraction is in <code>utils.py:extract_code()</code> using regex patterns matching BLADE's approach:
+      <br><br>
+      <span class="code-label">utils.py — extract_code() (lines 62-101)</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">extract_code</span>(response: <span class="typ">str</span>) -> <span class="typ">Optional[str]</span>:
+    <span class="cmt"># Priority 1: ```python ... ``` blocks</span>
+    pattern = <span class="str">r"```(?:python)?\s*\n(.*?)\n```"</span>
+    matches = re.<span class="fn">findall</span>(pattern, response, re.DOTALL | re.IGNORECASE)
+
+    <span class="kw">if</span> matches:
+        <span class="kw">return</span> matches[<span class="num">0</span>].<span class="fn">strip</span>()
+
+    <span class="cmt"># Priority 2: Fallback if response looks like raw code</span>
+    <span class="kw">if</span> <span class="str">"def "</span> <span class="kw">in</span> response <span class="kw">or</span> <span class="str">"class "</span> <span class="kw">in</span> response:
+        <span class="kw">return</span> response.<span class="fn">strip</span>()
+
+    <span class="kw">return</span> <span class="kw">None</span>  <span class="cmt"># Extraction failed → invalid solution</span></code></pre>
+      <strong>The pipeline after extraction:</strong>
+      <ol>
+        <li><code>extract_code(response)</code> → Python code string (or None)</li>
+        <li><code>extract_description(response)</code> → algorithm description</li>
+        <li><code>extract_classname(code)</code> → class name for the Solution object</li>
+        <li><code>validate_code(code)</code> → static checks (forbidden imports, class, __call__, syntax)</li>
+        <li><code>problem.evaluate(solution)</code> → COCO benchmark evaluation → AOCC score</li>
+      </ol>
+      If extraction fails at step 1 (returns None), the solution gets <code>fitness = 0</code> and <code>reward = 0</code>.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      "What does the bandit state snapshot look like? How do you log operator statistics?"
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      The <code>get_state_snapshot()</code> method returns a dict of all arm statistics, used for logging and by the stagnation detector:
+      <br><br>
+      <span class="code-label">bandit.py — get_state_snapshot() (lines 239-264)</span>
+      <pre class="code-block"><code><span class="kw">def</span> <span class="fn">get_state_snapshot</span>(<span class="par">self</span>) -> <span class="typ">Dict[str, Dict[str, float]]</span>:
+    snapshot = {}
+    <span class="kw">for</span> arm_name, arm_state <span class="kw">in</span> <span class="par">self</span>.arms.items():
+        snapshot[arm_name] = {
+            <span class="str">"count"</span>: arm_state.discounted_count,  <span class="cmt"># effective N</span>
+            <span class="str">"mean"</span>: arm_state.posterior_mean,     <span class="cmt"># mu_hat</span>
+            <span class="str">"var"</span>: arm_state.posterior_var,        <span class="cmt"># tau^2</span>
+            <span class="str">"std"</span>: math.<span class="fn">sqrt</span>(arm_state.posterior_var),
+            <span class="str">"theta"</span>: arm_state.last_theta,       <span class="cmt"># last sample</span>
+            <span class="str">"pulls"</span>: arm_state.pulls,             <span class="cmt"># total selections</span>
+        }
+    <span class="kw">return</span> snapshot</code></pre>
+      <strong>Example output at generation 10:</strong>
+      <pre class="code-block"><code>{
+  <span class="str">"simplify"</span>: {<span class="str">"count"</span>: <span class="num">8.2</span>, <span class="str">"mean"</span>: <span class="num">0.71</span>, <span class="str">"std"</span>: <span class="num">0.11</span>, <span class="str">"pulls"</span>: <span class="num">12</span>},
+  <span class="str">"crossover"</span>: {<span class="str">"count"</span>: <span class="num">6.5</span>, <span class="str">"mean"</span>: <span class="num">0.78</span>, <span class="str">"std"</span>: <span class="num">0.12</span>, <span class="str">"pulls"</span>: <span class="num">9</span>},
+  <span class="str">"random_new"</span>: {<span class="str">"count"</span>: <span class="num">3.1</span>, <span class="str">"mean"</span>: <span class="num">0.34</span>, <span class="str">"std"</span>: <span class="num">0.18</span>, <span class="str">"pulls"</span>: <span class="num">7</span>}
+}</code></pre>
+      The <code>arm_history</code> list in <code>core.py</code> also records every operator selection for post-hoc analysis (used to generate the operator dynamics charts).
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- SECTION 9: KEY FORMULAS & EQUATIONS -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="section" id="sec9">
+  <div class="section-header">
+    <div class="section-icon">9</div>
+    <h2>Key Formulas & Equations Reference</h2>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Write out the complete D-TS algorithm mathematically.
+      <span class="priority-tag critical">Critical</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <div class="formula-block">
+        <div class="formula-label">Discounted Thompson Sampling (Qi et al., 2023 — Algorithm 1)</div>
+        <strong>Initialization:</strong> For each arm $i$: $N_0(\gamma, i) = 0$, $\tilde{\mu}_0(\gamma, i) = 0$
+        <br><br>
+        <strong>At each time step $t$:</strong>
+        <br>
+        1. <strong>Discount all arms:</strong>
+        $$N_t(\gamma, i) = \gamma \cdot N_{t-1}(\gamma, i) \quad \forall i$$
+        $$\tilde{\mu}_t(\gamma, i) = \gamma \cdot \tilde{\mu}_{t-1}(\gamma, i) \quad \forall i$$
+
+        2. <strong>Compute posterior parameters:</strong>
+        $$\hat{\mu}_i = \frac{\tilde{\mu}_t(\gamma, i)}{N_t(\gamma, i)}, \quad \tau_i = \min\!\left(\frac{1}{\sqrt{N_t(\gamma, i)}},\; \tau_{\max}\right)$$
+
+        3. <strong>Sample and select:</strong>
+        $$\theta_i \sim \mathcal{N}(\hat{\mu}_i, \tau_i^2) \quad \forall i$$
+        $$a_t = \arg\max_i \theta_i \quad \text{(with probability } 1-\varepsilon\text{)}$$
+        $$a_t \sim \text{Uniform}(\mathcal{A}) \quad \text{(with probability } \varepsilon\text{)}$$
+
+        4. <strong>Observe reward and update:</strong>
+        $$N_t(\gamma, a_t) = N_t(\gamma, a_t) + 1$$
+        $$\tilde{\mu}_t(\gamma, a_t) = \tilde{\mu}_t(\gamma, a_t) + r_t$$
+      </div>
+      <strong>Parameters:</strong> $\gamma = 0.99$ (discount), $\tau_{\max} = 0.20$ (variance cap), $\varepsilon = 0.4$ (exploration floor).
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the AOCC formula in full mathematical notation?
+      <span class="priority-tag high">High</span>
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <div class="formula-block">
+        <div class="formula-label">Area Over the Convergence Curve (AOCC)</div>
+        $$\text{AOCC} = \frac{1}{n} \sum_{i=1}^{n} \frac{\log_{10}(y_i) - \log_{10}(f^*)}{\log_{10}(\text{ub}) - \log_{10}(\text{lb})}$$
+        Where:
+        <ul style="margin-top:0.5rem">
+          <li>$y_i$ = best fitness found at evaluation $i$ (clipped to $[\text{lb}, \text{ub}]$)</li>
+          <li>$f^*$ = known global optimum</li>
+          <li>$\text{lb}, \text{ub}$ = normalization bounds</li>
+          <li>$n$ = total evaluations (budget = 10,000)</li>
+        </ul>
+        Result: $\text{AOCC} \in [0, 1]$; higher = faster, more consistent convergence.
+      </div>
+      The final scalar fitness is the <strong>mean AOCC</strong> across all 24 MA-BBOB function instances and 5 independent runs per instance.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      Write out the reward function formally.
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <div class="formula-block">
+        <div class="formula-label">Absolute Fitness Reward (Equation 3.2)</div>
+        $$r_t = \begin{cases} 0 & \text{if } v_t = 0 \quad \text{(invalid code: crash, timeout, syntax error)} \\ \text{clip}(f_{\text{child}}, 0, 1) & \text{if } v_t = 1 \quad \text{(valid code)} \end{cases}$$
+        Where $\text{clip}(x, a, b) = \max(a, \min(b, x))$ and $f_{\text{child}}$ is the AOCC score.
+      </div>
+      <strong>Why absolute (not relative)?</strong> Relative reward ($f_{\text{child}} - f_{\text{parent}}$) creates per-operator baseline asymmetry: Simplify receives inflated rewards for trivial improvements over mediocre parents, while Crossover is punished for not beating the best parent. Absolute reward asks: <em>"which operator produces the highest-quality solutions on average?"</em>
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the effective window of the discount factor?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <div class="formula-block">
+        <div class="formula-label">Discount Factor Effective Window</div>
+        The weight of an observation from $k$ steps ago is $\gamma^k$:
+        $$w_k = \gamma^k = 0.99^k$$
+        <br>
+        <strong>Half-life:</strong> $k_{1/2} = \frac{\ln(0.5)}{\ln(\gamma)} = \frac{-0.693}{-0.01005} \approx 69$ steps
+        <br><br>
+        <strong>Effective window</strong> (1% weight): $k_{0.01} = \frac{\ln(0.01)}{\ln(0.99)} \approx 458$ steps
+        <br><br>
+        <strong>Practical window</strong> ($\approx 37\%$ weight): $k \approx \frac{1}{1-\gamma} = \frac{1}{0.01} = 100$ steps
+      </div>
+      With a budget of 100 LLM evaluations and $\gamma = 0.99$, the effective window spans essentially the entire run. This is a <em>gentle</em> discount — observations from the start of the run still carry $\sim 37\%$ of their original weight by the end. More aggressive discounting (e.g., $\gamma = 0.9$, window $\approx 10$) would make the controller more reactive but less stable.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the Elo rating computation and what do the numbers mean?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <div class="formula-block">
+        <div class="formula-label">Elo Rating System (adapted for algorithm comparison)</div>
+        Expected score of player A vs B:
+        $$E_A = \frac{1}{1 + 10^{(R_B - R_A)/400}}$$
+        Rating update after match:
+        $$R_A' = R_A + K \cdot (S_A - E_A)$$
+        Where $S_A \in \{0, 0.5, 1\}$ is the actual outcome (loss/draw/win) and $K$ is the update factor.
+      </div>
+      <strong>Results interpretation:</strong>
+      <table>
+        <tr><th>Method</th><th>Elo</th><th>Interpretation</th></tr>
+        <tr><td>GA-LLaMEA</td><td>~1575</td><td>Expected to beat Baseline ~80% of the time</td></tr>
+        <tr><td>EoH</td><td>~1490</td><td>Expected to beat Baseline ~58% of the time</td></tr>
+        <tr><td>Baseline LLaMEA</td><td>~1435</td><td>Reference point</td></tr>
+      </table>
+      An Elo gap of 140 points (GA-LLaMEA vs Baseline) corresponds to roughly 80/20 win probability. The gap of 85 points (GA-LLaMEA vs EoH) corresponds to roughly 62/38.
+    </div>
+  </div>
+
+  <div class="qa-card">
+    <div class="qa-question" onclick="toggle(this)">
+      What is the (mu + lambda) selection formula?
+      <span class="toggle">&#9660;</span>
+    </div>
+    <div class="qa-answer">
+      <div class="formula-block">
+        <div class="formula-label">Elitist Selection Strategy</div>
+        $$P_{t+1} = \text{top-}\mu\!\left(P_t \cup O_t\right) \quad \text{subject to diversity constraint}$$
+        Where:
+        <ul style="margin-top:0.5rem">
+          <li>$P_t$ = current parent population ($|P_t| = \mu = 4$)</li>
+          <li>$O_t$ = offspring generated this generation ($|O_t| = \lambda = 8$)</li>
+          <li>$\text{top-}\mu$ selects the $\mu$ highest-fitness individuals with unique code</li>
+        </ul>
+        Combined pool: $|P_t \cup O_t| = 12$ candidates compete for $\mu = 4$ survival slots.
+      </div>
+      <strong>Selection pressure:</strong> $\lambda / \mu = 8/4 = 2$, meaning each parent must outperform at least one offspring on average to survive. This creates moderate selection pressure — strong enough to maintain quality, gentle enough to allow innovative solutions time to develop.
     </div>
   </div>
 </div>
