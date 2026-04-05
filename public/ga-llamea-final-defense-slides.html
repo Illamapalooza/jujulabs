@@ -210,17 +210,17 @@ hr.divider {
 
 /* ─── FIGURE IMAGES ─── */
 .figure-img {
-  max-width: 85%;
-  max-height: 55vh;
+  max-width: 95%;
+  max-height: 70vh;
   margin: 12px auto;
   display: block;
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
   object-fit: contain;
 }
-.figure-img.full { max-width: 95%; max-height: 65vh; }
-.figure-img.small { max-width: 60%; max-height: 45vh; }
-.figure-img.tall { max-height: 70vh; }
+.figure-img.full { max-width: 100%; max-height: 80vh; }
+.figure-img.small { max-width: 70%; max-height: 55vh; }
+.figure-img.tall { max-height: 80vh; }
 .figure-caption {
   text-align: center;
   font-size: 0.6em;
@@ -1006,12 +1006,12 @@ hr.divider {
   <span class="tag amber">Methodology</span>
   <h2>Framework Architecture</h2>
   <hr class="divider">
-  <div class="card-grid cols-2" style="gap:16px; align-items:start;">
+  <div style="display:flex; flex-direction:column; gap:16px; margin:12px 0;">
     <!-- Baseline LLaMEA -->
-    <div class="card" style="padding:16px 18px;">
-      <h3 style="margin-bottom:10px; font-size:0.85em; color:var(--text-secondary);">Baseline LLaMEA <span style="font-weight:400; font-size:0.85em;">(van Stein &amp; B&auml;ck, 2024)</span></h3>
-      <div style="display:flex; flex-direction:column; gap:6px; font-size:0.6em;">
-        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+    <div class="card" style="padding:20px 24px;">
+      <h3 style="margin-bottom:12px; font-size:0.95em; color:var(--text-secondary);">Baseline LLaMEA <span style="font-weight:400; font-size:0.85em;">(van Stein &amp; B&auml;ck, 2024)</span></h3>
+      <div style="display:flex; flex-direction:column; gap:8px; font-size:0.72em;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <div class="rf-box" style="font-size:1em;">Initialization</div>
           <span class="rf-arrow">&rarr;</span>
           <div class="rf-box" style="font-size:1em;">Population</div>
@@ -1019,7 +1019,7 @@ hr.divider {
           <div class="rf-box" style="font-size:1em; background:var(--border-light);">Random Prompt Selection</div>
         </div>
         <div style="text-align:center; font-size:1.2em; color:var(--text-secondary);">&darr;</div>
-        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; justify-content:center;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:center;">
           <div class="rf-box" style="font-size:1em;">Refine</div>
           <span style="color:var(--text-secondary);">/</span>
           <div class="rf-box" style="font-size:1em;">Random New</div>
@@ -1027,7 +1027,7 @@ hr.divider {
           <div class="rf-box" style="font-size:1em;">Refine-Simplify</div>
         </div>
         <div style="text-align:center; font-size:1.2em; color:var(--text-secondary);">&darr;</div>
-        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <div class="rf-box" style="font-size:1em;">LLM Generation</div>
           <span class="rf-arrow">&rarr;</span>
           <div class="rf-box" style="font-size:1em;">Evaluation</div>
@@ -1035,15 +1035,15 @@ hr.divider {
           <div class="rf-box" style="font-size:1em;">Update Population</div>
         </div>
       </div>
-      <p style="font-size:0.55em; color:var(--text-secondary); margin-top:8px; margin-bottom:0; line-height:1.4;">
+      <p style="font-size:0.62em; color:var(--text-secondary); margin-top:10px; margin-bottom:0; line-height:1.4;">
         <strong style="color:var(--text-secondary);">Key limitation:</strong> Parallel but isolated refinement paths &mdash; <strong style="color:#dc2626;">no recombination</strong> across candidates. Static random operator selection.
       </p>
     </div>
     <!-- GA-LLaMEA -->
-    <div class="card" style="padding:16px 18px; border: 1.5px solid var(--blue-border); background:var(--blue-soft);">
-      <h3 style="margin-bottom:10px; font-size:0.85em; color:var(--blue);">GA-LLaMEA <span class="pill" style="font-size:0.75em;">Ours</span></h3>
+    <div class="card" style="padding:20px 24px; border: 1.5px solid var(--blue-border); background:var(--blue-soft);">
+      <h3 style="margin-bottom:12px; font-size:0.95em; color:var(--blue);">GA-LLaMEA <span class="pill" style="font-size:0.75em;">Ours</span></h3>
       <img src="GA-LLAMEA-GRAPH.png" alt="GA-LLaMEA Architecture" style="width:100%; border-radius:var(--radius-sm);">
-      <p style="font-size:0.55em; color:var(--text-secondary); margin-top:8px; margin-bottom:0; line-height:1.4;">
+      <p style="font-size:0.62em; color:var(--text-secondary); margin-top:10px; margin-bottom:0; line-height:1.4;">
         <strong style="color:var(--text-secondary);">Key additions:</strong> <strong style="color:#047857;">Generative Crossover</strong> for multi-parent recombination + <strong style="color:#047857;">D-TS adaptive</strong> operator selection replacing static scheduling.
       </p>
     </div>
@@ -1352,7 +1352,7 @@ Result: semantically coherent</div>
       </tr>
     </tbody>
   </table>
-  <img src="4.2-Boxplot.png" alt="Fitness Distribution Box Plot" class="figure-img" style="max-width:40%; max-height:28vh; margin:2px auto;">
+  <img src="4.2-Boxplot.png" alt="Fitness Distribution Box Plot" class="figure-img" style="max-width:70%; max-height:45vh; margin:8px auto;">
   <div class="highlight-box" style="padding:6px 14px; font-size:0.62em;">
     <strong>Key takeaway:</strong> GA-LLaMEA leads across all metrics. Explained by three behavioural mechanisms examined next.
   </div>
@@ -1367,7 +1367,7 @@ Result: semantically coherent</div>
   <span class="tag green">Results</span>
   <h2>Elo Tournament Rankings</h2>
   <hr class="divider">
-  <img src="4.1-Elo.png" alt="Elo Rating Point Plot" class="figure-img" style="max-width:50%; max-height:28vh; margin:2px auto;">
+  <img src="4.1-Elo.png" alt="Elo Rating Point Plot" class="figure-img" style="max-width:75%; max-height:50vh; margin:8px auto;">
   <div class="stats" style="margin:8px 0;">
     <div class="stat">
       <span class="number" style="font-size:1.5em;">~1575</span>
@@ -1395,7 +1395,7 @@ Result: semantically coherent</div>
   <span class="tag green">Results</span>
   <h2>Convergence Analysis</h2>
   <hr class="divider">
-  <img src="4.3-CT_a.png" alt="Convergence Trajectories" class="figure-img" style="max-width:60%; max-height:32vh; margin:2px auto;">
+  <img src="4.3-CT_a.png" alt="Convergence Trajectories" class="figure-img" style="max-width:80%; max-height:55vh; margin:8px auto;">
   <div class="card-grid cols-3" style="margin-top:4px; gap:8px;">
     <div class="card active" style="padding:8px 12px;">
       <h3 style="font-size:0.78em;">GA-LLaMEA</h3>
@@ -1431,8 +1431,8 @@ Result: semantically coherent</div>
     </tbody>
   </table>
   <div class="card-grid cols-2" style="margin-top:4px; gap:8px;">
-    <img src="4.5-BehaviourAll.png" alt="Behaviour Profile of All 1,442 Algorithms" class="figure-img" style="max-width:100%; max-height:30vh; margin:0;">
-    <img src="4.6-Top100Profiles.png" alt="Top-100 Profiles per Method" class="figure-img" style="max-width:100%; max-height:30vh; margin:0;">
+    <img src="4.5-BehaviourAll.png" alt="Behaviour Profile of All 1,442 Algorithms" class="figure-img" style="max-width:100%; max-height:50vh; margin:0;">
+    <img src="4.6-Top100Profiles.png" alt="Top-100 Profiles per Method" class="figure-img" style="max-width:100%; max-height:50vh; margin:0;">
   </div>
   <span class="cite">Profiling: van Stein et al. (2025). Exploration/exploitation: Berger-Tal et al. (2014).</span>
   <aside class="notes">Behavioural profiles of all 1,442 generated algorithms, not just the best. GA-LLaMEA aligns most closely with the Q4 gold standard: lowest exploration, highest intensification ratio, lowest distance-to-best, highest late improvement fraction.</aside>
@@ -1479,7 +1479,7 @@ Result: semantically coherent</div>
   <span class="tag green">Results</span>
   <h2>Code Evolution Graphs</h2>
   <hr class="divider">
-  <img src="4.7-CEG.png" alt="Code Evolution Graphs — 3 methods x 5 runs" class="figure-img" style="max-width:90%; max-height:36vh; margin:2px auto;">
+  <img src="4.7-CEG.png" alt="Code Evolution Graphs — 3 methods x 5 runs" class="figure-img" style="max-width:95%; max-height:60vh; margin:8px auto;">
   <div class="card-grid cols-3" style="margin-top:6px; gap:10px;">
     <div class="card" style="padding:10px 14px;">
       <h3>EoH</h3>
@@ -1551,8 +1551,8 @@ Result: semantically coherent</div>
     </tbody>
   </table>
   <div class="card-grid cols-2" style="margin-top:6px; gap:8px;">
-    <img src="4.10-CrossoverBoxplot.png" alt="Crossover Ablation Box Plot" class="figure-img" style="max-width:100%; max-height:26vh; margin:0;">
-    <img src="4.11-CrossoverConv_a.png" alt="Crossover Ablation Convergence" class="figure-img" style="max-width:100%; max-height:26vh; margin:0;">
+    <img src="4.10-CrossoverBoxplot.png" alt="Crossover Ablation Box Plot" class="figure-img" style="max-width:100%; max-height:45vh; margin:0;">
+    <img src="4.11-CrossoverConv_a.png" alt="Crossover Ablation Convergence" class="figure-img" style="max-width:100%; max-height:45vh; margin:0;">
   </div>
   <div class="highlight-box" style="font-size:0.6em; padding:6px 12px;">
     Single-inspiration <em>hurts</em> (-1.0%) &mdash; insufficient building-block diversity <span class="cite-inline">(Goldberg, 1989)</span>. Multi-inspiration (+2.7%) unlocks recombination <span class="cite-inline">(Sudholt, 2014)</span>. D-TS reduces variance &rarr; <strong>variance-reduction mechanism.</strong>
@@ -1589,8 +1589,8 @@ Result: semantically coherent</div>
     </div>
   </div>
   <div class="card-grid cols-2" style="margin-top:4px; gap:8px;">
-    <img src="4.12-PopConv_a.png" alt="Population Size Convergence" class="figure-img" style="max-width:100%; max-height:30vh; margin:0;">
-    <img src="4.13-PopBoxplot.png" alt="Population Size Box Plot" class="figure-img" style="max-width:100%; max-height:30vh; margin:0;">
+    <img src="4.12-PopConv_a.png" alt="Population Size Convergence" class="figure-img" style="max-width:100%; max-height:50vh; margin:0;">
+    <img src="4.13-PopBoxplot.png" alt="Population Size Box Plot" class="figure-img" style="max-width:100%; max-height:50vh; margin:0;">
   </div>
   <span class="cite">Population sizing: Goldberg et al. (2001). COCO/BBOB: Hansen et al. (2021).</span>
   <aside class="notes">Population size ablation. 8-parent initialization is strictly better: 7.9% higher mean, 3 times lower variance, all runs above 0.80. The 4-parent config includes a lower outlier around 0.65.</aside>
