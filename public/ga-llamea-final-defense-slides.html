@@ -713,7 +713,41 @@ hr.divider {
 </section>
 
 <!-- ══════════════════════════════════════════════ -->
-<!-- SLIDE 3 — Problem Statement                   -->
+<!-- SLIDE 3 — Background of the Study             -->
+<!-- ══════════════════════════════════════════════ -->
+<section>
+  <span class="tag">Introduction</span>
+  <h2>Background of the Study</h2>
+  <hr class="divider">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+      <h3>The Algorithm Design Challenge</h3>
+      <p>Solving real-world optimization problems requires designing metaheuristic algorithms &mdash; a process traditionally done manually by domain experts, requiring extensive trial-and-error and deep mathematical intuition <span class="cite-inline">(Wolpert &amp; Macready, 1997)</span></p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+      <h3>LLMs Enable Automated Algorithm Design</h3>
+      <p>Large Language Models can now <strong>generate executable optimization code</strong> from natural-language prompts, enabling a new paradigm: LLM-driven Automated Algorithm Design (AAD). Frameworks like LLaMEA and EoH treat the LLM as an evolutionary operator that iteratively refines algorithms <span class="cite-inline">(van Stein &amp; B&auml;ck, 2024; Liu et al., 2024)</span></p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+      <h3>Current Limitations Motivate GA-LLaMEA</h3>
+      <p>However, existing LLM-driven frameworks remain <strong>mutation-centric</strong> &mdash; candidates evolve in isolation without recombination. They also lack <strong>adaptive operator selection</strong>, relying on static schedules that cannot respond to shifting search dynamics. These gaps motivate our framework.</p>
+    </div>
+  </div>
+  <div class="highlight-box" style="font-size:0.68em; padding:10px 14px; margin-top:10px;">
+    <strong>Core insight:</strong> By combining <em>generative crossover</em> (multi-parent recombination via LLM reasoning) with <em>Discounted Thompson Sampling</em> (bandit-based adaptive control), GA-LLaMEA addresses the fundamental limitations of current LLM-driven evolutionary frameworks.
+  </div>
+  <aside class="notes">Background: optimization requires algorithm design, traditionally manual. LLMs now enable automated algorithm generation. But current frameworks have key limitations: no crossover, no adaptive selection. This motivates GA-LLaMEA.</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 4 — Problem Statement                   -->
 <!-- ══════════════════════════════════════════════ -->
 <section>
   <span class="tag">Introduction</span>
