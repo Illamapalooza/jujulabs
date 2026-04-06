@@ -1161,27 +1161,67 @@ Result: semantically coherent</div>
   <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:1em;align-items:start">
     <div>
       <p style="font-size:0.72em;color:var(--text-secondary);margin:0 0 6px;">Sample from each arm&rsquo;s posterior:</p>
-      <div class="eq-block" style="font-size:0.92em;margin:0.3em 0;">
+      <div class="eq-block" style="font-size:0.88em;margin:0.3em 0;">
         \[ \theta_t(i)\sim\mathcal{N}\!\left(\hat{\mu}_t(i),\,\tau_t^2(i)\right) \tag{3-7} \]
       </div>
-      <p style="font-size:0.72em;color:var(--text-secondary);margin:0 0 6px;">Stagnation-aware selection (3 cases):</p>
+      <p style="font-size:0.72em;color:var(--text-secondary);margin:0 0 6px;">Select operator with highest sample:</p>
+      <div class="eq-block" style="font-size:0.88em;margin:0.3em 0;">
+        \[ i_t = \arg\max_{i \in \mathcal{A}} \theta_t(i) \tag{3-8} \]
+      </div>
+      <p style="font-size:0.72em;color:var(--text-secondary);margin:0 0 6px;">&epsilon;-greedy exploration floor:</p>
+      <div class="eq-block" style="font-size:0.88em;margin:0.3em 0;">
+        \[ i_t = \begin{cases} \text{Uniform}(\mathcal{A}), & \text{with prob } \epsilon \\ \arg\max_{i}\,\theta_t(i), & \text{with prob } 1-\epsilon \end{cases} \tag{3-10} \]
+      </div>
+    </div>
+    <div style="font-size:0.72em;display:flex;flex-direction:column;gap:0.4em">
+      <div class="annotation-card" style="padding:10px 14px;">
+        <b>Eq 3-7</b>: Each operator draws a random sample from its Gaussian posterior &mdash; higher mean + lower variance &rarr; higher likely sample.
+      </div>
+      <div class="annotation-card" style="padding:10px 14px;">
+        <b>Eq 3-8</b>: The operator with the highest drawn sample is selected &mdash; the greedy Thompson step.
+      </div>
+      <div class="annotation-card highlight" style="padding:10px 14px;">
+        <b>Eq 3-10</b>: With probability &epsilon;=0.15, ignore the bandit and select uniformly at random &mdash; prevents arm starvation.
+      </div>
+    </div>
+  </div>
+  <aside class="notes">D-TS selection mechanism without stagnation. Eq 3-7 samples from posteriors, Eq 3-8 selects the argmax, and Eq 3-10 adds an epsilon-greedy exploration floor to prevent arm starvation. Next slide adds the stagnation override (Eq 3-12, 3-13).</aside>
+</section>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- SLIDE 14+3 — D-TS: Stagnation Override        -->
+<!-- ══════════════════════════════════════════════ -->
+<section data-transition="slide" style="padding:44px 64px;">
+  <div class="slide-tag methodology">Methodology</div>
+  <h2 style="margin-bottom:0.15em;font-size:1.3em;">D-TS &mdash; Stagnation Override</h2>
+  <hr class="divider" style="margin:2px 0 10px;">
+  <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:1em;align-items:start">
+    <div>
+      <p style="font-size:0.72em;color:var(--text-secondary);margin:0 0 6px;">When no improvement for s &ge; s<sub>max</sub> generations, select best operator group:</p>
+      <div class="eq-block" style="font-size:0.88em;margin:0.3em 0;">
+        \[ k^* = \arg\max_{G \in \{G_e,\, G_x\}} \max_{i \in G} \hat{\mu}_t(i) \tag{3-12} \]
+      </div>
+      <p style="font-size:0.72em;color:var(--text-secondary);margin:0 0 6px;">Full stagnation-aware selection policy:</p>
       <div class="eq-block" style="font-size:0.88em;margin:0.3em 0;">
         \[ i_t = \begin{cases} \text{Uniform}(k^*), & s \geq s_{\max} \\ \text{Uniform}(\mathcal{A}), & \text{prob}\;\epsilon \\ \arg\max_{i}\,\theta_t(i), & \text{otherwise} \end{cases} \tag{3-13} \]
       </div>
     </div>
     <div style="font-size:0.72em;display:flex;flex-direction:column;gap:0.4em">
       <div class="annotation-card highlight" style="padding:10px 14px;">
-        <b>Case 1 — Stagnation</b>: s &ge; 10 &rarr; switch to best group k*
+        <b>Eq 3-12</b>: G<sub>e</sub>={Mutation, Random New} (exploration), G<sub>x</sub>={Refine, Crossover} (exploitation). Select group with highest-performing operator.
       </div>
       <div class="annotation-card" style="padding:10px 14px;">
-        <b>Case 2 — Exploration</b>: &epsilon;=0.15 uniform random
+        <b>Case 1</b>: Stagnation (s &ge; 10) &rarr; force-switch to best group k*, reset counter s=0
       </div>
       <div class="annotation-card" style="padding:10px 14px;">
-        <b>Case 3 — Thompson</b>: highest posterior sample
+        <b>Case 2</b>: &epsilon;-greedy exploration floor (Eq 3-10)
+      </div>
+      <div class="annotation-card" style="padding:10px 14px;">
+        <b>Case 3</b>: Thompson sampling argmax (Eq 3-8)
       </div>
     </div>
   </div>
-  <aside class="notes">Complete operator selection policy. Thompson sampling (Eq 3-7), exploration floor (Eq 3-10), and full stagnation-aware 3-case rule (Eq 3-13). k* = argmax over operator groups G_e, G_x of max posterior mean (Eq 3-12). This is the slide the panel will probe most directly.</aside>
+  <aside class="notes">Stagnation override mechanism. When s consecutive generations yield no fitness improvement, the policy forces a switch to the best-performing operator group via Eq 3-12. Groups: G_e = exploration (Mutation, Random New), G_x = exploitation (Refine, Crossover). The full 3-case policy (Eq 3-13) integrates stagnation override, exploration floor, and Thompson sampling. This is the slide the panel will probe most directly — k* selects the group whose best arm has the highest posterior mean.</aside>
 </section>
 
 <!-- ══════════════════════════════════════════════ -->
