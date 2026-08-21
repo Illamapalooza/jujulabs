@@ -20,7 +20,7 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full transition-colors duration-300 ${
+      className={`fixed top-0 z-50 w-full transition-colors duration-300 lg:hidden ${
         scrolled ? "border-b border-border bg-background/80 backdrop-blur-md" : ""
       }`}
     >

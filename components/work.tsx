@@ -7,18 +7,20 @@ import { SectionReveal } from "./section-reveal";
 export function Work() {
   return (
     <section id="work" className="px-6 py-24 sm:px-10 sm:py-32">
-      <SectionReveal className="mx-auto max-w-6xl">
+      <SectionReveal className="mx-auto max-w-5xl">
         <SectionHead
           label="Work"
           title="Who we work with."
           lead="Platforms in daily production use, built and led end to end."
         />
 
-        <div className="mt-14 space-y-5">
-          {clients.map((client) => (
+        <div className="mt-14 grid gap-5 lg:grid-cols-12">
+          {clients.map((client, index) => (
             <article
               key={client.name}
-              className="panel grid gap-8 p-7 sm:grid-cols-12 sm:gap-10 sm:p-9"
+              className={`panel panel-lift grid gap-8 p-7 sm:grid-cols-12 sm:gap-10 sm:p-9 ${
+                index % 2 === 0 ? "lg:col-span-11" : "lg:col-span-11 lg:col-start-2"
+              }`}
             >
               <div className="sm:col-span-4">
                 <Image

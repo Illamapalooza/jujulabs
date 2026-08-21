@@ -5,8 +5,8 @@ import { SectionReveal } from "./section-reveal";
 export function Contact() {
   return (
     <section id="contact" className="px-6 py-24 sm:px-10 sm:py-32">
-      <SectionReveal className="mx-auto max-w-6xl">
-        <div className="glow panel overflow-hidden p-8 sm:p-14">
+      <SectionReveal className="mx-auto max-w-5xl">
+        <div className="glow panel panel-lift ml-auto max-w-4xl overflow-hidden p-8 sm:p-14">
           <SectionHead
             label="Contact"
             title="Start a project."

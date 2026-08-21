@@ -1,22 +1,31 @@
 import { services } from "@/lib/data";
+
 import { SectionHead } from "./section-head";
 import { SectionReveal } from "./section-reveal";
+
+// Unequal spans and offsets so the row never reads as three identical cards.
+const SERVICE_SPANS = [
+  "lg:col-span-7",
+  "lg:col-span-5 lg:translate-y-8",
+  "lg:col-span-8 lg:col-start-3 lg:translate-y-2",
+];
+
 
 export function Services() {
   return (
     <section id="services" className="px-6 py-24 sm:px-10 sm:py-32">
-      <SectionReveal className="mx-auto max-w-6xl">
+      <SectionReveal className="mx-auto max-w-5xl">
         <SectionHead
           label="Services"
           title="What we build."
           lead="Jujulabs is an independent engineering studio working with startups and teams who need things built right — and shipped fast."
         />
 
-        <div className="mt-14 grid gap-5 lg:grid-cols-3">
-          {services.map((service) => (
+        <div className="mt-14 grid gap-5 lg:grid-cols-12">
+          {services.map((service, index) => (
             <div
               key={service.title}
-              className="panel flex flex-col p-7 transition-colors hover:border-foreground/20"
+              className={`panel panel-lift flex flex-col p-7 ${SERVICE_SPANS[index] ?? "lg:col-span-6"}`}
             >
               <h3 className="display text-[1.375rem]">{service.title}</h3>
 
