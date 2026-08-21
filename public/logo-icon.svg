@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Jujulabs Logo — Icon (Dark BG) — Wider/Bolder -->
+  <rect width="512" height="512" rx="64" fill="#0A0A0A"/>
+
+  <!-- Container: left wall + top + right wall ("l") — thicker stroke, wider shape -->
+  <path d="M 96,420 L 96,100 Q 96,68 128,68 L 384,68 Q 416,68 416,100 L 416,420"
+        fill="none" stroke="#FFFFFF" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- j1: dot + stem — wider bars -->
+  <circle cx="196" cy="168" r="28" fill="#FFFFFF"/>
+  <rect x="168" y="224" width="56" height="196" rx="10" fill="#FFFFFF"/>
+
+  <!-- j2: dot + stem — wider bars -->
+  <circle cx="316" cy="168" r="28" fill="#FFFFFF"/>
+  <rect x="288" y="224" width="56" height="196" rx="10" fill="#FFFFFF"/>
+</svg>
