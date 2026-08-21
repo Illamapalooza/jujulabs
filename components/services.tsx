@@ -1,47 +1,40 @@
 import { services } from "@/lib/data";
+import { SectionHead } from "./section-head";
 import { SectionReveal } from "./section-reveal";
 
 export function Services() {
   return (
-    <section id="services" className="px-6 py-24 sm:py-32">
-      <SectionReveal className="mx-auto max-w-3xl">
-        <p className="font-mono text-xs uppercase tracking-widest text-muted">
-          Services
-        </p>
+    <section id="services" className="px-6 py-24 sm:px-10 sm:py-32">
+      <SectionReveal className="mx-auto max-w-6xl">
+        <SectionHead
+          label="Services"
+          title="What we build."
+          lead="Jujulabs is an independent engineering studio working with startups and teams who need things built right — and shipped fast."
+        />
 
-        <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-          What we build.
-        </h2>
-
-        <p className="mt-6 max-w-2xl leading-relaxed text-muted">
-          Jujulabs is an independent engineering studio specializing in
-          full-stack web applications, AI agent systems, and workflow
-          automation. We work with startups and teams who need things
-          built right — and shipped fast.
-        </p>
-
-        <div className="mt-12 space-y-8">
+        <div className="mt-14 grid gap-5 lg:grid-cols-3">
           {services.map((service) => (
             <div
               key={service.title}
-              className="group rounded-lg border border-border p-6 transition-colors hover:border-foreground/20"
+              className="panel flex flex-col p-7 transition-colors hover:border-foreground/20"
             >
-              <h3 className="text-lg font-semibold tracking-tight">
-                {service.title}
-              </h3>
+              <h3 className="display text-[1.375rem]">{service.title}</h3>
 
-              <p className="mt-3 text-sm leading-relaxed text-muted">
+              <p className="mt-4 text-[0.9375rem] leading-relaxed text-muted">
                 {service.description}
               </p>
 
-              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
-                {service.capabilities.map((cap) => (
+              <ul className="mt-7 space-y-2.5 border-t border-border pt-6">
+                {service.capabilities.map((capability) => (
                   <li
-                    key={cap}
-                    className="flex items-center gap-2 font-mono text-xs text-muted"
+                    key={capability}
+                    className="flex items-baseline gap-3 font-mono text-xs text-foreground/75"
                   >
-                    <span className="h-1 w-1 rounded-full bg-foreground/30" />
-                    {cap}
+                    <span
+                      aria-hidden
+                      className="h-1 w-1 shrink-0 rounded-full bg-accent"
+                    />
+                    {capability}
                   </li>
                 ))}
               </ul>

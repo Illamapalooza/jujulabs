@@ -1,38 +1,32 @@
 import { posts } from "@/lib/data";
+import { SectionHead } from "./section-head";
 import { SectionReveal } from "./section-reveal";
 
 export function Feed() {
   return (
-    <section id="feed" className="px-6 py-24 sm:py-32">
-      <SectionReveal className="mx-auto max-w-3xl">
-        <p className="font-mono text-xs uppercase tracking-widest text-muted">
-          Feed
-        </p>
+    <section id="feed" className="px-6 py-24 sm:px-10 sm:py-32">
+      <SectionReveal className="mx-auto max-w-6xl">
+        <SectionHead label="Feed" title="What we're working on." />
 
-        <h2 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
-          What we&apos;re working on.
-        </h2>
-
-        <div className="mt-12 space-y-6">
+        <div className="mt-16 border-t border-border">
           {posts.map((post) => (
             <article
               key={post.title}
-              className="group border-l-2 border-border pl-6 transition-colors hover:border-foreground/30"
+              className="grid gap-4 border-b border-border py-10 sm:grid-cols-12 sm:gap-10"
             >
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-                <h3 className="font-semibold tracking-tight">
-                  {post.title}
-                </h3>
+              <div className="sm:col-span-3">
                 <p className="font-mono text-xs text-muted">{post.date}</p>
+                <p className="eyebrow mt-2 text-accent">{post.tag}</p>
               </div>
 
-              <p className="mt-2 text-sm leading-relaxed text-muted">
-                {post.description}
-              </p>
-
-              <span className="mt-3 inline-block rounded-full border border-border px-2.5 py-0.5 font-mono text-xs text-muted">
-                {post.tag}
-              </span>
+              <div className="sm:col-span-9">
+                <h3 className="display text-[1.375rem] sm:text-[1.75rem]">
+                  {post.title}
+                </h3>
+                <p className="mt-4 max-w-2xl text-[0.9375rem] leading-relaxed text-muted">
+                  {post.description}
+                </p>
+              </div>
             </article>
           ))}
         </div>

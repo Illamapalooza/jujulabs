@@ -1,48 +1,47 @@
-import { Logo } from "./logo";
-
 export function Hero() {
   return (
-    <section className="flex min-h-svh flex-col items-center justify-center px-6">
-      <div className="animate-fade-in-up flex flex-col items-center gap-8">
-        <Logo className="w-full max-w-md text-foreground" />
-        <div className="flex flex-col items-center gap-3 text-center">
-          <p className="max-w-md text-lg leading-relaxed text-muted sm:text-xl">
-            Web apps, agentic systems, and automation
-            — engineered to ship.
-          </p>
+    <section className="relative flex min-h-svh items-center overflow-hidden px-6 pt-32 pb-20 sm:px-10">
+      <div className="glow pointer-events-none absolute inset-0" aria-hidden />
+
+      <div className="relative mx-auto w-full max-w-6xl">
+        <p className="eyebrow animate-rise text-muted">
+          Independent engineering studio — Philippines
+        </p>
+
+        <h1
+          className="display animate-rise mt-8 max-w-4xl text-[2.75rem] sm:text-[4.5rem]"
+          style={{ animationDelay: "80ms" }}
+        >
+          Web apps, agentic systems, and automation
+          <span className="text-accent"> — engineered to ship.</span>
+        </h1>
+
+        <p
+          className="animate-rise mt-8 max-w-xl text-base leading-relaxed text-muted"
+          style={{ animationDelay: "160ms" }}
+        >
+          We design, build, and run production software for teams that need it
+          working — not prototyped. Full-stack products, AI agents that do real
+          work, and the automation that holds it together.
+        </p>
+
+        <div
+          className="animate-rise mt-12 flex flex-wrap items-center gap-3"
+          style={{ animationDelay: "240ms" }}
+        >
           <a
             href="#contact"
-            className="mt-4 border border-foreground px-6 py-2.5 font-mono text-xs uppercase tracking-widest transition-colors hover:bg-foreground hover:text-background"
+            className="rounded-full bg-accent px-7 py-3 font-mono text-xs uppercase tracking-[0.18em] text-background transition-opacity hover:opacity-90"
           >
             Start a project
           </a>
-        </div>
-      </div>
-      <div className="animate-fade-in-up-delayed mt-16">
-        <a
-          href="#services"
-          className="group flex flex-col items-center gap-2 text-muted transition-colors hover:text-foreground"
-          aria-label="Scroll to services section"
-        >
-          <span className="font-mono text-xs uppercase tracking-widest">
-            Scroll
-          </span>
-          <svg
-            width="16"
-            height="24"
-            viewBox="0 0 16 24"
-            fill="none"
-            className="animate-bounce-gentle"
+          <a
+            href="#work"
+            className="rounded-full border border-border px-7 py-3 font-mono text-xs uppercase tracking-[0.18em] text-muted transition-colors hover:border-foreground/40 hover:text-foreground"
           >
-            <path
-              d="M8 0v20m0 0l-6-6m6 6l6-6"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </a>
+            See the work
+          </a>
+        </div>
       </div>
     </section>
   );

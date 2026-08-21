@@ -1,16 +1,23 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-bricolage",
   display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-instrument-sans",
+  display: "swap",
+});
+
+const plexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plex-mono",
   display: "swap",
 });
 
@@ -27,6 +34,7 @@ export const metadata: Metadata = {
     siteName: "jujulabs",
     locale: "en_US",
     type: "website",
+    images: [{ url: "/og-image.png", width: 1920, height: 640 }],
   },
   twitter: {
     card: "summary_large_image",
@@ -46,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`${bricolage.variable} ${instrumentSans.variable} ${plexMono.variable}`}>
       <body>{children}</body>
     </html>
   );
