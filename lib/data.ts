@@ -6,7 +6,13 @@ export type Service = {
 
 export type Client = {
   name: string;
+  logo: string;
+  logoAlt: string;
+  logoClassName: string;
+  url: string;
+  role: string;
   description: string;
+  highlights: string[];
   tech: string[];
 };
 
@@ -55,15 +61,44 @@ export const services: Service[] = [
 export const clients: Client[] = [
   {
     name: "Flying Tigers Express",
+    logo: "/fte-logo.svg",
+    logoAlt: "Flying Tigers Express logo",
+    logoClassName: "h-11 sm:h-14",
+    url: "https://flyingtigersexpress.com",
+    role: "Tech Lead · Consultant",
     description:
-      "Leading development for a logistics and enterprise platform — shipment tracking, multi-hub operations, partner management, and finance systems.",
-    tech: ["Next.js", "NestJS", "PostgreSQL", "Google Cloud"],
+      "Nationwide logistics and courier platform — booking, shipment tracking, multi-hub and partner-branch operations, COD wallets and merchant settlement, invoicing, and notifications. One codebase serving an ops console, a customer portal, and native mobile apps.",
+    highlights: [
+      "Shopify app — merchants book, rate, and track FTE shipments straight from their storefront orders, with address coverage lookup and SMS updates",
+      "Merchant COD wallets, rider custody, and automated settlement and invoicing",
+      "Multi-hub, partner-branch, and walk-in booking flows with flight-level tracking",
+      "Leading a team of 5 devs — architecture, PR review, releases, and production deploys",
+    ],
+    tech: [
+      "Next.js",
+      "NestJS",
+      "React Native",
+      "PostgreSQL",
+      "Shopify",
+      "Google Cloud",
+    ],
   },
   {
     name: "Nurture Your Leads",
+    logo: "/nyl-wordmark.svg",
+    logoAlt: "Nurture Your Leads logo",
+    logoClassName: "h-7 sm:h-9",
+    url: "https://www.nurtureyourleads.com",
+    role: "Lead Engineer",
     description:
-      "Building a SaaS CRM platform from the ground up — sales pipelines, client management, automated follow-ups, and role-based access control.",
-    tech: ["React", "Next.js", "Supabase", "Tailwind CSS"],
+      "SaaS CRM built from the ground up for sales teams — contact and deal pipelines, automated follow-up sequences, team workspaces, and permissions that reach down to the record level.",
+    highlights: [
+      "Team management with attribute-based access control (ABAC) and pooled lead routing",
+      "Automated follow-up sequences and transactional email",
+      "Instant contact and deal search powered by Typesense",
+      "Subscription billing and multi-tenant workspaces",
+    ],
+    tech: ["Next.js", "tRPC", "Prisma", "Supabase", "Stripe", "Tailwind CSS"],
   },
 ];
 
@@ -81,10 +116,10 @@ export const pastWork: PastWork[] = [
     tech: ["React Native", "OpenAI", "PostgreSQL"],
   },
   {
-    name: "Bidpilot AI",
+    name: "HIREAI",
     description:
-      "AI-powered tender analysis platform — upload bid documents, extract requirements, and generate readiness reports.",
-    tech: ["Next.js", "Firebase", "OpenAI"],
+      "AI assistant deployed into a client's business operations — captures and qualifies leads across Meta and Messenger, runs follow-up until they convert, and escalates when a human is needed.",
+    tech: ["LLM Agents", "Meta API", "Google Sheets"],
   },
 ];
 
